@@ -1,10 +1,11 @@
 #pragma once
 
-class Spades
+namespace spds
 {
+    class Spades
+    {
 
-public:
-
-    int getTestNumber() const;
-
-};
+    public:
+        int getTestNumber() const;
+    };
+}
