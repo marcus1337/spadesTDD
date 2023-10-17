@@ -2,6 +2,7 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#include <iterator> 
 
 namespace spds
 {
@@ -33,8 +34,8 @@ namespace spds
         }
     };
 
-    struct Deck {
-        std::vector<Card> cards;
+    class Deck {
+        std::vector<Card> cards, initCards;
         std::vector<Suit> getSuits() const {
             using enum Suit;
             return { CLOVER, DIAMOND, HEART, SPADE };
@@ -44,7 +45,7 @@ namespace spds
             return { ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, KNIGHT, QUEEN, KING, BIG_JOKER, LITTLE_JOKER };
         }
 
-        bool vectorContainsCard(const std::vector<Card>& cards, const Card& card) {
+        bool vectorContainsCard(const std::vector<Card>& cards, const Card& card) const {
             return std::find(cards.begin(), cards.end(), card) != cards.end();
         }
 
@@ -71,13 +72,32 @@ namespace spds
             }
         }
 
+        void setInitCards() {
+            initCards.clear();
+            std::transform(cards.begin(), cards.end(), std::back_inserter(initCards),
+                [](const Card& card) { return Card(card.rank, card.suit); });
+        }
+
         void setDeckExcluding(const std::vector<Card>& excludeCards) {
             addCardsExcluding(getDefaultCards(), excludeCards);
             addCardsExcluding(getJokers(), excludeCards);
+            setInitCards();
         }
 
+    public:
         Deck() {
             setDeckExcluding(getJokers());
+        }
+        Deck(const std::vector<Card>& excludeCards) {
+            setDeckExcluding(excludeCards);
+        }
+        void reset() {
+            cards.clear();
+            std::transform(initCards.begin(), initCards.end(), std::back_inserter(cards),
+                [](const Card& card) { return Card(card.rank, card.suit); });
+        }
+        void shuffle() {
+
         }
 
     };
