@@ -1,6 +1,7 @@
 #include <vector>
 #include <gtest/gtest.h>
 #include "Spades.h"
+#include "global/PortableRandom.h"
 
 using namespace spd;
 

@@ -9,52 +9,25 @@ namespace spd {
     struct custom_uniform_int_distribution //Partially from https://stackoverflow.com/a/44525591/7202012
     {
         using result_type = IntType;
-        const result_type A, B;
-
-        struct param_type
-        {
-            const result_type A, B;
-            param_type(result_type aa, result_type bb)
-                : A(aa), B(bb)
-            {}
-        };
-        explicit custom_uniform_int_distribution(const result_type a = 0, const result_type b = std::numeric_limits<result_type>::max())
-            : A(a), B(b)
-        {}
-        explicit custom_uniform_int_distribution(const param_type& params)
-            : A(params.A), B(params.B)
+        const result_type from, to;
+        explicit custom_uniform_int_distribution(const result_type from = 0, const result_type to = std::numeric_limits<result_type>::max())
+            : from(from), to(to)
         {}
         template <class Generator>
         result_type operator()(Generator& g) const
         {
-            return rnd(g, A, B);
+            return rnd(g, from, to);
         }
         template <class Generator>
-        result_type operator()(Generator& g, const param_type& params) const
+        result_type operator()(Generator& g, const result_type& from, const result_type& to) const
         {
-            return rnd(g, params.A, params.B);
-        }
-        result_type a() const
-        {
-            return A;
-        }
-        result_type b() const
-        {
-            return B;
-        }
-        result_type min() const
-        {
-            return A;
-        }
-        result_type max() const
-        {
-            return B;
+            return rnd(g, from, to);
         }
 
         template <class Generator>
         result_type reject_sampling(Generator& g, const result_type reject_lim) const
         {
-            auto n = g();
+            result_type n = g();
             while (n <= reject_lim)
                 n = g();
             return n;
@@ -77,12 +50,11 @@ namespace spd {
     {
         typedef typename std::iterator_traits<RandomIt>::difference_type diff_t;
         typedef custom_uniform_int_distribution<diff_t> distr_t;
-        typedef typename distr_t::param_type param_t;
         distr_t D;
         diff_t n = last - first;
         for (diff_t i = n - 1; i > 0; --i)
         {
-            std::swap(first[i], first[D(g, param_t(0, i))]);
+            std::swap(first[i], first[D(g, 0, i)]);
         }
     }
 
