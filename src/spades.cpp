@@ -1,6 +1,6 @@
-#include "spades.h"
+#include "Spades.h"
 
-using namespace spds;
+using namespace spd;
 
 int Spades::getTestNumber() const{
     return 1337;

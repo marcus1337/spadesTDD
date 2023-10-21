@@ -1,8 +1,8 @@
 #include <vector>
 #include <gtest/gtest.h>
-#include "spades.h"
+#include "Spades.h"
 
-using namespace spds;
+using namespace spd;
 
 TEST(test0, HelloWorldAssert) {
   Spades spades;
