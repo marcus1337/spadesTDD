@@ -5,10 +5,10 @@ Spades library code made with Test-Driven-Development (TDD).
 
 ```bash
 mkdir -p build
-cmake -S. -Bbuild
 cd build
-# BUILD_TESTING: unit testing ON/OFF (default is ON)
-cmake --build . -DBUILD_TESTING=ON
+# BUILD_TESTING: unit testing ON/OFF (default is usually ON)
+cmake -S.. -B. -DBUILD_TESTING=ON
+cmake --build .
 # Run the tests
 ctest
 ```
