@@ -33,6 +33,9 @@ namespace spd
         bool operator==(const Card& other) const {
             return sameRank(other) && sameSuit(other);
         }
+        bool operator<(const Card& other) const {
+            return sameSuit(other) ? getRank() < other.getRank() : getSuit() < other.getSuit();
+        }
         Rank getRank() const {
             return rank;
         }

@@ -4,6 +4,7 @@
 #include "global/PortableRandom.h"
 #include <algorithm>
 #include "Deck.h"
+#include <set>
 
 using namespace spd;
 
@@ -51,6 +52,16 @@ TEST(test1, TestRandomDiff) {
     bool areEqual = std::equal(arr1.begin(), arr1.end(), arr2.begin());
 
     EXPECT_FALSE(areEqual);
+}
+
+TEST(DeckTest, UniqueCards) {
+    Deck deck;
+    std::set<Card> cards;
+    while (!deck.empty()) {
+        const auto card = deck.pop();
+        EXPECT_TRUE(cards.find(card) == cards.end());
+        cards.emplace(card);
+    }
 }
 
 TEST(DeckTest, Shuffled) {
