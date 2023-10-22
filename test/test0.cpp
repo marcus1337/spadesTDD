@@ -8,12 +8,7 @@
 
 using namespace spd;
 
-TEST(test0, HelloWorldAssert) {
-  Spades spades;
-  EXPECT_EQ(spades.getTestNumber(), 1337);
-}
-
-TEST(test1, TestRandomSame) {
+TEST(PortableRandom, RandomSame) {
     auto& r = PortableRandom::getInstance();
     std::vector<int> arr1, arr2;
     const int n = 200;
@@ -33,7 +28,7 @@ TEST(test1, TestRandomSame) {
     EXPECT_TRUE(areEqual);
 }
 
-TEST(test1, TestRandomDiff) {
+TEST(PortableRandom, RandomDiff) {
     auto& r = PortableRandom::getInstance();
     std::vector<int> arr1, arr2;
     const int n = 200;
@@ -54,7 +49,7 @@ TEST(test1, TestRandomDiff) {
     EXPECT_FALSE(areEqual);
 }
 
-TEST(DeckTest, UniqueCards) {
+TEST(Deck, UniqueCards) {
     Deck deck;
     std::set<Card> cards;
     while (!deck.empty()) {
@@ -64,7 +59,7 @@ TEST(DeckTest, UniqueCards) {
     }
 }
 
-TEST(DeckTest, Shuffled) {
+TEST(Deck, Shuffled) {
     Deck deck;
     std::vector<Card> cards;
     while (!deck.empty())

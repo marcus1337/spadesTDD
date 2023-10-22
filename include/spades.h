@@ -19,6 +19,6 @@ namespace spd
     {
 
     public:
-        int getTestNumber() const;
+
     };
 }
