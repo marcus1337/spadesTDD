@@ -3,6 +3,7 @@
 #include "Spades.h"
 #include "global/PortableRandom.h"
 #include <algorithm>
+#include "Deck.h"
 
 using namespace spd;
 
@@ -50,4 +51,19 @@ TEST(test1, TestRandomDiff) {
     bool areEqual = std::equal(arr1.begin(), arr1.end(), arr2.begin());
 
     EXPECT_FALSE(areEqual);
+}
+
+TEST(DeckTest, Shuffled) {
+    Deck deck;
+    std::vector<Card> cards;
+    while (!deck.empty())
+        cards.push_back(deck.pop());
+    auto sameSuitInRange = [&cards](int from, int to) {
+        const auto firstCard = cards[from];
+        for (int i = from; i < to; i++)
+            if (!cards[i].sameSuit(firstCard))
+                return false;
+        return true;
+    };
+    EXPECT_FALSE(sameSuitInRange(0,12) && sameSuitInRange(13, 25));
 }

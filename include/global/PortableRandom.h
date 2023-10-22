@@ -45,8 +45,8 @@ namespace spd {
         }
     };
 
-    template<class RandomIt, class UniformRandomBitGenerator>
-    void custom_shuffle(RandomIt first, RandomIt last, UniformRandomBitGenerator&& g)
+    template<class RandomIt, class Generator>
+    void custom_shuffle(RandomIt first, RandomIt last, Generator&& g)
     {
         typedef typename std::iterator_traits<RandomIt>::difference_type diff_t;
         typedef custom_uniform_int_distribution<diff_t> distr_t;
@@ -84,6 +84,11 @@ namespace spd {
         int randInt(int from, int to) {
             custom_uniform_int_distribution<int> dis(from, to);
             return dis(mt);
+        }
+
+        template<class T>
+        void shuffle(std::vector<T>& vec) {
+            custom_shuffle(vec.begin(), vec.end(), mt);
         }
 
     };

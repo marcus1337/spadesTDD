@@ -14,9 +14,10 @@ namespace spd
         SPADE, HEART, DIAMOND, CLOVER, NONE
     };
 
-    struct Card {
-        const Rank rank;
-        const Suit suit;
+    class Card {
+        Rank rank;
+        Suit suit;
+    public:
         Card(const Rank& rank, const Suit& suit) : rank(rank), suit(suit) {
             isJoker(rank) ? assert(suit == Suit::NONE) : assert(suit != Suit::NONE);
         }
@@ -30,7 +31,19 @@ namespace spd
             return rank == Rank::BIG_JOKER || rank == Rank::LITTLE_JOKER;
         }
         bool operator==(const Card& other) const {
-            return (rank == other.rank) && (suit == other.suit);
+            return sameRank(other) && sameSuit(other);
+        }
+        Rank getRank() const {
+            return rank;
+        }
+        Suit getSuit() const {
+            return suit;
+        }
+        bool sameSuit(const Card& other) const {
+            return getSuit() == other.getSuit();
+        }
+        bool sameRank(const Card& other) const {
+            return getRank() == other.getRank();
         }
     };
 

@@ -4,11 +4,12 @@
 #include <algorithm>
 #include <iterator>
 #include "data/Card.h"
+#include "global/PortableRandom.h"
 
 namespace spd
 {
     class Deck {
-        std::vector<Card> cards, initCards;
+        std::vector<Card> cards;
         std::vector<Suit> getSuits() const {
             using enum Suit;
             return { CLOVER, DIAMOND, HEART, SPADE };
@@ -45,32 +46,31 @@ namespace spd
             }
         }
 
-        void setInitCards() {
-            initCards.clear();
-            std::transform(cards.begin(), cards.end(), std::back_inserter(initCards),
-                [](const Card& card) { return Card(card.rank, card.suit); });
-        }
-
         void setDeckExcluding(const std::vector<Card>& excludeCards) {
             addCardsExcluding(getDefaultCards(), excludeCards);
             addCardsExcluding(getJokers(), excludeCards);
-            setInitCards();
+        }
+
+        void shuffle() {
+            PortableRandom::getInstance().shuffle(cards);
         }
 
     public:
         Deck() {
             setDeckExcluding(getJokers());
+            shuffle();
         }
         Deck(const std::vector<Card>& excludeCards) {
             setDeckExcluding(excludeCards);
+            shuffle();
         }
-        void reset() {
-            cards.clear();
-            std::transform(initCards.begin(), initCards.end(), std::back_inserter(cards),
-                [](const Card& card) { return Card(card.rank, card.suit); });
+        Card pop() {
+            const Card card = cards.back();
+            cards.pop_back();
+            return card;
         }
-        void shuffle() {
-
+        bool empty() const {
+            return cards.empty();
         }
 
     };
