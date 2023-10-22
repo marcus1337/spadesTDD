@@ -10,24 +10,21 @@
 #include <memory>
 #include "data/Score.h"
 #include "Deck.h"
+#include "rules/BidVariationController.h"
 
 namespace spd
 {
-    struct CardEvaluator {
-        virtual int getValue(const Card& card) = 0;
-    };
-
     class Spades
     {
         Deck deck;
         bool started = false;
-        std::unique_ptr<BidVariation> bidVariation;
+        BidVariationController bidVariationController;
         std::unique_ptr<TrumpVariation> trumpVariation;
 
     public:
 
         Spades() {
-            setBidVariation(std::make_unique<DoubleBlindNil>());
+
         }
 
         void startNewGame() {
@@ -38,15 +35,15 @@ namespace spd
             started = false;
         }
 
-        bool setBidVariation(std::unique_ptr<BidVariation> bidVariation){
+        bool setBidVariation(BidVariationType type){
             if(!hasStarted()){
-                this->bidVariation = std::move(bidVariation);
+                bidVariationController.setType(type);
             }
             return !hasStarted();
         }
 
-        const BidVariation* getBidVariation() const {
-            return bidVariation.get();
+        BidVariationType getBidVariation() const {
+            return bidVariationController.getBidVariationType();
         }
 
         bool setTrumpVariation(std::unique_ptr<TrumpVariation> trumpVariation){

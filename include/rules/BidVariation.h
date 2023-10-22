@@ -8,6 +8,9 @@
 #include <string>
 #include <optional>
 #include "data/Player.h"
+#include <memory>
+#include <map>
+#include <cassert>
 
 namespace spd
 {
@@ -15,11 +18,12 @@ namespace spd
         protected:
         const int MAX_BID = 13;
         public:
-        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) = 0;
+        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) const = 0;
         virtual ~BidVariation() = default;
     };
+
     class DoubleBlindNil : public BidVariation{
-        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) override {
+        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) const override {
             const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
             std::vector<Bid> bids;
             for(int i = 0; i < MAX_BID-teamBid; i++)
@@ -28,7 +32,7 @@ namespace spd
         }
     };
     class DoubleNil : public BidVariation{
-        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) override {
+        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) const override {
             const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
             std::vector<Bid> bids;
             for(int i = 0; i < MAX_BID-teamBid; i++)
@@ -36,4 +40,5 @@ namespace spd
             return bids;
         }
     };
+
 }

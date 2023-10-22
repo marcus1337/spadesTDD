@@ -37,8 +37,9 @@ TEST(API, EndGame) {
 
 TEST(API, SetBidVariation) {
     Spades spades;
-    spades.setBidVariation(std::make_unique<DoubleBlindNil>());
-    EXPECT_TRUE(dynamic_cast<const DoubleBlindNil*>(spades.getBidVariation()) != nullptr);
+    const auto type = BidVariationType::DOUBLE_NILL;
+    spades.setBidVariation(type);
+    EXPECT_TRUE(spades.getBidVariation() == type);
 }
 
 TEST(API, SetTrumpVariation) {
