@@ -54,7 +54,7 @@ TEST(Deck, UniqueCards) {
     std::set<Card> cards;
     while (!deck.empty()) {
         const auto card = deck.pop();
-        EXPECT_TRUE(cards.find(card) == cards.end());
+        EXPECT_FALSE(cards.contains(card));
         cards.emplace(card);
     }
 }
@@ -72,4 +72,33 @@ TEST(Deck, Shuffled) {
         return true;
     };
     EXPECT_FALSE(sameSuitInRange(0,12) && sameSuitInRange(13, 25));
+}
+
+TEST(API, Serialization) {
+    Spades spades;
+    const auto data = spades.serialize();
+    //TODO: Edit spades state here
+    spades.deserialize(data);
+    EXPECT_EQ(spades.serialize(), data);
+}
+
+TEST(API, StartNewGame) {
+    Spades spades;
+    EXPECT_FALSE(spades.hasStarted());
+    spades.startNewGame();
+    EXPECT_TRUE(spades.hasStarted());
+}
+
+TEST(API, EndGame) {
+    Spades spades;
+    spades.startNewGame();
+    EXPECT_TRUE(spades.hasStarted());
+    spades.endGame();
+    EXPECT_FALSE(spades.hasStarted());
+}
+
+TEST(API, SetBidVariation) {
+    Spades spades;
+    spades.setBidVariation(std::make_unique<DoubleBlindNil>());
+    EXPECT_TRUE(dynamic_cast<DoubleBlindNil*>(spades.getBidVariation()) != nullptr);
 }
