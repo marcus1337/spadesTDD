@@ -16,6 +16,7 @@ namespace spd
         const int MAX_BID = 13;
         public:
         virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) = 0;
+        virtual ~BidVariation() = default;
     };
     class DoubleBlindNil : public BidVariation{
         virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) override {

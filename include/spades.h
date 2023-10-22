@@ -5,7 +5,8 @@
 #include <iterator>
 #include "data/Card.h"
 #include <string>
-#include "BidVariation.h"
+#include "rules/BidVariation.h"
+#include "rules/TrumpVariation.h"
 #include <memory>
 #include "data/Score.h"
 
@@ -19,6 +20,7 @@ namespace spd
     {
         bool started = false;
         std::unique_ptr<BidVariation> bidVariation;
+        std::unique_ptr<TrumpVariation> trumpVariation;
 
     public:
 
@@ -41,8 +43,19 @@ namespace spd
             return !hasStarted();
         }
 
-        BidVariation* getBidVariation() const {
+        const BidVariation* getBidVariation() const {
             return bidVariation.get();
+        }
+
+        bool setTrumpVariation(std::unique_ptr<TrumpVariation> trumpVariation){
+            if(!hasStarted()){
+                this->trumpVariation = std::move(trumpVariation);
+            }
+            return !hasStarted();
+        }
+
+        const TrumpVariation* getTrumpVariation() const {
+            return trumpVariation.get();
         }
 
         bool hasStarted() const {
