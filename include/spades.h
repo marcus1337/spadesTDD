@@ -5,12 +5,11 @@
 #include <iterator>
 #include "data/Card.h"
 #include <string>
-#include "rules/BidVariation.h"
-#include "rules/TrumpVariation.h"
 #include <memory>
 #include "data/Score.h"
 #include "Deck.h"
 #include "rules/BidVariationController.h"
+#include "rules/TrumpVariationController.h"
 
 namespace spd
 {
@@ -19,7 +18,7 @@ namespace spd
         Deck deck;
         bool started = false;
         BidVariationController bidVariationController;
-        std::unique_ptr<TrumpVariation> trumpVariation;
+        TrumpVariationController trumpVariationController;
 
     public:
 
@@ -37,24 +36,24 @@ namespace spd
 
         bool setBidVariation(BidVariationType type){
             if(!hasStarted()){
-                bidVariationController.setType(type);
+                bidVariationController.setBidVariationType(type);
             }
             return !hasStarted();
         }
 
-        BidVariationType getBidVariation() const {
+        BidVariationType getBidVariationType() const {
             return bidVariationController.getBidVariationType();
         }
 
-        bool setTrumpVariation(std::unique_ptr<TrumpVariation> trumpVariation){
+        bool setTrumpVariation(TrumpVariationType type){
             if(!hasStarted()){
-                this->trumpVariation = std::move(trumpVariation);
+                trumpVariationController.setTrumpVariationType(type);
             }
             return !hasStarted();
         }
 
-        const TrumpVariation* getTrumpVariation() const {
-            return trumpVariation.get();
+        TrumpVariationType getTrumpVariationType() const {
+            return trumpVariationController.getTrumpVariationType();
         }
 
         bool hasStarted() const {

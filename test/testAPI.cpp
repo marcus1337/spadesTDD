@@ -39,11 +39,12 @@ TEST(API, SetBidVariation) {
     Spades spades;
     const auto type = BidVariationType::DOUBLE_NILL;
     spades.setBidVariation(type);
-    EXPECT_TRUE(spades.getBidVariation() == type);
+    EXPECT_TRUE(spades.getBidVariationType() == type);
 }
 
 TEST(API, SetTrumpVariation) {
     Spades spades;
-    spades.setTrumpVariation(std::make_unique<AceHigh>());
-    EXPECT_TRUE(dynamic_cast<const AceHigh*>(spades.getTrumpVariation()) != nullptr);
+    const auto type = TrumpVariationType::ACE_HIGH;
+    spades.setTrumpVariation(type);
+    EXPECT_TRUE(spades.getTrumpVariationType() == type);
 }
