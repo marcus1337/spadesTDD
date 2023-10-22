@@ -10,6 +10,7 @@
 #include "Deck.h"
 #include "rules/BidVariationController.h"
 #include "rules/TrumpVariationController.h"
+#include "data/SpadesMemento.h"
 
 namespace spd
 {
@@ -19,6 +20,14 @@ namespace spd
         bool started = false;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
+
+        SpadesMemento makeMemento() const{
+            return SpadesMemento{};
+        }
+
+        void loadMemento(const SpadesMemento& memento){
+
+        }
 
     public:
 
@@ -60,11 +69,12 @@ namespace spd
             return started;
         }
 
-        std::string serialize() const { //TODO: implement
-            return "";
+        std::string serialize() const {
+            return makeMemento().serialize();
         }
 
-        void deserialize(const std::string& data) { //TODO: implement
+        void deserialize(const std::string& data) {
+            loadMemento(SpadesMemento(data));
         }
 
         Score getScore() const {
