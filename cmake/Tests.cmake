@@ -8,6 +8,6 @@ FetchContent_MakeAvailable(googletest)
 
 include(GoogleTest)
 enable_testing()
-add_executable(unit_tests "test/testAPI.cpp" "test/testGlobal.cpp" "test/testDeck.cpp")
+add_executable(unit_tests "test/testAPI.cpp" "test/testGlobal.cpp" "test/testDeck.cpp" "test/testScore.cpp")
 target_link_libraries(unit_tests GTest::gtest_main ${PROJECT_NAME})
 gtest_discover_tests(unit_tests)

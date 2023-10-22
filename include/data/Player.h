@@ -7,14 +7,10 @@
 #include "data/Card.h"
 #include <string>
 #include <optional>
+#include "data/Bid.h"
 
 namespace spd
 {
-    struct Bid{
-        int tricks;
-        bool blind;
-    };
-
     struct Player{
         std::vector<Card> hand;
         std::optional<Bid> bid;

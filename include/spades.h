@@ -7,6 +7,7 @@
 #include <string>
 #include "BidVariation.h"
 #include <memory>
+#include "data/Score.h"
 
 namespace spd
 {
@@ -53,6 +54,10 @@ namespace spd
         }
 
         void deserialize(const std::string& data) { //TODO: implement
+        }
+
+        Score getScore() const {
+            return Score{};
         }
 
     };
