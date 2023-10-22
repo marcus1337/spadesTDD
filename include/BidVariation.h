@@ -6,24 +6,33 @@
 #include <iterator>
 #include "data/Card.h"
 #include <string>
+#include <optional>
+#include "data/Player.h"
 
 namespace spd
 {
-    struct Bid{
-        int numTricks;
-        bool blind;
-        Bid(int numTricks, bool blind) : numTricks(){
+    class BidVariation {
+        protected:
+        const int MAX_BID = 13;
+        public:
+        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) = 0;
+    };
+    class DoubleBlindNil : public BidVariation{
+        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) override {
+            const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
+            std::vector<Bid> bids;
+            for(int i = 0; i < MAX_BID-teamBid; i++)
+                bids.push_back(Bid{.tricks=i,.blind=player.blind});
+            return bids;
         }
     };
-
-    class BidVariation {
-        public:
-        virtual std::vector<Bid> getPossibleBids() = 0;
-    };
-
-    class DoubleBlindNil : public BidVariation{
-        virtual std::vector<Bid> getPossibleBids() override {
-            return {};
+    class DoubleNil : public BidVariation{
+        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) override {
+            const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
+            std::vector<Bid> bids;
+            for(int i = 0; i < MAX_BID-teamBid; i++)
+                bids.push_back(Bid{.tricks=i,.blind=false});
+            return bids;
         }
     };
 }
