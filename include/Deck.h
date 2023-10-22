@@ -4,11 +4,12 @@
 #include <algorithm>
 #include <iterator>
 #include "data/Card.h"
-#include "global/PortableRandom.h"
+#include "PortableRandom.h"
 
 namespace spd
 {
     class Deck {
+        PortableRandom portableRandom;
         std::vector<Card> cards;
         std::vector<Suit> getSuits() const {
             using enum Suit;
@@ -52,7 +53,7 @@ namespace spd
         }
 
         void shuffle() {
-            PortableRandom::getInstance().shuffle(cards);
+            portableRandom.shuffle(cards);
         }
 
     public:
@@ -72,6 +73,11 @@ namespace spd
         bool empty() const {
             return cards.empty();
         }
-
+        void setSeed(int seed){
+            portableRandom.setSeed(seed);
+        }
+        int getSeed() const {
+            return portableRandom.getSeed();
+        }
     };
 }

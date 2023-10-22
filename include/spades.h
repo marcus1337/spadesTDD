@@ -9,6 +9,7 @@
 #include "rules/TrumpVariation.h"
 #include <memory>
 #include "data/Score.h"
+#include "Deck.h"
 
 namespace spd
 {
@@ -18,6 +19,7 @@ namespace spd
 
     class Spades
     {
+        Deck deck;
         bool started = false;
         std::unique_ptr<BidVariation> bidVariation;
         std::unique_ptr<TrumpVariation> trumpVariation;
@@ -71,6 +73,17 @@ namespace spd
 
         Score getScore() const {
             return Score{};
+        }
+
+        bool setSeed(int seed){
+            if(!hasStarted()){
+                deck.setSeed(seed);
+            }
+            return !hasStarted();
+        }
+
+        int getSeed() const {
+            return deck.getSeed();
         }
 
     };

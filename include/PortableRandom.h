@@ -59,17 +59,10 @@ namespace spd {
     }
 
     class PortableRandom {
-
         int seed;
         std::mt19937 mt;
-        PortableRandom() : seed(std::random_device()()), mt(seed) {
-        }
-
     public:
-
-        static PortableRandom& getInstance() {
-            static PortableRandom instance;
-            return instance;
+        PortableRandom() : seed(std::random_device()()), mt(seed) {
         }
 
         void setSeed(unsigned int newSeed) {

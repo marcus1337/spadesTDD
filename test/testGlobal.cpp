@@ -1,7 +1,7 @@
 #include <vector>
 #include <gtest/gtest.h>
 #include "Spades.h"
-#include "global/PortableRandom.h"
+#include "PortableRandom.h"
 #include <algorithm>
 #include "Deck.h"
 #include <set>
@@ -9,7 +9,7 @@
 using namespace spd;
 
 TEST(PortableRandom, RandomSame) {
-    auto& r = PortableRandom::getInstance();
+    PortableRandom r;
     std::vector<int> arr1, arr2;
     const int n = 200;
     const int maxValue = 100;
@@ -29,7 +29,7 @@ TEST(PortableRandom, RandomSame) {
 }
 
 TEST(PortableRandom, RandomDiff) {
-    auto& r = PortableRandom::getInstance();
+    PortableRandom r;
     std::vector<int> arr1, arr2;
     const int n = 200;
     const int maxValue = 100;
