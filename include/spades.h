@@ -7,7 +7,7 @@
 #include <string>
 #include <memory>
 #include "data/Score.h"
-#include "Deck.h"
+#include "table/Deck.h"
 #include "rules/BidVariationController.h"
 #include "rules/TrumpVariationController.h"
 #include "data/SpadesMemento.h"

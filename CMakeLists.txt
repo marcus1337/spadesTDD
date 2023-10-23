@@ -7,7 +7,7 @@ if(UNIX AND NOT APPLE)
     cmake_policy(SET CMP0135 NEW)
 endif()
 
-add_library(${PROJECT_NAME} STATIC "src/Spades.cpp" "include/data/Card.h" "include/Deck.h" "include/global/PortableRandom.h")
+add_library(${PROJECT_NAME} STATIC "src/Spades.cpp")
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<INSTALL_INTERFACE:include>

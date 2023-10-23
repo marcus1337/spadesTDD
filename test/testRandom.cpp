@@ -1,9 +1,8 @@
 #include <vector>
 #include <gtest/gtest.h>
 #include "Spades.h"
-#include "PortableRandom.h"
+#include "table/PortableRandom.h"
 #include <algorithm>
-#include "Deck.h"
 #include <set>
 
 using namespace spd;

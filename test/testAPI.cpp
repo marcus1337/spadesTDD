@@ -2,7 +2,6 @@
 #include <gtest/gtest.h>
 #include "Spades.h"
 #include <algorithm>
-#include "Deck.h"
 #include <set>
 
 using namespace spd;
