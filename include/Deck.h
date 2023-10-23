@@ -47,24 +47,28 @@ namespace spd
             }
         }
 
+    public:
+        Deck() {
+            setDeckExcluding(getJokers());
+        }
+        
+        Deck(const std::vector<Card>& excludeCards) {
+            setDeckExcluding(excludeCards);
+        }
+        
         void setDeckExcluding(const std::vector<Card>& excludeCards) {
+            cards.clear();
             addCardsExcluding(getDefaultCards(), excludeCards);
             addCardsExcluding(getJokers(), excludeCards);
         }
 
-        void shuffle() {
-            portableRandom.shuffle(cards);
+        void shuffle(int round) {
+            setSeed(getSeed());
+            for(int i = 0 ; i <= round; i++){
+                portableRandom.shuffle(cards);
+            }
         }
 
-    public:
-        Deck() {
-            setDeckExcluding(getJokers());
-            shuffle();
-        }
-        Deck(const std::vector<Card>& excludeCards) {
-            setDeckExcluding(excludeCards);
-            shuffle();
-        }
         Card pop() {
             const Card card = cards.back();
             cards.pop_back();

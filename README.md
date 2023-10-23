@@ -1,5 +1,5 @@
 # spadesTDD
-Spades library code made with Test-Driven-Development (TDD).
+Spades library code made (partially) with Test-Driven-Development (TDD).
 
 ## How to Build
 
@@ -12,3 +12,7 @@ cmake --build .
 # Run the tests
 ctest
 ```
+
+## Attributions
+
+[JSON for Modern C++](https://github.com/nlohmann/json)

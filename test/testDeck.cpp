@@ -20,6 +20,7 @@ TEST(Deck, UniqueCards) {
 TEST(Deck, Shuffled) {
     Deck deck;
     std::vector<Card> cards;
+    deck.shuffle(0);
     while (!deck.empty())
         cards.push_back(deck.pop());
     auto sameSuitInRange = [&cards](int from, int to) {

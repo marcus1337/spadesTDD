@@ -17,80 +17,109 @@ namespace spd
     class Spades
     {
         Deck deck;
-        bool started = false;
+        int round = 0;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
 
-        SpadesMemento makeMemento() const{
-            return SpadesMemento{};
+        SpadesMemento makeMemento() const
+        {
+            auto memento = SpadesMemento();
+            memento.round = round;
+            memento.seed = getSeed();
+            memento.bidVariation = (int)bidVariationController.getBidVariationType();
+            memento.trumpVariation = (int)trumpVariationController.getTrumpVariationType();
+            return memento;
         }
 
-        void loadMemento(const SpadesMemento& memento){
-
+        void loadMemento(const SpadesMemento &memento)
+        {
+            round = memento.round;
+            setSeed(memento.seed);
+            if (memento.bidVariation < (unsigned int)BidVariationType::LAST)
+            {
+                bidVariationController.setBidVariationType((BidVariationType)memento.bidVariation);
+            }
+            if (memento.trumpVariation < (unsigned int)BidVariationType::LAST)
+            {
+                trumpVariationController.setTrumpVariationType((TrumpVariationType)memento.bidVariation);
+            }
         }
 
     public:
-
-        Spades() {
-
+        Spades()
+        {
         }
 
-        void startNewGame() {
-            started = true;
+        void startNewGame()
+        {
+            round = 1;
         }
 
-        void endGame(){
-            started = false;
+        void endGame()
+        {
+            round = 0;
         }
 
-        bool setBidVariation(BidVariationType type){
-            if(!hasStarted()){
+        bool setBidVariation(BidVariationType type)
+        {
+            if (!hasStarted())
+            {
                 bidVariationController.setBidVariationType(type);
             }
             return !hasStarted();
         }
 
-        BidVariationType getBidVariationType() const {
+        BidVariationType getBidVariationType() const
+        {
             return bidVariationController.getBidVariationType();
         }
 
-        bool setTrumpVariation(TrumpVariationType type){
-            if(!hasStarted()){
+        bool setTrumpVariation(TrumpVariationType type)
+        {
+            if (!hasStarted())
+            {
                 trumpVariationController.setTrumpVariationType(type);
             }
             return !hasStarted();
         }
 
-        TrumpVariationType getTrumpVariationType() const {
+        TrumpVariationType getTrumpVariationType() const
+        {
             return trumpVariationController.getTrumpVariationType();
         }
 
-        bool hasStarted() const {
-            return started;
+        bool hasStarted() const
+        {
+            return round > 0;
         }
 
-        std::string serialize() const {
+        std::string serialize() const
+        {
             return makeMemento().serialize();
         }
 
-        void deserialize(const std::string& data) {
+        void deserialize(const std::string &data)
+        {
             loadMemento(SpadesMemento(data));
         }
 
-        Score getScore() const {
+        Score getScore() const
+        {
             return Score{};
         }
 
-        bool setSeed(int seed){
-            if(!hasStarted()){
+        bool setSeed(int seed)
+        {
+            if (!hasStarted())
+            {
                 deck.setSeed(seed);
             }
             return !hasStarted();
         }
 
-        int getSeed() const {
+        int getSeed() const
+        {
             return deck.getSeed();
         }
-
     };
 }
