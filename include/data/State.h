@@ -57,7 +57,7 @@ namespace spd
 
         int getRound() const
         {
-            return (int)(bids.size() / 4);
+            return playedCards.size() % 52;
         }
 
         bool isBidPhase() const
@@ -98,5 +98,6 @@ namespace spd
         }
 
         std::vector<int> bids;
+        std::vector<Card> playedCards;
     };
 }
