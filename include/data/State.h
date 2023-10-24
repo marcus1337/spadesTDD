@@ -51,7 +51,7 @@ namespace spd
         {
             if (!isBidPhase())
             {
-                return false;
+                return true;
             }
             else
             {
