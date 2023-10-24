@@ -22,7 +22,7 @@ namespace spd
         int round = 0;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
-        std::array<Player,4> players{};
+        std::array<Player, 4> players{};
         std::vector<int> bids;
 
         SpadesMemento makeMemento() const
@@ -49,6 +49,11 @@ namespace spd
             }
         }
 
+        int getRoundIndex() const
+        {
+            return round - 1;
+        }
+
     public:
         Spades()
         {
@@ -64,13 +69,10 @@ namespace spd
             round = 0;
         }
 
-        bool setBidVariation(BidVariationType type)
+        void setBidVariation(BidVariationType type)
         {
-            if (!hasStarted())
-            {
-                bidVariationController.setBidVariationType(type);
-            }
-            return !hasStarted();
+            assert(!hasStarted());
+            bidVariationController.setBidVariationType(type);
         }
 
         BidVariationType getBidVariationType() const
@@ -78,13 +80,10 @@ namespace spd
             return bidVariationController.getBidVariationType();
         }
 
-        bool setTrumpVariation(TrumpVariationType type)
+        void setTrumpVariation(TrumpVariationType type)
         {
-            if (!hasStarted())
-            {
-                trumpVariationController.setTrumpVariationType(type);
-            }
-            return !hasStarted();
+            assert(!hasStarted());
+            trumpVariationController.setTrumpVariationType(type);
         }
 
         TrumpVariationType getTrumpVariationType() const
@@ -112,13 +111,10 @@ namespace spd
             return Score{};
         }
 
-        bool setSeed(int seed)
+        void setSeed(int seed)
         {
-            if (!hasStarted())
-            {
-                deck.setSeed(seed);
-            }
-            return !hasStarted();
+            assert(!hasStarted());
+            deck.setSeed(seed);
         }
 
         int getSeed() const
@@ -126,26 +122,57 @@ namespace spd
             return deck.getSeed();
         }
 
-        const Player& getPlayer(const Seat& seat) const{
-            return players[(int) seat];
+        const Player &getPlayer(const Seat &seat) const
+        {
+            return players[(int)seat];
         }
 
-        bool hasPlayerBid(const Seat& seat) const {
-            
-            return false;
+        Seat getStartBidder(int round) const
+        {
+            return (Seat)((round - 1) % 4);
         }
 
-        bool isBidPhase() const {
-            return bids.size() % 4 != 0;
+        bool hasPlayerBid(const Seat &seat) const
+        {
+            if (!isBidPhase())
+            {
+                return false;
+            }
+            else
+            {
+                int madeBids = bids.size() % 4;
+                Seat startBidder = getStartBidder(round);
+                for (int i = 0; i < madeBids; i++)
+                {
+                    int seatIndex = ((int)startBidder + i) % 4;
+                    if ((Seat)seatIndex == seat)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
 
-        Seat getTurnSeat() const {
+        bool isBidPhase() const
+        {
+            return bids.size() < round * 4;
+        }
+
+        Seat getTurnSeat() const
+        {
+            if (isBidPhase())
+            {
+                int playerIndex = (bids.size() + getRoundIndex()) % 4;
+                return (Seat)playerIndex;
+            }
             return Seat::SOUTH;
         }
 
-        void addBid(int bid){
+        void addBid(int bid)
+        {
+            assert(hasStarted());
             bids.push_back(bid);
         }
-
     };
 }

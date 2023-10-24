@@ -48,11 +48,21 @@ TEST(API, SetTrumpVariation) {
     EXPECT_TRUE(spades.getTrumpVariationType() == type);
 }
 
-TEST(API, BidOrder) {
+TEST(API, BidOrderRound1) {
     Spades spades;
+    spades.startNewGame();
+    for(const auto& seat : {Seat::SOUTH, Seat::EAST, Seat::NORTH, Seat::WEST}){
+        EXPECT_FALSE(spades.hasPlayerBid(seat));
+    }
     EXPECT_TRUE(spades.getTurnSeat() == Seat::SOUTH);
     EXPECT_FALSE(spades.hasPlayerBid(Seat::SOUTH));
     spades.addBid(1);
     EXPECT_TRUE(spades.getTurnSeat() == Seat::WEST);
     EXPECT_TRUE(spades.hasPlayerBid(Seat::SOUTH));
+    spades.addBid(1);
+    EXPECT_TRUE(spades.getTurnSeat() == Seat::NORTH);
+    EXPECT_TRUE(spades.hasPlayerBid(Seat::WEST));
+    spades.addBid(1);
+    EXPECT_TRUE(spades.getTurnSeat() == Seat::EAST);
+    EXPECT_TRUE(spades.hasPlayerBid(Seat::NORTH));
 }
