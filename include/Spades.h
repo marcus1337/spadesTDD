@@ -11,6 +11,8 @@
 #include "rules/BidVariationController.h"
 #include "rules/TrumpVariationController.h"
 #include "data/SpadesMemento.h"
+#include <array>
+#include <vector>
 
 namespace spd
 {
@@ -20,6 +22,8 @@ namespace spd
         int round = 0;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
+        std::array<Player,4> players{};
+        std::vector<int> bids;
 
         SpadesMemento makeMemento() const
         {
@@ -121,5 +125,27 @@ namespace spd
         {
             return deck.getSeed();
         }
+
+        const Player& getPlayer(const Seat& seat) const{
+            return players[(int) seat];
+        }
+
+        bool hasPlayerBid(const Seat& seat) const {
+            
+            return false;
+        }
+
+        bool isBidPhase() const {
+            return bids.size() % 4 != 0;
+        }
+
+        Seat getTurnSeat() const {
+            return Seat::SOUTH;
+        }
+
+        void addBid(int bid){
+            bids.push_back(bid);
+        }
+
     };
 }

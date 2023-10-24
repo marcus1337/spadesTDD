@@ -11,20 +11,19 @@
 
 namespace spd
 {
-    struct Player{
-        std::vector<Card> hand;
-        std::optional<Bid> bid;
-        bool blind;
-        bool hasBid() const {
-            return bid.has_value();
-        }
+    enum class Seat{
+        SOUTH = 0, WEST, NORTH, EAST
     };
 
-    struct Team{
-        Player player1;
-        Player player2; 
+    class Player{
+        std::optional<int> bid;
+        std::vector<Card> hand;
+        public:
+        void setBid(int bid){
+            this->bid = std::optional<int>(bid);
+        }
         bool hasBid() const {
-            return player1.hasBid() && player2.hasBid();
+            return bid.has_value();
         }
     };
 }

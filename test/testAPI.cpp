@@ -7,7 +7,7 @@
 using namespace spd;
 
 
-TEST(API, Serialization) {
+TEST(Serialization, Seed) {
     Spades spades;
     const auto data = spades.serialize();
     int oldSeed = spades.getSeed();
@@ -46,4 +46,13 @@ TEST(API, SetTrumpVariation) {
     const auto type = TrumpVariationType::ACE_HIGH;
     spades.setTrumpVariation(type);
     EXPECT_TRUE(spades.getTrumpVariationType() == type);
+}
+
+TEST(API, BidOrder) {
+    Spades spades;
+    EXPECT_TRUE(spades.getTurnSeat() == Seat::SOUTH);
+    EXPECT_FALSE(spades.hasPlayerBid(Seat::SOUTH));
+    spades.addBid(1);
+    EXPECT_TRUE(spades.getTurnSeat() == Seat::WEST);
+    EXPECT_TRUE(spades.hasPlayerBid(Seat::SOUTH));
 }

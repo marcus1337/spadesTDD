@@ -18,25 +18,27 @@ namespace spd
         protected:
         const int MAX_BID = 13;
         public:
-        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) const = 0;
+        virtual std::vector<int> getPossibleBids(const Seat& seat, const std::array<Player,4>& players) const = 0;
         virtual ~BidVariation() = default;
     };
 
     class DoubleBlindNil : public BidVariation{
-        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) const override {
-            const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
-            std::vector<Bid> bids;
+        virtual std::vector<int> getPossibleBids(const Seat& seat, const std::array<Player,4>& players) const override {
+            //const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
+            const int teamBid = 0;
+            std::vector<int> bids;
             for(int i = 0; i < MAX_BID-teamBid; i++)
-                bids.push_back(Bid{.tricks=i,.blind=player.blind});
+                bids.push_back(i);
             return bids;
         }
     };
     class DoubleNil : public BidVariation{
-        virtual std::vector<Bid> getPossibleBids(const Player& player, const Player& teamPlayer, const Team& playerTeam, const Team& enemyTeam) const override {
-            const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
-            std::vector<Bid> bids;
+        virtual std::vector<int> getPossibleBids(const Seat& seat, const std::array<Player,4>& players) const override {
+            //const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
+            const int teamBid = 0;
+            std::vector<int> bids;
             for(int i = 0; i < MAX_BID-teamBid; i++)
-                bids.push_back(Bid{.tricks=i,.blind=false});
+                bids.push_back(i);
             return bids;
         }
     };

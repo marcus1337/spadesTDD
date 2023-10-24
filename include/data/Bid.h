@@ -9,9 +9,8 @@
 
 namespace spd
 {
-    struct Bid{
-        int tricks;
-        bool blind;
+    enum class BidOption{
+        SHOW_HAND
     };
 
 }
