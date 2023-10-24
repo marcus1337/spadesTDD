@@ -13,31 +13,30 @@
 #include "data/SpadesMemento.h"
 #include <array>
 #include <vector>
+#include "data/State.h"
 
 namespace spd
 {
     class Spades
     {
         Deck deck;
-        int round = 0;
+        State state;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
         std::array<Player, 4> players{};
-        std::vector<int> bids;
 
         SpadesMemento makeMemento() const
         {
             auto memento = SpadesMemento();
-            memento.round = round;
             memento.seed = getSeed();
             memento.bidVariation = (int)bidVariationController.getBidVariationType();
             memento.trumpVariation = (int)trumpVariationController.getTrumpVariationType();
+            memento.bids = state.bids;
             return memento;
         }
 
         void loadMemento(const SpadesMemento &memento)
         {
-            round = memento.round;
             setSeed(memento.seed);
             if (memento.bidVariation < (unsigned int)BidVariationType::LAST)
             {
@@ -47,11 +46,7 @@ namespace spd
             {
                 trumpVariationController.setTrumpVariationType((TrumpVariationType)memento.bidVariation);
             }
-        }
-
-        int getRoundIndex() const
-        {
-            return round - 1;
+            state.bids = memento.bids;
         }
 
     public:
@@ -59,19 +54,14 @@ namespace spd
         {
         }
 
-        void startNewGame()
+        void reset()
         {
-            round = 1;
-        }
-
-        void endGame()
-        {
-            round = 0;
+            state.clear();
         }
 
         void setBidVariation(BidVariationType type)
         {
-            assert(!hasStarted());
+            assert(!state.hasGameStarted());
             bidVariationController.setBidVariationType(type);
         }
 
@@ -82,18 +72,13 @@ namespace spd
 
         void setTrumpVariation(TrumpVariationType type)
         {
-            assert(!hasStarted());
+            assert(!state.hasGameStarted());
             trumpVariationController.setTrumpVariationType(type);
         }
 
         TrumpVariationType getTrumpVariationType() const
         {
             return trumpVariationController.getTrumpVariationType();
-        }
-
-        bool hasStarted() const
-        {
-            return round > 0;
         }
 
         std::string serialize() const
@@ -113,7 +98,7 @@ namespace spd
 
         void setSeed(int seed)
         {
-            assert(!hasStarted());
+            assert(!state.hasGameStarted());
             deck.setSeed(seed);
         }
 
@@ -127,52 +112,24 @@ namespace spd
             return players[(int)seat];
         }
 
-        Seat getStartBidder(int round) const
-        {
-            return (Seat)((round - 1) % 4);
-        }
-
         bool hasPlayerBid(const Seat &seat) const
         {
-            if (!isBidPhase())
-            {
-                return false;
-            }
-            else
-            {
-                int madeBids = bids.size() % 4;
-                Seat startBidder = getStartBidder(round);
-                for (int i = 0; i < madeBids; i++)
-                {
-                    int seatIndex = ((int)startBidder + i) % 4;
-                    if ((Seat)seatIndex == seat)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
+            return state.hasPlayerBid(seat);
         }
 
         bool isBidPhase() const
         {
-            return bids.size() < round * 4;
+            return state.isBidPhase();
         }
 
         Seat getTurnSeat() const
         {
-            if (isBidPhase())
-            {
-                int playerIndex = (bids.size() + getRoundIndex()) % 4;
-                return (Seat)playerIndex;
-            }
-            return Seat::SOUTH;
+            return state.getTurnSeat();
         }
 
         void addBid(int bid)
         {
-            assert(hasStarted());
-            bids.push_back(bid);
+            state.bids.push_back(bid);
         }
     };
 }

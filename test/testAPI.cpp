@@ -19,21 +19,6 @@ TEST(Serialization, Seed) {
     EXPECT_NE(spades2.getSeed(), oldSeed);
 }
 
-TEST(API, StartNewGame) {
-    Spades spades;
-    EXPECT_FALSE(spades.hasStarted());
-    spades.startNewGame();
-    EXPECT_TRUE(spades.hasStarted());
-}
-
-TEST(API, EndGame) {
-    Spades spades;
-    spades.startNewGame();
-    EXPECT_TRUE(spades.hasStarted());
-    spades.endGame();
-    EXPECT_FALSE(spades.hasStarted());
-}
-
 TEST(API, SetBidVariation) {
     Spades spades;
     const auto type = BidVariationType::DOUBLE_NILL;
@@ -50,7 +35,6 @@ TEST(API, SetTrumpVariation) {
 
 TEST(API, BidOrderRound1) {
     Spades spades;
-    spades.startNewGame();
     for(const auto& seat : {Seat::SOUTH, Seat::EAST, Seat::NORTH, Seat::WEST}){
         EXPECT_FALSE(spades.hasPlayerBid(seat));
     }
