@@ -17,6 +17,34 @@ namespace spd
             return (Seat)(getRound() % 4);
         }
 
+        std::vector<Seat> getSeats(const Seat& from, int numSeats) const {
+            if(numSeats == 0){
+                return {};
+            }
+            std::vector<Seat> seats = {from};
+            numSeats--;
+            std::vector<Seat> nextSeats = getNextSeats(from, numSeats);
+            seats.insert(seats.end(), nextSeats.begin(), nextSeats.end());
+            return seats;
+        }
+
+        std::vector<Seat> getNextSeats(const Seat &from, int numSteps) const
+        {
+            std::vector<Seat> seats;
+            Seat seat = from;
+            for(int i = 0 ; i < numSteps; i++){
+                seat = getNextSeat(seat);
+                seats.push_back(seat);
+            }
+            return seats;
+        }
+
+        Seat getNextSeat(const Seat &from) const
+        {
+            int playerIndex = ((int)from + 1) % 4;
+            return (Seat)playerIndex;
+        }
+
     public:
         State()
         {
@@ -34,7 +62,7 @@ namespace spd
 
         bool isBidPhase() const
         {
-            return bids.size() < (getRound()+1) * 4;
+            return bids.size() < (getRound() + 1) * 4;
         }
 
         Seat getTurnSeat() const
@@ -55,11 +83,8 @@ namespace spd
             }
             else
             {
-                for (int i = 0; i < bids.size() % 4; i++)
-                {
-                    int seatIndex = ((int)getStartBidder() + i) % 4;
-                    if ((Seat)seatIndex == seat)
-                    {
+                for(const auto& biddedSeat : getSeats(getStartBidder(), bids.size() % 4)){
+                    if(biddedSeat == seat){
                         return true;
                     }
                 }
@@ -67,7 +92,8 @@ namespace spd
             }
         }
 
-        bool hasGameStarted() const {
+        bool hasGameStarted() const
+        {
             return !bids.empty();
         }
 
