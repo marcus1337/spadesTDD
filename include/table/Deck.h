@@ -5,12 +5,14 @@
 #include <iterator>
 #include "data/Card.h"
 #include "PortableRandom.h"
+#include <array>
+#include "data/Player.h"
 
 namespace spd
 {
     class Deck {
         PortableRandom portableRandom;
-        std::vector<Card> cards;
+        std::array<Card, 2> excludeCards;
         std::vector<Suit> getSuits() const {
             using enum Suit;
             return { CLOVER, DIAMOND, HEART, SPADE };
@@ -35,48 +37,54 @@ namespace spd
             }
             return cards;
         }
-        std::vector<Card> getJokers() const {
+        std::array<Card, 2> getJokers() const {
             return { Card::BigJoker(), Card::LittleJoker() };
         }
 
-        void addCardsExcluding(const std::vector<Card>& addCards, const std::vector<Card>& excludeCards) {
-            for (const auto& card : addCards) {
-                if (!vectorContainsCard(excludeCards, card)) {
+        void addCardsExcluding(std::vector<Card> cards, const std::vector<Card> cardsToAdd) const{
+            for (const auto& card : cardsToAdd) {
+                if(excludeCards[0] != card && excludeCards[1] != card){
                     cards.push_back(card);
                 }
             }
         }
 
-    public:
-        Deck() {
-            setDeckExcluding(getJokers());
-        }
-        
-        Deck(const std::vector<Card>& excludeCards) {
-            setDeckExcluding(excludeCards);
-        }
-        
-        void setDeckExcluding(const std::vector<Card>& excludeCards) {
-            cards.clear();
-            addCardsExcluding(getDefaultCards(), excludeCards);
-            addCardsExcluding(getJokers(), excludeCards);
+        std::vector<Card> getCards() const {
+            std::vector<Card> cards;
+            addCardsExcluding(cards, getDefaultCards());
+            const auto jokers = getJokers();
+            addCardsExcluding(cards, {jokers[0], jokers[1]});
+            return cards;
         }
 
-        void shuffle(int round) {
+        std::vector<Card> getShuffledCards(int round) {
+            std::vector<Card> cards = getCards();
             setSeed(getSeed());
             for(int i = 0 ; i <= round; i++){
                 portableRandom.shuffle(cards);
             }
+            return cards;
         }
 
-        Card pop() {
-            const Card card = cards.back();
-            cards.pop_back();
-            return card;
+    public:
+        Deck() : excludeCards(getJokers()) {
         }
-        bool empty() const {
-            return cards.empty();
+
+        void setExcludeCards(std::array<Card, 2> excludeCards){
+            assert(excludeCards[0] != excludeCards[1]);
+            this->excludeCards = excludeCards;
         }
+        
+        std::array<Card, 13> getHand(const Seat& seat, int round){
+            setSeed(getSeed());
+            const int handSize = 13;
+            std::array<Card, handSize> hand = {};
+            const auto cards = getShuffledCards(round);
+            const int deckOffset = ((int)seat) * handSize;
+            std::copy(cards.begin() + deckOffset, cards.begin() + handSize + deckOffset, hand.begin());
+            return hand;
+        }
+
         void setSeed(int seed){
             portableRandom.setSeed(seed);
         }

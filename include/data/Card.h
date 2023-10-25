@@ -18,6 +18,13 @@ namespace spd
         Rank rank;
         Suit suit;
     public:
+
+        Card(){
+            auto joker = BigJoker();
+            rank = joker.getRank();
+            suit = joker.getSuit();
+        }
+        
         Card(const Rank& rank, const Suit& suit) : rank(rank), suit(suit) {
             isJoker(rank) ? assert(suit == Suit::NONE) : assert(suit != Suit::NONE);
         }

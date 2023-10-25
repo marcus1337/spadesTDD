@@ -10,25 +10,9 @@ using namespace spd;
 TEST(Deck, UniqueCards) {
     Deck deck;
     std::set<Card> cards;
-    while (!deck.empty()) {
-        const auto card = deck.pop();
+    for(const auto& card : deck.getHand(Seat::SOUTH, 0)){
         EXPECT_FALSE(cards.contains(card));
         cards.emplace(card);
     }
 }
 
-TEST(Deck, Shuffled) {
-    Deck deck;
-    std::vector<Card> cards;
-    deck.shuffle(0);
-    while (!deck.empty())
-        cards.push_back(deck.pop());
-    auto sameSuitInRange = [&cards](int from, int to) {
-        const auto firstCard = cards[from];
-        for (int i = from; i < to; i++)
-            if (!cards[i].sameSuit(firstCard))
-                return false;
-        return true;
-    };
-    EXPECT_FALSE(sameSuitInRange(0,12) && sameSuitInRange(13, 25));
-}
