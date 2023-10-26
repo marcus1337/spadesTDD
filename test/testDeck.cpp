@@ -11,6 +11,7 @@ TEST(Deck, UniqueCards) {
     Deck deck;
     std::set<Card> cards;
     for(const auto& card : deck.getHand(Seat::SOUTH, 0)){
+        std::cout << "(" << card.toString() << ") ";
         EXPECT_FALSE(cards.contains(card));
         cards.emplace(card);
     }

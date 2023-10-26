@@ -4,11 +4,12 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator> 
+#include <string>
 
 namespace spd
 {
     enum class Rank {
-        ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, KNIGHT, QUEEN, KING, BIG_JOKER, LITTLE_JOKER
+        ACE = 0, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, KNIGHT, QUEEN, KING, BIG_JOKER, LITTLE_JOKER
     };
     enum class Suit {
         SPADE, HEART, DIAMOND, CLOVER, NONE
@@ -18,12 +19,6 @@ namespace spd
         Rank rank;
         Suit suit;
     public:
-
-        Card(){
-            auto joker = BigJoker();
-            rank = joker.getRank();
-            suit = joker.getSuit();
-        }
         
         Card(const Rank& rank, const Suit& suit) : rank(rank), suit(suit) {
             isJoker(rank) ? assert(suit == Suit::NONE) : assert(suit != Suit::NONE);
@@ -40,6 +35,9 @@ namespace spd
         bool operator==(const Card& other) const {
             return sameRank(other) && sameSuit(other);
         }
+        bool operator!=(const Card& other) const {
+            return !(*this == other);
+        }
         bool operator<(const Card& other) const {
             return sameSuit(other) ? getRank() < other.getRank() : getSuit() < other.getSuit();
         }
@@ -54,6 +52,9 @@ namespace spd
         }
         bool sameRank(const Card& other) const {
             return getRank() == other.getRank();
+        }
+        std::string toString() const {
+            return std::to_string((int)getRank()) + "," + std::to_string((int)getSuit());
         }
     };
 
