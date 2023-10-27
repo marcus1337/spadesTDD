@@ -55,7 +55,7 @@ namespace spd
             return {Card::BigJoker(), Card::LittleJoker()};
         }
 
-        void addCardsExcluding(std::vector<Card> cards, const std::vector<Card> cardsToAdd) const
+        void addCardsExcluding(std::vector<Card>& cards, const std::vector<Card> cardsToAdd) const
         {
             for (const auto &card : cardsToAdd)
             {
@@ -108,6 +108,7 @@ namespace spd
             auto end = std::begin(cards) + std::min(deckOffset + handSize, static_cast<int>(cards.size()));
 
             std::copy(start, end, std::back_inserter(hand));
+            assert(hand.size() == handSize);
             return hand;
         }
 
