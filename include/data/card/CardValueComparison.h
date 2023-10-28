@@ -46,7 +46,7 @@ namespace spd
             }
             else
             {
-                return false;
+                return value != other;
             }
         }
     };
