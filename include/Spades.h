@@ -80,7 +80,7 @@ namespace spd
 
         void reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
         {
-            reset(PortableRandom::makeRandomSeed(), bidVariationType, trumpVariationType);
+            reset(getSeed(), bidVariationType, trumpVariationType);
         }
 
         void reset(BidVariationType bidVariationType)
