@@ -42,7 +42,6 @@ TEST_F(CardSerializationTest, DeserializeCards) {
         deserializedCards.push_back(Card(value));
     }
     std::vector<Card> allCards = Card::getCards();
-    
     ASSERT_EQ(allCards.size(), deserializedCards.size()) << "Number of cards mismatch.";
     for (size_t i = 0; i < allCards.size(); ++i) {
         ASSERT_EQ(allCards[i], deserializedCards[i]) << "Cards at index " << i << " are not the same.";

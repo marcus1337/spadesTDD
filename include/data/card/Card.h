@@ -13,7 +13,7 @@ namespace spd
 
     public:
         Card() : value(NormalCardValue()) {}
-        explicit Card(int _value) : value(CardValueSerialization::deserialize(_value)) {} 
+        explicit Card(int serializedValue) : value(CardValueSerialization::deserialize(serializedValue)) {} 
         Card(const CardValue &value) : value(value) {}
         Card(const Rank &rank, const Suit &suit) : value(NormalCardValue(rank, suit)) {}
         Card(const Joker &joker) : value(JokerValue(joker)) {}
