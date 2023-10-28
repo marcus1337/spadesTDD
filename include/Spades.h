@@ -102,7 +102,7 @@ namespace spd
         }
 
         void resetAndRandomizeSeed(){
-            reset(PortableRandom::makeRandomSeed(), getBidVariationType(), getTrumpVariationType());
+            reset(PortableRandom::makeRandomSeed());
         }
 
         BidVariationType getBidVariationType() const
