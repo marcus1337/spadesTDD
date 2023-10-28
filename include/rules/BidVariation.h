@@ -20,16 +20,15 @@ namespace spd
         const int MAX_BID = 13;
 
     public:
-        virtual std::vector<int> getPossibleBids(const Seat &seat, const State &state) const = 0;
+        virtual std::vector<int> getBids(const Seat &seat, const State &state) const = 0;
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const = 0;
         virtual ~BidVariation() = default;
     };
 
     class DoubleBlindNil : public BidVariation
     {
-        virtual std::vector<int> getPossibleBids(const Seat &seat, const State &state) const override
+        virtual std::vector<int> getBids(const Seat &seat, const State &state) const override
         {
-            // const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
             const int teamBid = 0;
             std::vector<int> bids;
             for (int i = 0; i < MAX_BID - teamBid; i++)
@@ -49,9 +48,8 @@ namespace spd
     };
     class DoubleNil : public BidVariation
     {
-        virtual std::vector<int> getPossibleBids(const Seat &seat, const State &state) const override
+        virtual std::vector<int> getBids(const Seat &seat, const State &state) const override
         {
-            // const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
             const int teamBid = 0;
             std::vector<int> bids;
             for (int i = 0; i < MAX_BID - teamBid; i++)
