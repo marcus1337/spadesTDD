@@ -12,7 +12,7 @@ namespace spd
 {
     class Deck
     {
-        PortableRandom portableRandom;
+        mutable PortableRandom portableRandom;
         std::array<Card, 2> excludeCards;
 
         bool isExcluded(const Card &card) const
@@ -32,9 +32,9 @@ namespace spd
             return cards;
         }
 
-        std::vector<Card> getShuffledCards(int round)
+        std::vector<Card> getShuffledCards(int round) const
         {
-            setSeed(getSeed());
+            portableRandom.setSeed(getSeed());
             std::vector<Card> cards = getCards();
             for (int i = 0; i <= round; i++)
                 portableRandom.shuffle(cards);
@@ -52,7 +52,7 @@ namespace spd
             this->excludeCards = excludeCards;
         }
 
-        std::array<Card, 13> getHand(const Seat &seat, int round)
+        std::array<Card, 13> getHand(const Seat &seat, int round) const
         {
             const auto cards = getShuffledCards(round);
             const int handSize = 13;
@@ -68,9 +68,11 @@ namespace spd
         {
             portableRandom.setSeed(seed);
         }
+
         int getSeed() const
         {
             return portableRandom.getSeed();
         }
+        
     };
 }
