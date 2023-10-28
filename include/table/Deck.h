@@ -64,12 +64,12 @@ namespace spd
             return hand;
         }
 
-        void setSeed(int seed)
+        void setSeed(unsigned int seed)
         {
             portableRandom.setSeed(seed);
         }
 
-        int getSeed() const
+        unsigned int getSeed() const
         {
             return portableRandom.getSeed();
         }

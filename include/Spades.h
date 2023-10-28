@@ -47,31 +47,67 @@ namespace spd
             state.bids = memento.bids;
         }
 
-    public:
-        Spades()
-        {
-        }
-
-        void reset()
-        {
-            state.clear();
-        }
-
         void setBidVariation(BidVariationType type)
         {
             assert(!state.hasGameStarted());
             bidVariationController.setBidVariationType(type);
         }
 
-        BidVariationType getBidVariationType() const
-        {
-            return bidVariationController.getBidVariationType();
-        }
-
         void setTrumpVariation(TrumpVariationType type)
         {
             assert(!state.hasGameStarted());
             trumpVariationController.setTrumpVariationType(type);
+        }
+
+        void setSeed(unsigned int seed)
+        {
+            assert(!state.hasGameStarted());
+            deck.setSeed(seed);
+        }
+
+    public:
+        Spades()
+        {
+        }
+
+        void reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
+        {
+            state.clear();
+            setSeed(seed);
+            setBidVariation(bidVariationType);
+            setTrumpVariation(trumpVariationType);
+        }
+
+        void reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
+        {
+            reset(PortableRandom::makeRandomSeed(), bidVariationType, trumpVariationType);
+        }
+
+        void reset(BidVariationType bidVariationType)
+        {
+            reset(getSeed(), bidVariationType, getTrumpVariationType());
+        }
+
+        void reset(TrumpVariationType trumpVariationType)
+        {
+            reset(getSeed(), getBidVariationType(), trumpVariationType);
+        }
+
+        void reset(unsigned int seed){
+            reset(seed, getBidVariationType(), getTrumpVariationType());
+        }
+
+        void reset(){
+            reset(getSeed());
+        }
+
+        void resetAndRandomizeSeed(){
+            reset(PortableRandom::makeRandomSeed(), getBidVariationType(), getTrumpVariationType());
+        }
+
+        BidVariationType getBidVariationType() const
+        {
+            return bidVariationController.getBidVariationType();
         }
 
         TrumpVariationType getTrumpVariationType() const
@@ -94,13 +130,7 @@ namespace spd
             return Score{};
         }
 
-        void setSeed(int seed)
-        {
-            assert(!state.hasGameStarted());
-            deck.setSeed(seed);
-        }
-
-        int getSeed() const
+        unsigned int getSeed() const
         {
             return deck.getSeed();
         }
@@ -125,17 +155,19 @@ namespace spd
             return state.isBidPhase();
         }
 
-        std::vector<int> getPossibleBids(const Seat& seat) const {
+        std::vector<int> getPossibleBids(const Seat &seat) const
+        {
             return bidVariationController.getBids(seat, state);
         }
 
-        std::vector<BidOption> getBidOptions(const Seat& seat) const {
+        std::vector<BidOption> getBidOptions(const Seat &seat) const
+        {
             return bidVariationController.getBidOptions(seat, state);
         }
 
-        void setBidOption(const Seat& seat, const BidOption& bidOption) {
+        void setBidOption(const Seat &seat, const BidOption &bidOption)
+        {
             state.setBidOption(seat, bidOption);
         }
-
     };
 }

@@ -8,16 +8,16 @@ using namespace spd;
 
 TEST(API, SetBidVariation) {
     Spades spades;
-    const auto type = BidVariationType::DOUBLE_NILL;
-    spades.setBidVariation(type);
-    EXPECT_TRUE(spades.getBidVariationType() == type);
+    const auto bidType = BidVariationType::DOUBLE_NILL;
+    spades.reset(bidType, TrumpVariationType::ACE_HIGH);
+    EXPECT_TRUE(spades.getBidVariationType() == bidType);
 }
 
 TEST(API, SetTrumpVariation) {
     Spades spades;
-    const auto type = TrumpVariationType::ACE_HIGH;
-    spades.setTrumpVariation(type);
-    EXPECT_TRUE(spades.getTrumpVariationType() == type);
+    const auto trumpType = TrumpVariationType::ACE_HIGH;
+    spades.reset(trumpType);
+    EXPECT_TRUE(spades.getTrumpVariationType() == trumpType);
 }
 
 TEST(API, BidOrderRound1) {

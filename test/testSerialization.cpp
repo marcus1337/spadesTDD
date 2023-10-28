@@ -12,8 +12,8 @@ using namespace spd;
 TEST(Serialization, Seed) {
     Spades spades;
     const auto data = spades.serialize();
-    int oldSeed = spades.getSeed();
-    spades.setSeed(spades.getSeed()+1);
+    const unsigned int oldSeed = spades.getSeed();
+    spades.reset(oldSeed+1);
     spades.deserialize(data);
     EXPECT_EQ(spades.serialize(), data);
     EXPECT_EQ(spades.getSeed(), oldSeed);
