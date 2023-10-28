@@ -22,7 +22,7 @@ TEST(API, SetTrumpVariation) {
 
 TEST(API, BidOrderRound1) {
     Spades spades;
-    for(const auto& seat : {Seat::SOUTH, Seat::EAST, Seat::NORTH, Seat::WEST}){
+    for(const auto& seat : SeatUtils::getSeats()){
         EXPECT_FALSE(spades.hasBid(seat));
     }
     EXPECT_TRUE(spades.getTurnSeat() == Seat::SOUTH);

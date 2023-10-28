@@ -14,43 +14,8 @@ namespace spd
     class State
     {
 
-        Seat getStartBidder() const
-        {
-            return (Seat)(getRound() % 4);
-        }
-
-        std::vector<Seat> getSeats(const Seat& from, int numSeats) const {
-            if(numSeats == 0){
-                return {};
-            }
-            std::vector<Seat> seats = {from};
-            numSeats--;
-            std::vector<Seat> nextSeats = getNextSeats(from, numSeats);
-            seats.insert(seats.end(), nextSeats.begin(), nextSeats.end());
-            return seats;
-        }
-
-        std::vector<Seat> getNextSeats(const Seat &from, int numSteps) const
-        {
-            std::vector<Seat> seats;
-            Seat seat = from;
-            for(int i = 0 ; i < numSteps; i++){
-                seat = getNextSeat(seat);
-                seats.push_back(seat);
-            }
-            return seats;
-        }
-
-        Seat getNextSeat(const Seat &from) const
-        {
-            int playerIndex = ((int)from + 1) % 4;
-            return (Seat)playerIndex;
-        }
-
     public:
-        State()
-        {
-        }
+        State() = default;
 
         void clear()
         {
@@ -64,14 +29,14 @@ namespace spd
 
         bool isBidPhase() const
         {
-            return bids.size() < (getRound() + 1) * 4;
+            return bids.size() < (getRound() + 1) * SeatUtils::numSeats;
         }
 
         Seat getTurnSeat() const
         {
             if (isBidPhase())
             {
-                int playerIndex = (bids.size() + getRound()) % 4;
+                int playerIndex = (bids.size() + getRound()) % SeatUtils::numSeats;
                 return (Seat)playerIndex;
             }
             return Seat::SOUTH;
@@ -97,7 +62,9 @@ namespace spd
             }
             else
             {
-                for(const auto& biddedSeat : getSeats(getStartBidder(), bids.size() % 4)){
+                const Seat startBidSeat = SeatUtils::getStartBidSeat(getRound());
+                const int numMadeBids = bids.size() % SeatUtils::numSeats;
+                for(const auto& biddedSeat : SeatUtils::getSeatOrder(startBidSeat, numMadeBids)){
                     if(biddedSeat == seat){
                         return true;
                     }
