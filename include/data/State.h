@@ -3,9 +3,9 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator>
-#include "data/Card.h"
 #include <string>
 #include <optional>
+#include "data/card/Card.h"
 
 namespace spd
 {

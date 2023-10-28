@@ -4,9 +4,9 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator>
-#include "data/Card.h"
 #include <string>
 #include <optional>
+#include "data/card/Card.h"
 #include "data/Player.h"
 #include <memory>
 #include <map>

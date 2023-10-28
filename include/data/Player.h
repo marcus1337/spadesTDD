@@ -4,7 +4,7 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator>
-#include "data/Card.h"
+#include "data/card/Card.h"
 #include <string>
 #include <optional>
 #include "data/Bid.h"

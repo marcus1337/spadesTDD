@@ -3,9 +3,9 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator>
-#include "data/Card.h"
 #include "PortableRandom.h"
 #include <array>
+#include "data/card/Card.h"
 #include "data/Player.h"
 
 namespace spd

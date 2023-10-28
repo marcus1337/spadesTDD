@@ -3,7 +3,6 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator>
-#include "data/Card.h"
 #include <string>
 #include <memory>
 #include "data/Score.h"
