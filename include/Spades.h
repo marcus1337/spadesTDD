@@ -9,7 +9,7 @@
 #include "table/Deck.h"
 #include "rules/BidVariationController.h"
 #include "rules/TrumpVariationController.h"
-#include "data/SpadesMemento.h"
+#include "data/memento/SpadesMemento.h"
 #include <array>
 #include <vector>
 #include "data/State.h"
