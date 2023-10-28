@@ -2,6 +2,7 @@
 
 #include "CardValue.h"
 #include "CardValueComparison.h"
+#include "CardValueSerialization.h"
 
 namespace spd
 {
@@ -12,6 +13,7 @@ namespace spd
 
     public:
         Card() : value(NormalCardValue()) {}
+        explicit Card(int _value) : value(CardValueSerialization::deserialize(_value)) {} 
         Card(const CardValue &value) : value(value) {}
         Card(const Rank &rank, const Suit &suit) : value(NormalCardValue(rank, suit)) {}
         Card(const Joker &joker) : value(JokerValue(joker)) {}
@@ -32,6 +34,10 @@ namespace spd
         bool operator<(const Card &other) const
         {
             return CardValueComparison(getValue()) < other.getValue();
+        }
+
+        int serialize() const {
+            return CardValueSerialization::serialize(getValue());
         }
 
         static std::vector<Card> getNormalCards()
