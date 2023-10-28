@@ -42,7 +42,7 @@ namespace spd
         }
 
     public:
-        Deck() : excludeCards({Card::BigJoker(), Card::LittleJoker()})
+        Deck() : excludeCards({Card(Joker::LITTLE), Card(Joker::BIG)})
         {
         }
 
@@ -54,10 +54,13 @@ namespace spd
 
         std::array<Card, 13> getHand(const Seat &seat, int round)
         {
+            const auto cards = getShuffledCards(round);
             const int handSize = 13;
             const int deckOffset = static_cast<int>(seat) * handSize;
             std::array<Card, 13> hand{};
-            std::copy_n(getShuffledCards(round).begin() + deckOffset, handSize, hand.begin());
+            for(int i = 0; i < hand.size(); i++){
+                hand[i] = cards.at(i + deckOffset);
+            }
             return hand;
         }
 
