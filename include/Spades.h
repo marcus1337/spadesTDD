@@ -22,7 +22,6 @@ namespace spd
         State state;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
-        std::array<Player, 4> players{};
 
         SpadesMemento makeMemento() const
         {
@@ -104,11 +103,6 @@ namespace spd
         int getSeed() const
         {
             return deck.getSeed();
-        }
-
-        const Player &getPlayer(const Seat &seat) const
-        {
-            return players[(int)seat];
         }
 
         bool hasPlayerBid(const Seat &seat) const

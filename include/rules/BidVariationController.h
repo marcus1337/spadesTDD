@@ -17,8 +17,8 @@ namespace spd{
             bidVariations[BidVariationType::DOUBLE_NILL] = std::make_unique<DoubleNil>();
             assert(bidVariations.size() == (int)BidVariationType::LAST);
         }
-        std::vector<int> getPossibleBids(const Seat& seat, const std::array<Player,4>& players) const{
-            return getBidVariation()->getPossibleBids(seat, players);
+        std::vector<int> getPossibleBids(const Seat& seat, const State& state) const{
+            return getBidVariation()->getPossibleBids(seat, state);
         }
         void setBidVariationType(BidVariationType type){
             this->variationType = type;

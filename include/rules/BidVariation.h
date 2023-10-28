@@ -11,6 +11,7 @@
 #include <memory>
 #include <map>
 #include <cassert>
+#include "data/State.h"
 
 namespace spd
 {
@@ -18,12 +19,12 @@ namespace spd
         protected:
         const int MAX_BID = 13;
         public:
-        virtual std::vector<int> getPossibleBids(const Seat& seat, const std::array<Player,4>& players) const = 0;
+        virtual std::vector<int> getPossibleBids(const Seat& seat, const State& state) const = 0;
         virtual ~BidVariation() = default;
     };
 
     class DoubleBlindNil : public BidVariation{
-        virtual std::vector<int> getPossibleBids(const Seat& seat, const std::array<Player,4>& players) const override {
+        virtual std::vector<int> getPossibleBids(const Seat& seat, const State& state) const override {
             //const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
             const int teamBid = 0;
             std::vector<int> bids;
@@ -33,7 +34,7 @@ namespace spd
         }
     };
     class DoubleNil : public BidVariation{
-        virtual std::vector<int> getPossibleBids(const Seat& seat, const std::array<Player,4>& players) const override {
+        virtual std::vector<int> getPossibleBids(const Seat& seat, const State& state) const override {
             //const int teamBid = teamPlayer.hasBid() ? teamPlayer.bid.value().tricks : 0;
             const int teamBid = 0;
             std::vector<int> bids;

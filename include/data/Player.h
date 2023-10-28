@@ -15,15 +15,4 @@ namespace spd
         SOUTH = 0, WEST, NORTH, EAST
     };
 
-    class Player{
-        std::optional<int> bid;
-        std::vector<Card> hand;
-        public:
-        void setBid(int bid){
-            this->bid = std::optional<int>(bid);
-        }
-        bool hasBid() const {
-            return bid.has_value();
-        }
-    };
 }
