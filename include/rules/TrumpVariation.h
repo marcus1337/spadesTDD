@@ -7,7 +7,7 @@
 #include <string>
 #include <optional>
 #include "data/card/Card.h"
-#include "data/Player.h"
+#include "data/State.h"
 
 namespace spd
 {

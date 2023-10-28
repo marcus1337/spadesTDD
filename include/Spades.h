@@ -105,9 +105,9 @@ namespace spd
             return deck.getSeed();
         }
 
-        bool hasPlayerBid(const Seat &seat) const
+        bool hasBid(const Seat &seat) const
         {
-            return state.hasPlayerBid(seat);
+            return state.hasBid(seat);
         }
 
         bool isBidPhase() const
@@ -124,5 +124,14 @@ namespace spd
         {
             state.bids.push_back(bid);
         }
+
+        std::vector<BidOption> getBidOptions(const Seat& seat) const {
+            return bidVariationController.getBidOptions(seat, state);
+        }
+
+        void setBidOption(const Seat& seat, const BidOption& bidOption) {
+            state.setBidOption(seat, bidOption);
+        }
+
     };
 }

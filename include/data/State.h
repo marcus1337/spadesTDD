@@ -5,6 +5,8 @@
 #include <iterator>
 #include <string>
 #include <optional>
+#include <map>
+#include <set>
 #include "data/card/Card.h"
 
 namespace spd
@@ -75,7 +77,19 @@ namespace spd
             return Seat::SOUTH;
         }
 
-        bool hasPlayerBid(const Seat &seat) const
+        bool hasBidOption(const Seat& seat, const BidOption& bidOption) const {
+            if(!roundBidOptions.contains(getRound()))
+                return false;
+            return roundBidOptions.at(getRound()).contains(std::make_pair(seat, bidOption));
+        }
+
+        void setBidOption(const Seat& seat, const BidOption& bidOption){
+            if(!roundBidOptions.contains(getRound()))
+                roundBidOptions[getRound()] = std::set<std::pair<Seat,BidOption>>();
+            roundBidOptions[getRound()].emplace(std::make_pair(seat, bidOption));
+        }
+
+        bool hasBid(const Seat &seat) const
         {
             if (!isBidPhase())
             {
@@ -99,5 +113,6 @@ namespace spd
 
         std::vector<int> bids;
         std::vector<Card> playedCards;
+        std::map<int, std::set<std::pair<Seat,BidOption>>> roundBidOptions;
     };
 }

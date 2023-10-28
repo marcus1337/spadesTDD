@@ -6,7 +6,7 @@
 #include "PortableRandom.h"
 #include <array>
 #include "data/card/Card.h"
-#include "data/Player.h"
+#include "data/Seat.h"
 
 namespace spd
 {
@@ -73,6 +73,6 @@ namespace spd
         {
             return portableRandom.getSeed();
         }
-        
+
     };
 }

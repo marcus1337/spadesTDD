@@ -23,17 +23,17 @@ TEST(API, SetTrumpVariation) {
 TEST(API, BidOrderRound1) {
     Spades spades;
     for(const auto& seat : {Seat::SOUTH, Seat::EAST, Seat::NORTH, Seat::WEST}){
-        EXPECT_FALSE(spades.hasPlayerBid(seat));
+        EXPECT_FALSE(spades.hasBid(seat));
     }
     EXPECT_TRUE(spades.getTurnSeat() == Seat::SOUTH);
-    EXPECT_FALSE(spades.hasPlayerBid(Seat::SOUTH));
+    EXPECT_FALSE(spades.hasBid(Seat::SOUTH));
     spades.addBid(1);
     EXPECT_TRUE(spades.getTurnSeat() == Seat::WEST);
-    EXPECT_TRUE(spades.hasPlayerBid(Seat::SOUTH));
+    EXPECT_TRUE(spades.hasBid(Seat::SOUTH));
     spades.addBid(1);
     EXPECT_TRUE(spades.getTurnSeat() == Seat::NORTH);
-    EXPECT_TRUE(spades.hasPlayerBid(Seat::WEST));
+    EXPECT_TRUE(spades.hasBid(Seat::WEST));
     spades.addBid(1);
     EXPECT_TRUE(spades.getTurnSeat() == Seat::EAST);
-    EXPECT_TRUE(spades.hasPlayerBid(Seat::NORTH));
+    EXPECT_TRUE(spades.hasBid(Seat::NORTH));
 }
