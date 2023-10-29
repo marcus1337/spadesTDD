@@ -155,6 +155,12 @@ namespace spd
             return bids;
         }
 
+        bool isFirstBidderInTeam(const Seat &seat, const State &state) const {
+            const auto startBidSeat = SeatUtils::getStartBidSeat(state.getRound());
+            const auto secondBidSeat = SeatUtils::getNextSeat(startBidSeat);
+            return seat == startBidSeat || seat == secondBidSeat;
+        }
+
     public:
         virtual std::vector<int> getBids(const Seat &seat, const State &state) const override
         {
@@ -173,7 +179,11 @@ namespace spd
         {
             const auto teamSeat = SeatUtils::getTeamSeat(seat);
             if(state.hasBid(seat) && state.hasBid(teamSeat)){
-                
+                if(isFirstBidderInTeam(seat, state)){
+                    if(state.getBid(seat) != 0 && state.getBid(teamSeat) != 0){
+                        return std::make_optional(0);
+                    }
+                }
             }
             return getStandardBidResult(seat, state);
         }
