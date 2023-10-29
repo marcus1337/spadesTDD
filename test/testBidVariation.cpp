@@ -63,3 +63,28 @@ TEST(MirrorBidTest, TeamBidValues)
     }
     EXPECT_EQ(totalSpades, 13);    
 }
+
+
+TEST(SuicideBidTest, PossibleBids) //TODO: Adapt for undo/redo such that undo undoes "bid history changes", maybe solve by API interface return std::optional bidResult(seat)
+{
+    Spades spades;
+    const unsigned int seed = 0;
+    spades.reset(seed);
+    spades.reset(BidVariationType::SUICIDE);
+    const auto seat = spades.getTurnSeat();
+    const auto bids = spades.getPossibleBids(seat);
+    EXPECT_NO_THROW(bids.at(1));
+    EXPECT_EQ(bids.at(1), 4);
+    EXPECT_EQ(bids.back(), 13);
+    spades.addBid(bids[1]);
+
+    const auto teamBids = spades.getPossibleBids(SeatUtils::getTeamSeat(seat));
+    EXPECT_EQ(teamBids.size(), 2);
+    EXPECT_EQ(teamBids[0], 0);
+    EXPECT_EQ(teamBids[1], bids[1]);
+
+    spades.reset();
+    spades.addBid(bids[0]);
+    const auto newTeamBids = spades.getPossibleBids(SeatUtils::getTeamSeat(seat));
+    EXPECT_EQ(newTeamBids.front(), 4);
+}
