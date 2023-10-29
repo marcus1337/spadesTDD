@@ -29,9 +29,13 @@ namespace spd
     {
         virtual std::vector<int> getBids(const Seat &seat, const State &state) const override
         {
-            const int teamBid = 0;
+            int teamBid = 0;
+            const auto teamSeat = SeatUtils::getTeamSeat(seat);
+            if(state.hasBid(teamSeat)){
+                teamBid += state.getBid(teamSeat);
+            }
             std::vector<int> bids;
-            for (int i = 0; i < MAX_BID - teamBid; i++)
+            for (int i = 0; i <= MAX_BID - teamBid; i++)
                 bids.push_back(i);
             return bids;
         }
@@ -52,7 +56,7 @@ namespace spd
         {
             const int teamBid = 0;
             std::vector<int> bids;
-            for (int i = 0; i < MAX_BID - teamBid; i++)
+            for (int i = 0; i <= MAX_BID - teamBid; i++)
                 bids.push_back(i);
             return bids;
         }

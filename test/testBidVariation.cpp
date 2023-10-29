@@ -10,9 +10,17 @@
 
 using namespace spd;
 
-TEST(BidVariation, BlindOption)
-{
+class DoubleBlindNillBidTest : public ::testing::Test {
+protected:
     Spades spades;
+    void SetUp() override {
+        spades.reset(BidVariationType::DOUBLE_BLIND_NILL);
+    }
+};
+
+
+TEST_F(DoubleBlindNillBidTest, BlindOption)
+{
     const Seat seat = Seat::SOUTH;
     std::vector<BidOption> bidOptions = spades.getBidOptions(seat);
     bool canBlindBid = std::ranges::find(bidOptions, BidOption::SHOW_HAND) != bidOptions.end();
@@ -21,4 +29,15 @@ TEST(BidVariation, BlindOption)
     bidOptions = spades.getBidOptions(seat);
     canBlindBid = std::ranges::find(bidOptions, BidOption::SHOW_HAND) != bidOptions.end();
     EXPECT_FALSE(canBlindBid);
+}
+
+TEST_F(DoubleBlindNillBidTest, TeamBidValues)
+{
+    const Seat seat = Seat::SOUTH;
+    const auto possibleBids = spades.getPossibleBids(seat);
+    EXPECT_TRUE(possibleBids.size() == 14);
+    spades.addBid(13);
+    const auto possibleTeamPlayerBids = spades.getPossibleBids(SeatUtils::getTeamSeat(seat));
+    EXPECT_TRUE(possibleTeamPlayerBids.size() == 1);
+    EXPECT_TRUE(possibleTeamPlayerBids.back() == 0);
 }

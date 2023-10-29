@@ -26,6 +26,11 @@ namespace spd
             return {Seat::SOUTH, Seat::WEST, Seat::NORTH, Seat::EAST};
         }
 
+        inline Seat getTeamSeat(const Seat& from){
+            int playerIndex = ((int)from + 2) % 4;
+            return (Seat)playerIndex;
+        }
+
         inline Seat getStartBidSeat(int round)
         {
             return (Seat)(round % SeatUtils::numSeats);
