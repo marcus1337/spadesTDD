@@ -18,6 +18,19 @@ namespace spd
     {
     protected:
         const int MAX_BID = 13;
+        std::vector<int> getAdjustedBidsBasedOnTeam(const Seat &seat, const State &state) const
+        {
+            int teamBid = 0;
+            const auto teamSeat = SeatUtils::getTeamSeat(seat);
+            if (state.hasBid(teamSeat))
+            {
+                teamBid += state.getBid(teamSeat);
+            }
+            std::vector<int> bids;
+            for (int i = 0; i <= MAX_BID - teamBid; i++)
+                bids.push_back(i);
+            return bids;
+        }
 
     public:
         virtual std::vector<int> getBids(const Seat &seat, const State &state) const = 0;
@@ -29,23 +42,17 @@ namespace spd
     {
         virtual std::vector<int> getBids(const Seat &seat, const State &state) const override
         {
-            int teamBid = 0;
-            const auto teamSeat = SeatUtils::getTeamSeat(seat);
-            if(state.hasBid(teamSeat)){
-                teamBid += state.getBid(teamSeat);
-            }
-            std::vector<int> bids;
-            for (int i = 0; i <= MAX_BID - teamBid; i++)
-                bids.push_back(i);
-            return bids;
+            return getAdjustedBidsBasedOnTeam(seat, state);
         }
 
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override
         {
-            if(!state.hasBidOption(seat, BidOption::SHOW_HAND))
+            if (!state.hasBidOption(seat, BidOption::SHOW_HAND))
             {
                 return {BidOption::SHOW_HAND};
-            }else{
+            }
+            else
+            {
                 return {};
             }
         }
@@ -54,15 +61,7 @@ namespace spd
     {
         virtual std::vector<int> getBids(const Seat &seat, const State &state) const override
         {
-            int teamBid = 0;
-            const auto teamSeat = SeatUtils::getTeamSeat(seat);
-            if(state.hasBid(teamSeat)){
-                teamBid += state.getBid(teamSeat);
-            }
-            std::vector<int> bids;
-            for (int i = 0; i <= MAX_BID - teamBid; i++)
-                bids.push_back(i);
-            return bids;
+            return getAdjustedBidsBasedOnTeam(seat, state);
         }
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override
         {
