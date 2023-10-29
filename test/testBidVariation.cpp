@@ -77,7 +77,7 @@ protected:
     }
 };
 
-TEST_F(SuicideBidTest, PossibleBids) // TODO: Adapt for undo/redo such that undo undoes "bid history changes", maybe solve by API interface return std::optional bidResult(seat)
+TEST_F(SuicideBidTest, PossibleBids)
 {
     const auto seat = spades.getTurnSeat();
     const auto bids = spades.getPossibleBids(seat);
