@@ -19,13 +19,15 @@ namespace spd
             std::vector<int> madeRoundBids;
             const int fromIndex = getRound() * SeatUtils::numSeats;
             const int toIndex = fromIndex + SeatUtils::numSeats;
-            for (int i = fromIndex; i < toIndex && i < bids.size(); i++){
+            for (int i = fromIndex; i < toIndex && i < bids.size(); i++)
+            {
                 madeRoundBids.push_back(bids[i]);
             }
             return madeRoundBids;
         }
 
-        std::array<Seat, SeatUtils::numSeats> getRoundBidOrder() const {
+        std::array<Seat, SeatUtils::numSeats> getRoundBidOrder() const
+        {
             std::array<Seat, SeatUtils::numSeats> bidOrder{};
             const Seat startSeat = SeatUtils::getStartBidSeat(getRound());
             const auto seatOrder = SeatUtils::getSeatOrder(startSeat, SeatUtils::numSeats);
@@ -38,7 +40,8 @@ namespace spd
             std::array<std::optional<std::pair<Seat, int>>, SeatUtils::numSeats> roundBids{};
             const auto roundBidOrder = getRoundBidOrder();
             const auto madeRoundBids = getMadeRoundBids();
-            for(int i = 0 ; i < madeRoundBids.size(); i++){
+            for (int i = 0; i < madeRoundBids.size(); i++)
+            {
                 roundBids[i] = std::make_optional(std::make_pair(roundBidOrder[i], madeRoundBids[i]));
             }
             return roundBids;
@@ -88,33 +91,24 @@ namespace spd
 
         bool hasBid(const Seat &seat) const
         {
-            if (!isBidPhase())
-            {
-                return true;
-            }
-            else
-            {
-                const Seat startBidSeat = SeatUtils::getStartBidSeat(getRound());
-                const int numMadeBids = bids.size() % SeatUtils::numSeats;
-                for (const auto &biddedSeat : SeatUtils::getSeatOrder(startBidSeat, numMadeBids))
-                {
-                    if (biddedSeat == seat)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
+            const auto roundBids = getRoundBids();
+            return std::any_of(roundBids.begin(), roundBids.end(),
+                               [&seat](const auto &roundBid)
+                               {
+                                   return roundBid.has_value() && roundBid->first == seat;
+                               });
         }
 
         int getBid(const Seat &seat) const
         {
-            for(const auto& roundBid : getRoundBids()){
-                if(roundBid.has_value() && roundBid->first == seat){
-                    return roundBid->second;
-                }
-            }
-            return -1;
+            const auto roundBids = getRoundBids();
+            auto it = std::find_if(roundBids.begin(), roundBids.end(),
+                                   [&seat](const auto &roundBid)
+                                   {
+                                       return roundBid.has_value() && roundBid->first == seat;
+                                   });
+            assert(it != roundBids.end());
+            return (*it)->second;
         }
 
         bool hasGameStarted() const
