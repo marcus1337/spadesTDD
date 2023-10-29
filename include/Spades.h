@@ -176,5 +176,10 @@ namespace spd
         {
             state.setBidOption(seat, bidOption);
         }
+
+        std::optional<int> getBidResult(const Seat& seat) const {
+            return bidVariationController.getBidResult(seat, state);
+        }
+
     };
 }

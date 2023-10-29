@@ -51,26 +51,34 @@ TEST(MirrorBidTest, TeamBidValues)
     spades.reset(BidVariationType::MIRROR);
 
     int totalSpades = 0;
-    for(const auto& seat : SeatUtils::getSeats()){
+    for (const auto &seat : SeatUtils::getSeats())
+    {
         const auto possibleBids = spades.getPossibleBids(seat);
         EXPECT_TRUE(possibleBids.size() == 1);
         const auto hand = spades.getHand(seat);
         int numSpades = std::count_if(hand.begin(), hand.end(),
-                                        [](const auto &card)
-                                        { return card.is(Suit::SPADE); });
+                                      [](const auto &card)
+                                      { return card.is(Suit::SPADE); });
         totalSpades += numSpades;
         EXPECT_TRUE(possibleBids.front() == numSpades);
     }
-    EXPECT_EQ(totalSpades, 13);    
+    EXPECT_EQ(totalSpades, 13);
 }
 
-
-TEST(SuicideBidTest, PossibleBids) //TODO: Adapt for undo/redo such that undo undoes "bid history changes", maybe solve by API interface return std::optional bidResult(seat)
+class SuicideBidTest : public ::testing::Test
 {
+protected:
     Spades spades;
-    const unsigned int seed = 0;
-    spades.reset(seed);
-    spades.reset(BidVariationType::SUICIDE);
+    void SetUp() override
+    {
+        const unsigned int seed = 0;
+        spades.reset(seed);
+        spades.reset(BidVariationType::SUICIDE);
+    }
+};
+
+TEST_F(SuicideBidTest, PossibleBids) // TODO: Adapt for undo/redo such that undo undoes "bid history changes", maybe solve by API interface return std::optional bidResult(seat)
+{
     const auto seat = spades.getTurnSeat();
     const auto bids = spades.getPossibleBids(seat);
     EXPECT_NO_THROW(bids.at(1));
@@ -87,4 +95,15 @@ TEST(SuicideBidTest, PossibleBids) //TODO: Adapt for undo/redo such that undo un
     spades.addBid(bids[0]);
     const auto newTeamBids = spades.getPossibleBids(SeatUtils::getTeamSeat(seat));
     EXPECT_EQ(newTeamBids.front(), 4);
+}
+
+TEST_F(SuicideBidTest, ConvertingTeamBids)
+{
+    const auto seat = spades.getTurnSeat();
+    EXPECT_FALSE(spades.getBidResult(seat).has_value());
+    spades.addBid(4);
+    spades.addBid(5);
+    spades.addBid(4);
+    EXPECT_TRUE(spades.getBidResult(seat).has_value());
+    EXPECT_EQ(spades.getBidResult(seat).value(), 0);
 }

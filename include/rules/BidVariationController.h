@@ -34,9 +34,14 @@ namespace spd
             return getBidVariation()->getBids(seat, state);
         }
 
-        std::vector<BidOption> getBidOptions(const Seat &seat, const State& state) const
+        std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const
         {
             return getBidVariation()->getBidOptions(seat, state);
+        }
+
+        std::optional<int> getBidResult(const Seat &seat, const State &state) const
+        {
+            return getBidVariation()->getBidResult(seat, state);
         }
 
         void setBidVariationType(BidVariationType type)

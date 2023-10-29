@@ -2,6 +2,7 @@
 #pragma once
 #include <vector>
 #include <cassert>
+#include <optional>
 #include <algorithm>
 #include <iterator>
 #include <string>
@@ -41,9 +42,18 @@ namespace spd
             return {numSpades};
         }
 
+        virtual std::optional<int> getStandardBidResult(const Seat &seat, const State &state) const
+        {
+            if (state.hasBid(seat))
+                return std::make_optional(state.getBid(seat));
+            else
+                return std::nullopt;
+        }
+
     public:
         virtual std::vector<int> getBids(const Seat &seat, const State &state) const = 0;
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const = 0;
+        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const = 0;
         virtual ~BidVariation() = default;
     };
 
@@ -65,6 +75,11 @@ namespace spd
                 return {};
             }
         }
+
+        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const
+        {
+            return getStandardBidResult(seat, state);
+        }
     };
     class DoubleNil : public BidVariation
     {
@@ -75,6 +90,10 @@ namespace spd
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override
         {
             return {};
+        }
+        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const
+        {
+            return getStandardBidResult(seat, state);
         }
     };
 
@@ -87,6 +106,10 @@ namespace spd
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override
         {
             return {};
+        }
+        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const
+        {
+            return getStandardBidResult(seat, state);
         }
     };
 
@@ -144,6 +167,15 @@ namespace spd
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override
         {
             return {};
+        }
+
+        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const
+        {
+            const auto teamSeat = SeatUtils::getTeamSeat(seat);
+            if(state.hasBid(seat) && state.hasBid(teamSeat)){
+                
+            }
+            return getStandardBidResult(seat, state);
         }
     };
 
