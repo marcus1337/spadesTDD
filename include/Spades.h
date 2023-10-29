@@ -18,7 +18,6 @@ namespace spd
 {
     class Spades
     {
-        Deck deck;
         State state;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
@@ -62,7 +61,7 @@ namespace spd
         void setSeed(unsigned int seed)
         {
             assert(!state.hasGameStarted());
-            deck.setSeed(seed);
+            state.deck.setSeed(seed);
         }
 
     public:
@@ -132,7 +131,7 @@ namespace spd
 
         unsigned int getSeed() const
         {
-            return deck.getSeed();
+            return state.deck.getSeed();
         }
 
         Seat getTurnSeat() const
@@ -160,9 +159,17 @@ namespace spd
             return bidVariationController.getBids(seat, state);
         }
 
+        std::vector<int> getPossibleBids() const {
+            return getPossibleBids(getTurnSeat());
+        }
+
         std::vector<BidOption> getBidOptions(const Seat &seat) const
         {
             return bidVariationController.getBidOptions(seat, state);
+        }
+
+        std::vector<Card> getHand(const Seat& seat) const {
+            return state.getHand(seat);
         }
 
         void setBidOption(const Seat &seat, const BidOption &bidOption)

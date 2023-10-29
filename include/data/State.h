@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include "data/card/Card.h"
+#include "table/Deck.h"
 
 namespace spd
 {
@@ -45,6 +46,16 @@ namespace spd
                 roundBids[i] = std::make_optional(std::make_pair(roundBidOrder[i], madeRoundBids[i]));
             }
             return roundBids;
+        }
+
+        std::vector<Card> getPlayedCards(int round) const {
+            std::vector<Card> roundCards;
+            const int numCardsPerRound = 13;
+            const int fromIndex = round*numCardsPerRound;
+            for(int i = fromIndex; i < numCardsPerRound && i < playedCards.size(); i++){
+                roundCards.push_back(playedCards[i]);
+            }
+            return roundCards;
         }
 
     public:
@@ -116,8 +127,20 @@ namespace spd
             return !bids.empty();
         }
 
+        std::vector<Card> getHand(const Seat& seat) const {
+            auto startHand = deck.getHand(seat, getRound());
+            auto playedRoundCards = getPlayedCards(getRound());
+            std::vector<Card> hand;
+            std::sort(startHand.begin(), startHand.end());
+            std::sort(playedRoundCards.begin(), playedRoundCards.end());
+            std::set_difference(startHand.begin(), startHand.end(), playedRoundCards.begin(), playedRoundCards.end(),
+                        std::back_inserter(hand));
+            return hand;
+        }
+
         std::vector<int> bids;
         std::vector<Card> playedCards;
         std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
+        Deck deck;
     };
 }

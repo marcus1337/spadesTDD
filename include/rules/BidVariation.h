@@ -32,6 +32,15 @@ namespace spd
             return bids;
         }
 
+        std::vector<int> getBidEqualToSpades(const Seat &seat, const State &state) const
+        {
+            const auto &hand = state.getHand(seat);
+            const int numSpades = std::count_if(hand.begin(), hand.end(),
+                                          [](const auto &card)
+                                          { return card.is(Suit::SPADE); });
+            return {numSpades};
+        }
+
     public:
         virtual std::vector<int> getBids(const Seat &seat, const State &state) const = 0;
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const = 0;
@@ -62,6 +71,18 @@ namespace spd
         virtual std::vector<int> getBids(const Seat &seat, const State &state) const override
         {
             return getAdjustedBidsBasedOnTeam(seat, state);
+        }
+        virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override
+        {
+            return {};
+        }
+    };
+
+    class Mirror : public BidVariation
+    {
+        virtual std::vector<int> getBids(const Seat &seat, const State &state) const override
+        {
+            return getBidEqualToSpades(seat, state);
         }
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override
         {

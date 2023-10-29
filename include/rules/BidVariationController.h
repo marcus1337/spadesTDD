@@ -7,6 +7,7 @@ namespace spd
     {
         DOUBLE_BLIND_NILL = 0,
         DOUBLE_NILL,
+        MIRROR,
         LAST
     };
     class BidVariationController
@@ -23,6 +24,7 @@ namespace spd
         {
             bidVariations[BidVariationType::DOUBLE_BLIND_NILL] = std::make_unique<DoubleBlindNil>();
             bidVariations[BidVariationType::DOUBLE_NILL] = std::make_unique<DoubleNil>();
+            bidVariations[BidVariationType::MIRROR] = std::make_unique<Mirror>();
             assert(bidVariations.size() == (int)BidVariationType::LAST);
         }
         std::vector<int> getBids(const Seat &seat, const State &state) const

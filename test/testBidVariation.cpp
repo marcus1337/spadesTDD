@@ -10,14 +10,15 @@
 
 using namespace spd;
 
-class DoubleBlindNillBidTest : public ::testing::Test {
+class DoubleBlindNillBidTest : public ::testing::Test
+{
 protected:
     Spades spades;
-    void SetUp() override {
+    void SetUp() override
+    {
         spades.reset(BidVariationType::DOUBLE_BLIND_NILL);
     }
 };
-
 
 TEST_F(DoubleBlindNillBidTest, BlindOption)
 {
@@ -40,4 +41,25 @@ TEST_F(DoubleBlindNillBidTest, TeamBidValues)
     const auto possibleTeamPlayerBids = spades.getPossibleBids(SeatUtils::getTeamSeat(seat));
     EXPECT_TRUE(possibleTeamPlayerBids.size() == 1);
     EXPECT_TRUE(possibleTeamPlayerBids.back() == 0);
+}
+
+TEST(MirrorBidTest, TeamBidValues)
+{
+    Spades spades;
+    const unsigned int seed = 0;
+    spades.reset(seed);
+    spades.reset(BidVariationType::MIRROR);
+
+    int totalSpades = 0;
+    for(const auto& seat : SeatUtils::getSeats()){
+        const auto possibleBids = spades.getPossibleBids(seat);
+        EXPECT_TRUE(possibleBids.size() == 1);
+        const auto hand = spades.getHand(seat);
+        int numSpades = std::count_if(hand.begin(), hand.end(),
+                                        [](const auto &card)
+                                        { return card.is(Suit::SPADE); });
+        totalSpades += numSpades;
+        EXPECT_TRUE(possibleBids.front() == numSpades);
+    }
+    EXPECT_EQ(totalSpades, 13);    
 }

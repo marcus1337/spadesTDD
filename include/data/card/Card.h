@@ -13,7 +13,7 @@ namespace spd
 
     public:
         Card() : value(NormalCardValue()) {}
-        explicit Card(int serializedValue) : value(CardValueSerialization::deserialize(serializedValue)) {} 
+        explicit Card(int serializedValue) : value(CardValueSerialization::deserialize(serializedValue)) {}
         Card(const CardValue &value) : value(value) {}
         Card(const Rank &rank, const Suit &suit) : value(NormalCardValue(rank, suit)) {}
         Card(const Joker &joker) : value(JokerValue(joker)) {}
@@ -36,7 +36,8 @@ namespace spd
             return CardValueComparison(getValue()) < other.getValue();
         }
 
-        int serialize() const {
+        int serialize() const
+        {
             return CardValueSerialization::serialize(getValue());
         }
 
@@ -56,6 +57,15 @@ namespace spd
             cards.push_back(Card(Joker::LITTLE));
             cards.push_back(Card(Joker::BIG));
             return cards;
+        }
+
+        bool is(const Suit &suit) const
+        {
+            if (const auto normalValue = std::get_if<NormalCardValue>(&value))
+            {
+                return normalValue->getSuit() == suit;
+            }
+            return false;
         }
     };
 
