@@ -181,5 +181,9 @@ namespace spd
             return bidVariationController.getBidResult(seat, state);
         }
 
+        void playCard(const Card& card){
+            
+        }
+
     };
 }
