@@ -67,6 +67,14 @@ namespace spd
             }
             return false;
         }
+        bool is(const Joker &joker) const
+        {
+            if (const auto jokerValue = std::get_if<JokerValue>(&value))
+            {
+                return jokerValue->getJoker() == joker;
+            }
+            return false;
+        }
     };
 
 }

@@ -23,6 +23,10 @@ namespace spd{
         }      
         void setTrumpVariationType(TrumpVariationType type){
             this->variationType = type;
+        }
+
+        Seat getTrickTaker(const std::array<std::pair<Seat, Card>, SeatUtils::numSeats>& trick) const {
+            return getTrumpVariation()->getTrickTaker(trick);
         }  
     };
 }

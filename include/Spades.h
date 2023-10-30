@@ -8,7 +8,6 @@
 #include "data/Score.h"
 #include "table/Deck.h"
 #include "rules/BidVariationController.h"
-#include "rules/TrumpVariationController.h"
 #include "data/memento/SpadesMemento.h"
 #include <array>
 #include <vector>
@@ -20,29 +19,20 @@ namespace spd
     {
         State state;
         BidVariationController bidVariationController;
-        TrumpVariationController trumpVariationController;
 
         SpadesMemento makeMemento() const
         {
             auto memento = SpadesMemento();
             memento.seed = getSeed();
-            memento.bidVariation = (int)bidVariationController.getBidVariationType();
-            memento.trumpVariation = (int)trumpVariationController.getTrumpVariationType();
+            memento.bidVariationType = (unsigned int)getBidVariationType();
+            memento.trumpVariationType = (unsigned int)getTrumpVariationType();
             memento.bids = state.bids;
             return memento;
         }
 
         void loadMemento(const SpadesMemento &memento)
         {
-            setSeed(memento.seed);
-            if (memento.bidVariation < (unsigned int)BidVariationType::LAST)
-            {
-                bidVariationController.setBidVariationType((BidVariationType)memento.bidVariation);
-            }
-            if (memento.trumpVariation < (unsigned int)BidVariationType::LAST)
-            {
-                trumpVariationController.setTrumpVariationType((TrumpVariationType)memento.bidVariation);
-            }
+            reset(memento.seed, memento.getBidVariationType(), memento.getTrumpVariationType());
             state.bids = memento.bids;
         }
 
@@ -55,7 +45,7 @@ namespace spd
         void setTrumpVariation(TrumpVariationType type)
         {
             assert(!state.hasGameStarted());
-            trumpVariationController.setTrumpVariationType(type);
+            state.trumpVariationController.setTrumpVariationType(type);
         }
 
         void setSeed(unsigned int seed)
@@ -111,7 +101,7 @@ namespace spd
 
         TrumpVariationType getTrumpVariationType() const
         {
-            return trumpVariationController.getTrumpVariationType();
+            return state.trumpVariationController.getTrumpVariationType();
         }
 
         std::string serialize() const
@@ -182,7 +172,7 @@ namespace spd
         }
 
         void playCard(const Card& card){
-            
+            state.playCard(card);
         }
 
     };

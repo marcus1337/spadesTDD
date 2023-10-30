@@ -9,6 +9,7 @@
 #include <set>
 #include "data/card/Card.h"
 #include "table/Deck.h"
+#include "rules/TrumpVariationController.h"
 
 namespace spd
 {
@@ -48,14 +49,32 @@ namespace spd
             return roundBids;
         }
 
-        std::vector<Card> getPlayedCards(int round) const {
-            std::vector<Card> roundCards;
+        std::vector<std::pair<Seat, Card>> getPlayedCards(int round) const
+        {
+            std::vector<std::pair<Seat, Card>> roundCards;
             const int numCardsPerRound = 13;
-            const int fromIndex = round*numCardsPerRound;
-            for(int i = fromIndex; i < numCardsPerRound && i < playedCards.size(); i++){
+            const int fromIndex = round * numCardsPerRound;
+            for (int i = fromIndex; i < numCardsPerRound && i < playedCards.size(); i++)
+            {
                 roundCards.push_back(playedCards[i]);
             }
             return roundCards;
+        }
+
+        std::array<std::pair<Seat, Card>, SeatUtils::numSeats> getLastTrick() const
+        {
+            std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
+            for (int i = SeatUtils::numSeats - 1; i >= 0; i--)
+            {
+                const auto seatCardPair = playedCards[playedCards.size() - 1 - i];
+                trick[SeatUtils::numSeats - 1 - i] = seatCardPair;
+            }
+            return trick;
+        }
+
+        Seat getLastTrickTakingSeat() const
+        {
+            return trumpVariationController.getTrickTaker(getLastTrick());
         }
 
     public:
@@ -64,6 +83,8 @@ namespace spd
         void clear()
         {
             bids.clear();
+            roundBidOptions.clear();
+            playedCards.clear();
         }
 
         int getRound() const
@@ -78,10 +99,22 @@ namespace spd
 
         Seat getTurnSeat() const
         {
+            const int round = getRound();
+            const auto playedRoundSeatCardPairs = getPlayedCards(round);
+            const int startBidIndex = round % SeatUtils::numSeats;
+
             if (isBidPhase())
             {
-                int playerIndex = (bids.size() + getRound()) % SeatUtils::numSeats;
+                int playerIndex = (bids.size() + startBidIndex) % SeatUtils::numSeats;
                 return (Seat)playerIndex;
+            }
+            else if (playedRoundSeatCardPairs.size() < SeatUtils::numSeats)
+            {
+                return (Seat)playedRoundSeatCardPairs.size();
+            }
+            else
+            {
+                const auto lastTrickTakingSeat = getLastTrickTakingSeat();
             }
             return Seat::SOUTH;
         }
@@ -127,20 +160,32 @@ namespace spd
             return !bids.empty();
         }
 
-        std::vector<Card> getHand(const Seat& seat) const {
+        std::vector<Card> getHand(const Seat &seat) const
+        {
             auto startHand = deck.getHand(seat, getRound());
             auto playedRoundCards = getPlayedCards(getRound());
             std::vector<Card> hand;
-            std::sort(startHand.begin(), startHand.end());
-            std::sort(playedRoundCards.begin(), playedRoundCards.end());
-            std::set_difference(startHand.begin(), startHand.end(), playedRoundCards.begin(), playedRoundCards.end(),
-                        std::back_inserter(hand));
+            for (const auto &card : startHand)
+            {
+                if (!std::any_of(playedRoundCards.begin(), playedRoundCards.end(),
+                                 [&](const auto &playedSeatCardPair)
+                                 { return playedSeatCardPair.second == card; }))
+                {
+                    hand.push_back(card);
+                }
+            }
             return hand;
         }
 
+        void playCard(const Card &card)
+        {
+            playedCards.push_back(std::make_pair(getTurnSeat(), card));
+        }
+
         std::vector<int> bids;
-        std::vector<Card> playedCards;
+        std::vector<std::pair<Seat, Card>> playedCards;
         std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
         Deck deck;
+        TrumpVariationController trumpVariationController;
     };
 }
