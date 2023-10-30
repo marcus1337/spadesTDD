@@ -48,15 +48,6 @@ namespace spd
 
     class AceHigh : public TrumpVariation
     {
-        Suit getLeadSuit(const std::array<std::pair<Seat, Card>, SeatUtils::numSeats> &trick) const
-        {
-            const auto leadCard = trick[0].second;
-            for (const auto suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART, Suit::SPADE})
-                if (leadCard.is(suit))
-                    return suit;
-            assert(false);
-            return Suit::DIAMOND;
-        }
 
     public:
         AceHigh() = default;
