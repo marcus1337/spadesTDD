@@ -36,13 +36,28 @@ namespace spd
 
         virtual bool isTrumpCard(const Card &card) const = 0;
         virtual int getCardValue(const Card &card) const = 0;
-        bool isLeadSuit(const Card& card, const State& state) const {
+        bool isLeadSuit(const Card &card, const State &state) const
+        {
             const auto leadSuit = getLeadSuit(state);
-            if(leadSuit.has_value()){
+            if (leadSuit.has_value())
+            {
                 const Suit suit = leadSuit.value();
                 return card.is(leadSuit.value());
             }
             return false;
+        }
+        bool isCardTrumpingWinCard(const Card &winCard, const Card &card, const State &state) const
+        {
+            const bool winCardTrump = isTrumpCard(winCard);
+            const bool cardTrump = isTrumpCard(card);
+            const bool winCardLead = isLeadSuit(winCard, state);
+            const bool cardLead = isLeadSuit(card, state);
+            const int winCardValue = getCardValue(winCard);
+            const int cardValue = getCardValue(card);
+            return (!winCardTrump && cardTrump) ||
+                   (!winCardTrump && !cardTrump && !winCardLead && cardLead) ||
+                   (winCardTrump && cardTrump && winCardValue < cardValue) ||
+                   (!winCardTrump && !cardTrump && winCardValue < cardValue);
         }
 
     public:
@@ -53,19 +68,12 @@ namespace spd
             const auto trick = state.getTrick();
             Card winCard = trick.front().second;
             Seat winSeat = trick.front().first;
-            for(const auto& cardSeatPair : trick){
+            for (const auto &cardSeatPair : trick)
+            {
                 const Seat seat = cardSeatPair.first;
                 const Card card = cardSeatPair.second;
-                if(!isTrumpCard(winCard) && isTrumpCard(card)){
-                    winSeat = seat;
-                    winCard = card;
-                }else if (!isTrumpCard(winCard) && !isTrumpCard(card) && !isLeadSuit(winCard, state) && isLeadSuit(card, state)){
-                    winSeat = seat;
-                    winCard = card;
-                }else if(isTrumpCard(winCard) && isTrumpCard(card) && getCardValue(winCard) < getCardValue(card)){
-                    winSeat = seat;
-                    winCard = card;
-                } else if (!isTrumpCard(winCard) && !isTrumpCard(card) && getCardValue(winCard) < getCardValue(card)){
+                if (isCardTrumpingWinCard(winCard, card, state))
+                {
                     winSeat = seat;
                     winCard = card;
                 }
@@ -85,15 +93,18 @@ namespace spd
             return card.is(Suit::SPADE);
         }
 
-        virtual int getCardValue(const Card &card) const override {
+        virtual int getCardValue(const Card &card) const override
+        {
             using enum Rank;
             const auto ranks = NormalCardValue::getRanks();
-            for(int i = 1; i < ranks.size(); i++){
-                if(card.is(ranks[i])){
-                    return i-1;
+            for (int i = 1; i < ranks.size(); i++)
+            {
+                if (card.is(ranks[i]))
+                {
+                    return i - 1;
                 }
             }
-            if(card.is(Rank::ACE))
+            if (card.is(Rank::ACE))
             {
                 return ranks.size();
             }
