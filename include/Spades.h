@@ -177,6 +177,9 @@ namespace spd
 
         void playCard(const Card& card){
             state.playCard(getTurnSeat(), card);
+            if(state.getPlayedTrickCardSeatPairs().size() == SeatUtils::numSeats){
+                state.trickTakers.push_back(trumpVariationController.getTrickTaker(state));
+            }
         }
 
     };
