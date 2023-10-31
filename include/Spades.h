@@ -8,10 +8,12 @@
 #include "data/Score.h"
 #include "table/Deck.h"
 #include "rules/BidVariationController.h"
+#include "rules/TrumpVariationController.h"
 #include "data/memento/SpadesMemento.h"
 #include <array>
 #include <vector>
 #include "data/State.h"
+#include "rules/Turn.h"
 
 namespace spd
 {
@@ -19,6 +21,8 @@ namespace spd
     {
         State state;
         BidVariationController bidVariationController;
+        TrumpVariationController trumpVariationController;
+        Turn turn;
 
         SpadesMemento makeMemento() const
         {
@@ -45,13 +49,13 @@ namespace spd
         void setTrumpVariation(TrumpVariationType type)
         {
             assert(!state.hasGameStarted());
-            state.trumpVariationController.setTrumpVariationType(type);
+            trumpVariationController.setTrumpVariationType(type);
         }
 
         void setSeed(unsigned int seed)
         {
             assert(!state.hasGameStarted());
-            state.deck.setSeed(seed);
+            state.setSeed(seed);
         }
 
     public:
@@ -101,7 +105,7 @@ namespace spd
 
         TrumpVariationType getTrumpVariationType() const
         {
-            return state.trumpVariationController.getTrumpVariationType();
+            return trumpVariationController.getTrumpVariationType();
         }
 
         std::string serialize() const
@@ -121,12 +125,12 @@ namespace spd
 
         unsigned int getSeed() const
         {
-            return state.deck.getSeed();
+            return state.getSeed();
         }
 
         Seat getTurnSeat() const
         {
-            return state.getTurnSeat();
+            return turn.getTurnSeat(state);
         }
 
         void addBid(int bid)
@@ -172,7 +176,7 @@ namespace spd
         }
 
         void playCard(const Card& card){
-            state.playCard(card);
+            state.playCard(getTurnSeat(), card);
         }
 
     };

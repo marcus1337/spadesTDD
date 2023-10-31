@@ -52,18 +52,6 @@ namespace spd
             this->excludeCards = excludeCards;
         }
 
-        std::array<Card, 13> getHand(const Seat &seat, int round) const
-        {
-            const auto cards = getShuffledCards(round);
-            const int handSize = 13;
-            const int deckOffset = static_cast<int>(seat) * handSize;
-            std::array<Card, 13> hand{};
-            for(int i = 0; i < hand.size(); i++){
-                hand[i] = cards.at(i + deckOffset);
-            }
-            return hand;
-        }
-
         void setSeed(unsigned int seed)
         {
             portableRandom.setSeed(seed);
@@ -74,5 +62,17 @@ namespace spd
             return portableRandom.getSeed();
         }
 
+        std::array<Card, 13> getHand(const Seat &seat, int round) const
+        {
+            const auto cards = getShuffledCards(round);
+            const int handSize = 13;
+            const int deckOffset = static_cast<int>(seat) * handSize;
+            std::array<Card, 13> hand{};
+            for (int i = 0; i < hand.size(); i++)
+            {
+                hand[i] = cards.at(i + deckOffset);
+            }
+            return hand;
+        }
     };
 }

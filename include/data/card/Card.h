@@ -59,6 +59,14 @@ namespace spd
             return cards;
         }
 
+        bool is(const Rank& rank) const {
+            if (const auto normalValue = std::get_if<NormalCardValue>(&value))
+            {
+                return normalValue->getRank() == rank;
+            }
+            return false;
+        }
+
         bool is(const Suit &suit) const
         {
             if (const auto normalValue = std::get_if<NormalCardValue>(&value))

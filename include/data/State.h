@@ -9,13 +9,12 @@
 #include <set>
 #include "data/card/Card.h"
 #include "table/Deck.h"
-#include "rules/TrumpVariationController.h"
 
 namespace spd
 {
     class State
     {
-
+        Deck deck;
         std::vector<int> getMadeRoundBids() const
         {
             std::vector<int> madeRoundBids;
@@ -49,6 +48,37 @@ namespace spd
             return roundBids;
         }
 
+    public:
+
+        void setSeed(unsigned int seed){
+            deck.setSeed(seed);
+        }
+
+        unsigned int getSeed() const {
+            return deck.getSeed();
+        }
+
+        std::array<std::pair<Seat, Card>, SeatUtils::numSeats> getTrick() const
+        {
+            std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
+            const int offset = trickTakers.size() * SeatUtils::numSeats;
+            for (int i = offset; i < SeatUtils::numSeats + offset; i++)
+            {
+                trick[i] = playedCards[i];
+            }
+            return trick;
+        }
+
+        std::vector<std::pair<Seat, Card>> getPlayedTrickCardSeatPairs() const {
+            std::vector<std::pair<Seat, Card>> trickCards;
+            const int offset = trickTakers.size() * SeatUtils::numSeats;
+            for (int i = offset; i < SeatUtils::numSeats + offset; i++)
+            {
+                trickCards.push_back(playedCards[i]);
+            }
+            return trickCards;
+        }
+
         std::vector<std::pair<Seat, Card>> getPlayedCards(int round) const
         {
             std::vector<std::pair<Seat, Card>> roundCards;
@@ -61,23 +91,6 @@ namespace spd
             return roundCards;
         }
 
-        std::array<std::pair<Seat, Card>, SeatUtils::numSeats> getLastTrick() const
-        {
-            std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
-            for (int i = SeatUtils::numSeats - 1; i >= 0; i--)
-            {
-                const auto seatCardPair = playedCards[playedCards.size() - 1 - i];
-                trick[SeatUtils::numSeats - 1 - i] = seatCardPair;
-            }
-            return trick;
-        }
-
-        Seat getLastTrickTakingSeat() const
-        {
-            return trumpVariationController.getTrickTaker(getLastTrick());
-        }
-
-    public:
         State() = default;
 
         void clear()
@@ -89,34 +102,19 @@ namespace spd
 
         int getRound() const
         {
-            return playedCards.size() % 52;
+            const int cardsPerRound = 52;
+            return playedCards.size() % cardsPerRound;
         }
+
+        /*int getRoundTricks() {
+            const int tricksPerRound = 13;
+            const int cardsPerTrick = 4;
+            return (playedCards.size() / cardsPerTrick) % tricksPerRound;
+        }*/
 
         bool isBidPhase() const
         {
             return bids.size() < (getRound() + 1) * SeatUtils::numSeats;
-        }
-
-        Seat getTurnSeat() const
-        {
-            const int round = getRound();
-            const auto playedRoundSeatCardPairs = getPlayedCards(round);
-            const int startBidIndex = round % SeatUtils::numSeats;
-
-            if (isBidPhase())
-            {
-                int playerIndex = (bids.size() + startBidIndex) % SeatUtils::numSeats;
-                return (Seat)playerIndex;
-            }
-            else if (playedRoundSeatCardPairs.size() < SeatUtils::numSeats)
-            {
-                return (Seat)playedRoundSeatCardPairs.size();
-            }
-            else
-            {
-                const auto lastTrickTakingSeat = getLastTrickTakingSeat();
-            }
-            return Seat::SOUTH;
         }
 
         bool hasBidOption(const Seat &seat, const BidOption &bidOption) const
@@ -177,15 +175,14 @@ namespace spd
             return hand;
         }
 
-        void playCard(const Card &card)
+        void playCard(const Seat &seat, const Card &card)
         {
-            playedCards.push_back(std::make_pair(getTurnSeat(), card));
+            playedCards.push_back(std::make_pair(seat, card));
         }
 
         std::vector<int> bids;
         std::vector<std::pair<Seat, Card>> playedCards;
         std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
-        Deck deck;
-        TrumpVariationController trumpVariationController;
+        std::vector<Seat> trickTakers;
     };
 }

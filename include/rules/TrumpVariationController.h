@@ -25,8 +25,8 @@ namespace spd{
             this->variationType = type;
         }
 
-        Seat getTrickTaker(const std::array<std::pair<Seat, Card>, SeatUtils::numSeats>& trick) const {
-            return getTrumpVariation()->getTrickTaker(trick);
+        Seat getTrickTaker(const State& state) const {
+            return getTrumpVariation()->getTrickTaker(state);
         }  
     };
 }
