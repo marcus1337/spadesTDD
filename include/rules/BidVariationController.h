@@ -1,16 +1,9 @@
 #pragma once
 #include "rules/BidVariation.h"
+#include "rules/BidVariationType.h"
 
 namespace spd
 {
-    enum class BidVariationType
-    {
-        DOUBLE_BLIND_NILL = 0,
-        DOUBLE_NILL,
-        MIRROR,
-        SUICIDE,
-        LAST
-    };
     class BidVariationController
     {
         BidVariationType variationType;

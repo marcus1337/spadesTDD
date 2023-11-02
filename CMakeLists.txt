@@ -12,6 +12,10 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/data/card/CardValue.cpp"
 "src/data/card/CardValueSerialization.cpp"
 
+"src/data/SpadesMemento.cpp"
+"src/data/Score.cpp"
+"src/data/State.cpp"
+
 )
 target_include_directories(${PROJECT_NAME}
   PUBLIC
