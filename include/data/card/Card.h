@@ -1,8 +1,6 @@
 #pragma once
 
 #include "CardValue.h"
-#include "CardValueComparison.h"
-#include "CardValueSerialization.h"
 
 namespace spd
 {
@@ -12,77 +10,26 @@ namespace spd
         CardValue value;
 
     public:
-        Card() : value(NormalCardValue()) {}
-        explicit Card(int serializedValue) : value(CardValueSerialization::deserialize(serializedValue)) {}
-        Card(const CardValue &value) : value(value) {}
-        Card(const Rank &rank, const Suit &suit) : value(NormalCardValue(rank, suit)) {}
-        Card(const Joker &joker) : value(JokerValue(joker)) {}
+        Card();
+        explicit Card(int serializedValue);
+        Card(const CardValue &value);
+        Card(const Rank &rank, const Suit &suit);
+        Card(const Joker &joker);
 
-        CardValue getValue() const
-        {
-            return value;
-        }
+        CardValue getValue() const;
 
-        bool operator==(const Card &other) const
-        {
-            return CardValueComparison(getValue()) == other.getValue();
-        }
-        bool operator!=(const Card &other) const
-        {
-            return !(*this == other);
-        }
-        bool operator<(const Card &other) const
-        {
-            return CardValueComparison(getValue()) < other.getValue();
-        }
+        bool operator==(const Card &other) const;
+        bool operator!=(const Card &other) const;
+        bool operator<(const Card &other) const;
 
-        int serialize() const
-        {
-            return CardValueSerialization::serialize(getValue());
-        }
+        int serialize() const;
 
-        static std::vector<Card> getNormalCards()
-        {
-            std::vector<Card> cards;
-            for (const auto &value : NormalCardValue::getValues())
-                cards.push_back(Card(value));
-            return cards;
-        }
+        static std::vector<Card> getNormalCards();
+        static std::vector<Card> getCards();
 
-        static std::vector<Card> getCards()
-        {
-            std::vector<Card> cards;
-            const auto defaultCards = getNormalCards();
-            cards.insert(cards.end(), defaultCards.begin(), defaultCards.end());
-            cards.push_back(Card(Joker::LITTLE));
-            cards.push_back(Card(Joker::BIG));
-            return cards;
-        }
-
-        bool is(const Rank& rank) const {
-            if (const auto normalValue = std::get_if<NormalCardValue>(&value))
-            {
-                return normalValue->getRank() == rank;
-            }
-            return false;
-        }
-
-        bool is(const Suit &suit) const
-        {
-            if (const auto normalValue = std::get_if<NormalCardValue>(&value))
-            {
-                return normalValue->getSuit() == suit;
-            }
-            return false;
-        }
-        bool is(const Joker &joker) const
-        {
-            if (const auto jokerValue = std::get_if<JokerValue>(&value))
-            {
-                return jokerValue->getJoker() == joker;
-            }
-            return false;
-        }
+        bool is(const Rank& rank) const;
+        bool is(const Suit &suit) const;
+        bool is(const Joker &joker) const;
     };
 
 }
