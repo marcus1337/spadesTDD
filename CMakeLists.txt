@@ -16,6 +16,12 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/data/Score.cpp"
 "src/data/State.cpp"
 
+"src/rules/BidVariation.cpp"
+"src/rules/BidVariationController.cpp"
+"src/rules/TrumpVariation.cpp"
+"src/rules/TrumpVariationController.cpp"
+"src/rules/Turn.cpp"
+
 )
 target_include_directories(${PROJECT_NAME}
   PUBLIC

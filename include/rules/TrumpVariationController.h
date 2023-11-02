@@ -8,23 +8,11 @@ namespace spd{
     class TrumpVariationController{
         TrumpVariationType variationType;
         std::map<TrumpVariationType, std::unique_ptr<TrumpVariation>> trumpVariations;
-        const TrumpVariation* getTrumpVariation() const{
-            return trumpVariations.at(variationType).get();
-        }
+        const TrumpVariation* getTrumpVariation() const;
         public:
-        TrumpVariationController() : variationType((TrumpVariationType)0){
-            trumpVariations[TrumpVariationType::ACE_HIGH] = std::make_unique<AceHigh>();
-            assert(trumpVariations.size() == (int)TrumpVariationType::LAST);
-        }
-        TrumpVariationType getTrumpVariationType() const{
-            return variationType;
-        }      
-        void setTrumpVariationType(TrumpVariationType type){
-            this->variationType = type;
-        }
-
-        Seat getTrickTaker(const State& state) const {
-            return getTrumpVariation()->getTrickTaker(state);
-        }  
+        TrumpVariationController();
+        TrumpVariationType getTrumpVariationType() const;
+        void setTrumpVariationType(TrumpVariationType type);
+        Seat getTrickTaker(const State& state) const;
     };
 }
