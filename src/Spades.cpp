@@ -167,3 +167,7 @@ void Spades::playCard(const Card &card)
         state.trickTakers.push_back(trumpVariationController.getTrickTaker(state));
     }
 }
+
+bool Spades::canPlayCard(const Card& card) const{
+    return false;
+}

@@ -24,6 +24,54 @@ protected:
 
 TEST_F(AceHighTrumpVariation, PlayableCards)
 {
+    Spades spades;
+    spades.reset(0);
+    spades.reset(TrumpVariationType::ACE_HIGH);
+    while (spades.isBidPhase())
+        spades.addBid(1);
+    bool hasNonTrumpCard = false;
+    for (const auto &card : spades.getHand(spades.getTurnSeat()))
+    {
+        if (!aceHigh.isTrumpCard(card))
+        {
+            hasNonTrumpCard = true;
+        }
+    }
+    if (hasNonTrumpCard)
+    {
+        EXPECT_FALSE(spades.canPlayCard(Card(Rank::ACE, Suit::SPADE)));
+    }
+}
+
+TEST_F(AceHighTrumpVariation, PlayableCardsLead)
+{
+    Spades spades;
+    spades.reset(0);
+    spades.reset(TrumpVariationType::ACE_HIGH);
+    while (spades.isBidPhase())
+        spades.addBid(1);
+    const auto leadCard = spades.getHand(spades.getTurnSeat()).front();
+    spades.playCard(leadCard);
+    bool hasLeadCardSuit = false;
+    for (const auto &card : spades.getHand(spades.getTurnSeat()))
+    {
+        for (const auto &suit : {Suit::SPADE, Suit::DIAMOND, Suit::CLOVER, Suit::HEART})
+        {
+            if (card.is(suit) && leadCard.is(suit))
+                hasLeadCardSuit = true;
+        }
+    }
+
+    for (const auto &card : spades.getHand(spades.getTurnSeat()))
+    {
+        for (const auto &suit : {Suit::SPADE, Suit::DIAMOND, Suit::CLOVER, Suit::HEART})
+        {
+            if (hasLeadCardSuit && card.is(suit) && !leadCard.is(suit))
+                EXPECT_FALSE(spades.canPlayCard(card));
+            else
+                EXPECT_TRUE(spades.canPlayCard(card));
+        }
+    }
 }
 
 TEST_F(AceHighTrumpVariation, CardRank)

@@ -50,6 +50,7 @@ namespace spd
         void setBidOption(const Seat &seat, const BidOption &bidOption);
         std::optional<int> getBidResult(const Seat& seat) const;
         void playCard(const Card& card);
+        bool canPlayCard(const Card& card) const;
 
     };
 }

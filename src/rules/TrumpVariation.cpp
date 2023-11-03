@@ -4,37 +4,66 @@
 
 using namespace spd;
 
+int TrumpVariation::getCardValue(const Card &card) const
+{
+    using enum Rank;
+    const auto ranks = NormalCardValue::getRanks();
+    for (int i = 1; i < ranks.size(); i++)
+    {
+        if (card.is(ranks[i]))
+        {
+            return i - 1;
+        }
+    }
+    if (card.is(Rank::ACE))
+    {
+        return ranks.size();
+    }
+    return 0;
+}
+
 std::optional<Card> TrumpVariation::getLeadCard(const State &state) const
 {
-    for (const auto &cardSeatPair : state.getTrick())
+    const auto playedCards = state.getPlayedCards(state.getRound());
+    if (!playedCards.empty())
     {
-        if (!cardSeatPair.second.is(Joker::BIG) && !cardSeatPair.second.is(Joker::LITTLE))
-        {
-            return std::make_optional(cardSeatPair.second);
-        }
+        return std::make_optional(playedCards.front().second);
     }
     return std::nullopt;
 }
 std::optional<Suit> TrumpVariation::getLeadSuit(const State &state) const
 {
-    const auto leadCard = getLeadCard(state);
-    for (const auto suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART, Suit::SPADE})
-        if (leadCard.has_value() && leadCard.value().is(suit))
-            return std::make_optional(suit);
+    const auto leadCardOptional = getLeadCard(state);
+    if (leadCardOptional.has_value())
+    {
+        Card leadCard = leadCardOptional.value();
+        if (isTrumpCard(leadCard))
+            return std::make_optional(Suit::SPADE);
+        else
+        {
+            for (const auto suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART, Suit::SPADE})
+                if (leadCard.is(suit))
+                    return std::make_optional(suit);
+        }
+    }
     return std::nullopt;
 }
 
 bool TrumpVariation::isLeadSuit(const Card &card, const State &state) const
 {
-    const auto leadSuit = getLeadSuit(state);
-    if (leadSuit.has_value())
-    {
-        const Suit suit = leadSuit.value();
-        return card.is(leadSuit.value());
+    const auto leadCardOptional = getLeadCard(state);
+    if(leadCardOptional.has_value()){
+        const auto leadCard = leadCardOptional.value();
+        if(isTrumpCard(leadCard) && isTrumpCard(card)){
+            return true;
+        }else{
+            const auto leadSuit = getLeadSuit(state).value_or(Suit::SPADE);
+            return card.is(leadSuit);
+        }
     }
     return false;
 }
-bool TrumpVariation::isCardTrumpingWinCard(const Card &winCard, const Card &card, const State &state) const
+bool TrumpVariation::isNewTopCard(const Card &winCard, const Card &card, const State &state) const
 {
     const bool winCardTrump = isTrumpCard(winCard);
     const bool cardTrump = isTrumpCard(card);
@@ -57,7 +86,7 @@ Seat TrumpVariation::getTrickTaker(const State &state) const
     {
         const Seat seat = cardSeatPair.first;
         const Card card = cardSeatPair.second;
-        if (isCardTrumpingWinCard(winCard, card, state))
+        if (isNewTopCard(winCard, card, state))
         {
             winSeat = seat;
             winCard = card;
@@ -73,20 +102,7 @@ bool AceHigh::isTrumpCard(const Card &card) const
     return card.is(Suit::SPADE);
 }
 
-int AceHigh::getCardValue(const Card &card) const
+int AceHigh::getTrumpCardValue(const Card &card) const
 {
-    using enum Rank;
-    const auto ranks = NormalCardValue::getRanks();
-    for (int i = 1; i < ranks.size(); i++)
-    {
-        if (card.is(ranks[i]))
-        {
-            return i - 1;
-        }
-    }
-    if (card.is(Rank::ACE))
-    {
-        return ranks.size();
-    }
-    return 0;
+    return getCardValue(card);
 }
