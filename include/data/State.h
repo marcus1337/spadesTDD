@@ -23,6 +23,7 @@ namespace spd
 
         std::array<std::pair<Seat, Card>, SeatUtils::numSeats> getTrick() const;
         std::vector<std::pair<Seat, Card>> getPlayedTrickCardSeatPairs() const;
+        std::vector<Card> getPlayedTrickCards() const;
         std::vector<std::pair<Seat, Card>> getPlayedCards(int round) const;
         State() = default;
 

@@ -1,4 +1,5 @@
 #include "rules/TrumpVariationController.h"
+#include "rules/Trick.h"
 
 using namespace spd;
 
@@ -22,5 +23,5 @@ void TrumpVariationController::setTrumpVariationType(TrumpVariationType type)
 
 Seat TrumpVariationController::getTrickTaker(const State &state) const
 {
-    return getTrumpVariation()->getTrickTaker(state);
+    return Trick(*getTrumpVariation(), state).getTrickTaker();
 }

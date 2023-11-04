@@ -70,6 +70,16 @@ std::vector<std::pair<Seat, Card>> State::getPlayedTrickCardSeatPairs() const
     return trickCards;
 }
 
+std::vector<Card> State::getPlayedTrickCards() const
+{
+    std::vector<Card> playedTrickCards;
+    for (const auto &[seat, card] : getPlayedTrickCardSeatPairs())
+    {
+        playedTrickCards.push_back(card);
+    }
+    return playedTrickCards;
+}
+
 std::vector<std::pair<Seat, Card>> State::getPlayedCards(int round) const
 {
     std::vector<std::pair<Seat, Card>> roundCards;

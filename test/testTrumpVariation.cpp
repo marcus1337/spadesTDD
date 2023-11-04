@@ -12,9 +12,10 @@ class AceHighTrumpVariation : public ::testing::Test
 {
 protected:
     State state;
-    AceHigh aceHigh;
+    TrumpVariationController variationController;
     void SetUp() override
     {
+        variationController.setTrumpVariationType(TrumpVariationType::ACE_HIGH);
         state.bids.push_back(1);
         state.bids.push_back(1);
         state.bids.push_back(1);
@@ -32,7 +33,7 @@ TEST_F(AceHighTrumpVariation, PlayableCards)
     bool hasNonTrumpCard = false;
     for (const auto &card : spades.getHand(spades.getTurnSeat()))
     {
-        if (!aceHigh.isTrumpCard(card))
+        if (!AceHigh().isTrumpCard(card))
         {
             hasNonTrumpCard = true;
         }
@@ -88,6 +89,6 @@ TEST_F(AceHighTrumpVariation, TrickTakingSeat)
     state.playCard(Seat::WEST, Card(Rank::ACE, Suit::CLOVER));
     state.playCard(Seat::NORTH, Card(Rank::KING, Suit::DIAMOND));
     state.playCard(Seat::EAST, Card(Rank::TWO, Suit::SPADE));
-    const auto seat = aceHigh.getTrickTaker(state);
+    const auto seat = variationController.getTrickTaker(state);
     EXPECT_EQ(seat, Seat::EAST);
 }

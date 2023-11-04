@@ -21,6 +21,7 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/rules/TrumpVariation.cpp"
 "src/rules/TrumpVariationController.cpp"
 "src/rules/Turn.cpp"
+"src/rules/Trick.cpp"
 
 )
 target_include_directories(${PROJECT_NAME}
