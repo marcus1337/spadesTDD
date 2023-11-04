@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CardValue.h"
+#include <optional>
 
 namespace spd
 {
@@ -26,6 +27,8 @@ namespace spd
 
         static std::vector<Card> getNormalCards();
         static std::vector<Card> getCards();
+
+        std::optional<Suit> getSuit() const;
 
         bool is(const Rank& rank) const;
         bool is(const Suit &suit) const;

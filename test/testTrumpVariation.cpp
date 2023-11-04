@@ -65,16 +65,13 @@ TEST_F(AceHighTrumpVariation, PlayableCardsLead)
 
     for (const auto &card : spades.getHand(spades.getTurnSeat()))
     {
-        for (const auto &suit : {Suit::SPADE, Suit::DIAMOND, Suit::CLOVER, Suit::HEART})
+        if (hasLeadCardSuit && !leadCard.is(card.getSuit().value()))
         {
-            if (hasLeadCardSuit && (card.is(suit) && !leadCard.is(suit) || !card.is(suit) && leadCard.is(suit)))
-            {
-                ASSERT_FALSE(spades.canPlayCard(card));
-            }
-            else if(!hasLeadCardSuit)
-            {
-                ASSERT_TRUE(spades.canPlayCard(card));
-            }
+            ASSERT_FALSE(spades.canPlayCard(card));
+        }
+        else if (!hasLeadCardSuit)
+        {
+            ASSERT_TRUE(spades.canPlayCard(card));
         }
     }
 }

@@ -76,3 +76,13 @@ bool Card::is(const Joker &joker) const
     }
     return false;
 }
+
+std::optional<Suit> Card::getSuit() const
+{
+    std::optional<Suit> suitOpt;
+    if (const auto normalValue = std::get_if<NormalCardValue>(&value))
+    {
+        return std::make_optional(normalValue->getSuit());
+    }
+    return suitOpt;
+}
