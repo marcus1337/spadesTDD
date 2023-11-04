@@ -80,7 +80,7 @@ std::vector<Card> State::getPlayedTrickCards() const
     return playedTrickCards;
 }
 
-std::vector<std::pair<Seat, Card>> State::getPlayedCards(int round) const
+std::vector<std::pair<Seat, Card>> State::getPlayedCardSeatPairs(int round) const
 {
     std::vector<std::pair<Seat, Card>> roundCards;
     const int numCardsPerRound = 13;
@@ -90,6 +90,14 @@ std::vector<std::pair<Seat, Card>> State::getPlayedCards(int round) const
         roundCards.push_back(playedCards[i]);
     }
     return roundCards;
+}
+
+std::vector<Card> State::getPlayedCards(int round) const{
+    std::vector<Card> cards;
+    for(const auto&[seat, card] : getPlayedCardSeatPairs(round)){
+        cards.push_back(card);
+    }
+    return cards;
 }
 
 void State::clear()
@@ -154,7 +162,7 @@ bool State::hasGameStarted() const
 std::vector<Card> State::getHand(const Seat &seat) const
 {
     auto startHand = deck.getHand(seat, getRound());
-    auto playedRoundCards = getPlayedCards(getRound());
+    auto playedRoundCards = getPlayedCardSeatPairs(getRound());
     std::vector<Card> hand;
     for (const auto &card : startHand)
     {

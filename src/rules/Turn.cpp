@@ -5,7 +5,7 @@ using namespace spd;
 Seat Turn::getTurnSeat(const State &state) const
 {
     const int round = state.getRound();
-    const auto playedRoundSeatCardPairs = state.getPlayedCards(round);
+    const auto playedRoundSeatCardPairs = state.getPlayedCardSeatPairs(round);
     const int startBidIndex = round % SeatUtils::numSeats;
 
     if (state.isBidPhase())

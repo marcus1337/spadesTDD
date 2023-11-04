@@ -39,28 +39,58 @@ bool Trick::sameSuit(const Card &card1, const Card &card2) const
 
 Trick::Trick(const TrumpVariation &trumpVariation, const State &state) : trumpVariation(trumpVariation), state(state) {}
 
-bool Trick::canPlace(const Card &card) const
+bool Trick::canPlaceFirst(const Card &card, const Seat &seat) const
 {
-    const auto playedTrickCards = state.getPlayedTrickCards();
-    if (playedTrickCards.empty())
-    { // First trick card
-        if (!trumpVariation.isTrumpCard(card))
+    return (!trumpVariation.isTrumpCard(card) || hasTrumpBeenPlayed()) ? true : hasOnlyTrumpCards(seat);
+}
+
+bool Trick::hasOnlyTrumpCards(const Seat &seat) const
+{
+    bool hasOnlyTrumpCards = true;
+    for (const auto &handCard : state.getHand(seat))
+    {
+        if (!trumpVariation.isTrumpCard(handCard))
+        {
+            hasOnlyTrumpCards = false;
+        }
+    }
+    return hasOnlyTrumpCards;
+}
+
+bool Trick::hasTrumpBeenPlayed() const
+{
+    for (const auto &card : state.getPlayedCards(state.getRound()))
+    {
+        if (trumpVariation.isTrumpCard(card))
         {
             return true;
         }
-        else
-        {
-            // check if A) has non-trump in hand? B) has trump been played earlier this round ever (breaking-spades)?
-        }
     }
-    else
-    {
-        const auto leadCard = playedTrickCards.front();
-
-        // check if A) don't lead-suit in hand? true B) if not A then check if card.suit == lead.suit?
-    }
-
     return false;
+}
+
+bool Trick::canPlaceContinuation(const Card &card, const Seat &seat) const
+{
+    const auto leadCard = getLeadCard().value();
+    if (sameSuit(card, leadCard))
+        return true;
+    return !hasSameSuit(card, seat);
+}
+
+bool Trick::hasSameSuit(const Card &card, const Seat &seat) const
+{
+    for (const auto &handCard : state.getHand(seat))
+    {
+        if (sameSuit(handCard, card))
+            return true;
+    }
+    return false;
+}
+
+bool Trick::canPlace(const Card &card, const Seat &seat) const
+{
+    const auto playedTrickCards = state.getPlayedTrickCards();
+    return playedTrickCards.empty() ? canPlaceFirst(card, seat) : canPlaceContinuation(card, seat);
 }
 
 Seat Trick::getTrickTaker() const
@@ -115,7 +145,7 @@ bool Trick::isNewTopCard(const Card &topCard, const Card &newCard) const
 
 std::optional<Card> Trick::getLeadCard() const
 {
-    const auto playedCards = state.getPlayedCards(state.getRound());
+    const auto playedCards = state.getPlayedCardSeatPairs(state.getRound());
     if (!playedCards.empty())
     {
         return std::make_optional(playedCards.front().second);
