@@ -40,7 +40,7 @@ namespace spd
         void playCard(const Seat &seat, const Card &card);
 
         std::vector<int> bids;
-        std::vector<std::pair<Seat, Card>> playedCards;
+        std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
         std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
         std::vector<Seat> trickTakers;
     };

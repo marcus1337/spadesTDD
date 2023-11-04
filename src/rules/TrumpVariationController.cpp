@@ -25,3 +25,8 @@ Seat TrumpVariationController::getTrickTaker(const State &state) const
 {
     return Trick(*getTrumpVariation(), state).getTrickTaker();
 }
+
+bool TrumpVariationController::canPlaceCard(const State &state, const Card &card, const Seat &seat) const
+{
+    return Trick(*getTrumpVariation(), state).canPlace(card, seat);
+}

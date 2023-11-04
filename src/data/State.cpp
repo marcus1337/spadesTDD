@@ -54,7 +54,7 @@ std::array<std::pair<Seat, Card>, SeatUtils::numSeats> State::getTrick() const
     const int offset = trickTakers.size() * SeatUtils::numSeats;
     for (int i = offset; i < SeatUtils::numSeats + offset; i++)
     {
-        trick[i] = playedCards[i];
+        trick[i] = playedSeatCardPairs[i];
     }
     return trick;
 }
@@ -63,9 +63,9 @@ std::vector<std::pair<Seat, Card>> State::getPlayedTrickCardSeatPairs() const
 {
     std::vector<std::pair<Seat, Card>> trickCards;
     const int offset = trickTakers.size() * SeatUtils::numSeats;
-    for (int i = offset; i < SeatUtils::numSeats + offset; i++)
+    for (int i = offset; i < SeatUtils::numSeats + offset && i < playedSeatCardPairs.size(); i++)
     {
-        trickCards.push_back(playedCards[i]);
+        trickCards.push_back(playedSeatCardPairs[i]);
     }
     return trickCards;
 }
@@ -85,9 +85,9 @@ std::vector<std::pair<Seat, Card>> State::getPlayedCardSeatPairs(int round) cons
     std::vector<std::pair<Seat, Card>> roundCards;
     const int numCardsPerRound = 13;
     const int fromIndex = round * numCardsPerRound;
-    for (int i = fromIndex; i < numCardsPerRound && i < playedCards.size(); i++)
+    for (int i = fromIndex; i < numCardsPerRound && i < playedSeatCardPairs.size(); i++)
     {
-        roundCards.push_back(playedCards[i]);
+        roundCards.push_back(playedSeatCardPairs[i]);
     }
     return roundCards;
 }
@@ -104,13 +104,14 @@ void State::clear()
 {
     bids.clear();
     roundBidOptions.clear();
-    playedCards.clear();
+    playedSeatCardPairs.clear();
+    trickTakers.clear();
 }
 
 int State::getRound() const
 {
     const int cardsPerRound = 52;
-    return playedCards.size() % cardsPerRound;
+    return playedSeatCardPairs.size() / cardsPerRound;
 }
 
 bool State::isBidPhase() const
@@ -178,5 +179,5 @@ std::vector<Card> State::getHand(const Seat &seat) const
 
 void State::playCard(const Seat &seat, const Card &card)
 {
-    playedCards.push_back(std::make_pair(seat, card));
+    playedSeatCardPairs.push_back(std::make_pair(seat, card));
 }

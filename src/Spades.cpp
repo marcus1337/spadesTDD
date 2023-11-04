@@ -169,5 +169,5 @@ void Spades::playCard(const Card &card)
 }
 
 bool Spades::canPlayCard(const Card& card) const{
-    return false;
+    return trumpVariationController.canPlaceCard(state, card, turn.getTurnSeat(state));
 }
