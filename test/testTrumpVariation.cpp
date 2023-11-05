@@ -5,6 +5,7 @@
 #include "table/Deck.h"
 #include <set>
 #include <cassert>
+#include <optional>
 
 using namespace spd;
 
@@ -74,14 +75,6 @@ TEST_F(AceHighTrumpVariation, PlayableCardsLead)
             ASSERT_TRUE(spades.canPlayCard(card));
         }
     }
-}
-
-TEST_F(AceHighTrumpVariation, CardRank)
-{
-}
-
-TEST_F(AceHighTrumpVariation, LeadCardSuit)
-{
 }
 
 TEST_F(AceHighTrumpVariation, TrickTakingSeat)
