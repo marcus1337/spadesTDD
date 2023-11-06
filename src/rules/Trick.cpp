@@ -6,11 +6,11 @@ bool TrickCardComparator::operator<(const TrickCardComparator &other) const
 {
     if (trump != other.trump)
     {
-        return !trump;
+        return other.trump;
     }
-    else if (!trump && leadSuit != other.leadSuit)
+    else if (!trump && !other.trump && leadSuit != other.leadSuit)
     {
-        return leadSuit;
+        return other.leadSuit;
     }
     else
     {
@@ -25,16 +25,20 @@ TrickCardComparator Trick::getTrickCardComparator(const Card &card) const
 
 bool Trick::sameSuit(const Card &card1, const Card &card2) const
 {
-    const auto value1 = card1.getValue();
-    if (trumpVariation.isTrumpCard(card1) && trumpVariation.isTrumpCard(card2))
+    const bool card1Trump = trumpVariation.isTrumpCard(card1);
+    const bool card2Trump = trumpVariation.isTrumpCard(card2);
+    if (card1Trump && card2Trump)
     {
         return true;
     }
-    else if (const auto normalCardValue = std::get_if<NormalCardValue>(&value1))
+    else if (!card1Trump && !card2Trump)
     {
-        return card2.is(normalCardValue->getSuit());
+        return card1.sameSuit(card2);
     }
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 Trick::Trick(const TrumpVariation &trumpVariation, const State &state) : trumpVariation(trumpVariation), state(state) {}
@@ -114,12 +118,12 @@ Seat Trick::getTrickTaker() const
 
 int Trick::getValue(const Card &card) const
 {
-    int value = 0;
-    if (trumpVariation.isTrumpCard(card))
-    {
-        value += trumpVariation.getTrumpValue(card);
-    }
+    return trumpVariation.isTrumpCard(card) ? getTrumpValue(card) : getNormalValue(card);
+}
 
+int Trick::getNormalValue(const Card &card) const
+{
+    int value = 0;
     using enum Rank;
     const auto ranks = NormalCardValue::getRanks();
     for (int i = 1; i < ranks.size(); i++)
@@ -132,6 +136,20 @@ int Trick::getValue(const Card &card) const
     if (card.is(Rank::ACE))
     {
         value += ranks.size();
+    }
+    return value;
+}
+
+int Trick::getTrumpValue(const Card &card) const
+{
+    int value = 0;
+    const auto trumpCardsDescending = trumpVariation.getTrumpCardsOrderedByValueDescending();
+    for (int i = 0; i < trumpCardsDescending.size(); i++)
+    {
+        if (card == trumpCardsDescending[i])
+        {
+            value += i;
+        }
     }
     return value;
 }

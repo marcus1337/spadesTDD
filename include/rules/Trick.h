@@ -27,6 +27,8 @@ namespace spd
         TrickCardComparator getTrickCardComparator(const Card &card) const;
         std::optional<Card> getLeadCard() const;
         std::optional<Suit> getLeadSuit() const;
+        int getNormalValue(const Card& card) const;
+        int getTrumpValue(const Card& card) const;
         int getValue(const Card &card) const;
         bool isLeadSuit(const Card &card) const;
         bool isNewTopCard(const Card &topCard, const Card &newCard) const;

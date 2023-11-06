@@ -1,6 +1,7 @@
 
 #pragma once
 #include <vector>
+#include <array>
 #include <optional>
 #include "data/card/Card.h"
 #include "data/Seat.h"
@@ -15,8 +16,9 @@ namespace spd
     public:
         TrumpVariation() = default;
         virtual ~TrumpVariation() = default;
-        virtual bool isTrumpCard(const Card &card) const = 0;
-        virtual int getTrumpValue(const Card &card) const = 0;
+        bool isTrumpCard(const Card &card) const;
+        virtual std::vector<Card> getTrumpCardsOrderedByValueDescending() const = 0;
+        virtual std::array<Card, 2> getExcludedCards() const = 0;
     };
 
     class AceHigh : public TrumpVariation
@@ -24,7 +26,8 @@ namespace spd
 
     public:
         AceHigh();
-        virtual bool isTrumpCard(const Card &card) const override;
-        virtual int getTrumpValue(const Card &card) const override;
+        virtual std::vector<Card> getTrumpCardsOrderedByValueDescending() const override;
+        virtual std::array<Card, 2> getExcludedCards() const override;
+
     };
 }

@@ -30,6 +30,7 @@ namespace spd
 
         std::optional<Suit> getSuit() const;
 
+        bool sameSuit(const Card& other) const;
         bool is(const Rank& rank) const;
         bool is(const Suit &suit) const;
         bool is(const Joker &joker) const;
