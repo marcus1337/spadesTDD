@@ -183,3 +183,13 @@ std::array<Card, 2> Spades::getExcludedCards() const
 {
     return trumpVariationController.getExcludedCards();
 }
+
+void Spades::undo()
+{
+
+}
+
+bool Spades::canUndo() const
+{
+    return false;
+}

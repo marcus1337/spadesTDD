@@ -55,5 +55,8 @@ namespace spd
         std::vector<Card> getTrumpCardsDescending() const;
         std::array<Card,2> getExcludedCards() const;
 
+        void undo();
+        bool canUndo() const;
+
     };
 }
