@@ -34,3 +34,13 @@ bool TrumpVariationController::canPlaceCard(const State &state, const Card &card
 {
     return Trick(*getTrumpVariation(), state).canPlace(card, seat);
 }
+
+std::vector<Card> TrumpVariationController::getTrumpCardsOrderedByValueDescending() const
+{
+    return getTrumpVariation()->getTrumpCardsOrderedByValueDescending();
+}
+
+std::array<Card, 2> TrumpVariationController::getExcludedCards() const
+{
+    return getTrumpVariation()->getExcludedCards();
+}

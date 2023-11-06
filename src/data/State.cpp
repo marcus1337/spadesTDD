@@ -38,16 +38,6 @@ std::array<std::optional<std::pair<Seat, int>>, SeatUtils::numSeats> State::getR
     return roundBids;
 }
 
-void State::setSeed(unsigned int seed)
-{
-    deck.setSeed(seed);
-}
-
-unsigned int State::getSeed() const
-{
-    return deck.getSeed();
-}
-
 std::array<std::pair<Seat, Card>, SeatUtils::numSeats> State::getTrick() const
 {
     std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
