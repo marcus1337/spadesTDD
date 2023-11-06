@@ -9,8 +9,12 @@ const TrumpVariation *TrumpVariationController::getTrumpVariation() const
 }
 TrumpVariationController::TrumpVariationController() : variationType((TrumpVariationType)0)
 {
-    trumpVariations[TrumpVariationType::ACE_HIGH] = std::make_unique<AceHigh>();
-    assert(trumpVariations.size() == (int)TrumpVariationType::LAST);
+    using enum TrumpVariationType;
+    trumpVariations[ACE_HIGH] = std::make_unique<AceHigh>();
+    trumpVariations[JOKER_JOKER] = std::make_unique<JokerJoker>();
+    trumpVariations[JOKER_JOKER_DEUCE] = std::make_unique<JokerJokerDeuce>();
+    trumpVariations[JOKER_JOKER_DEUCE_DEUCE] = std::make_unique<JokerJokerDeuceDeuce>();
+    assert(trumpVariations.size() == (int)LAST);
 }
 TrumpVariationType TrumpVariationController::getTrumpVariationType() const
 {
