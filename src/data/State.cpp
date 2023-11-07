@@ -100,8 +100,8 @@ void State::clear()
 
 int State::getRound() const
 {
-    const int cardsPerRound = 52;
-    return playedSeatCardPairs.size() / cardsPerRound;
+    const int tricksPerRound = 13;
+    return trickTakers.size() / tricksPerRound;
 }
 
 bool State::isBidPhase() const

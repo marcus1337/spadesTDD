@@ -119,7 +119,9 @@ Seat Spades::getTurnSeat() const
 
 void Spades::addBid(int bid)
 {
-    state.bids.push_back(bid);
+    auto bidCommand = std::make_unique<BidCommand>(bid);
+    bidCommand->execute(state, turn, trumpVariationController);
+    history.addCommand(std::move(bidCommand));
 }
 
 bool Spades::hasBid(const Seat &seat) const
@@ -154,7 +156,9 @@ std::vector<Card> Spades::getHand(const Seat &seat) const
 
 void Spades::setBidOption(const Seat &seat, const BidOption &bidOption)
 {
-    state.setBidOption(seat, bidOption);
+    auto bidOptCommand = std::make_unique<BidOptionCommand>(bidOption, seat);
+    bidOptCommand->execute(state, turn, trumpVariationController);
+    history.addCommand(std::move(bidOptCommand));
 }
 
 std::optional<int> Spades::getBidResult(const Seat &seat) const
