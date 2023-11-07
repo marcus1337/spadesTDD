@@ -1,5 +1,6 @@
 #include "Spades.h"
 #include <cassert>
+#include "history/SpadesCommand.h"
 
 using namespace spd;
 
@@ -43,6 +44,7 @@ Spades::Spades()
 
 void Spades::reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
 {
+    history.clear();
     state.clear();
     setSeed(seed);
     setBidVariation(bidVariationType);
@@ -161,11 +163,9 @@ std::optional<int> Spades::getBidResult(const Seat &seat) const
 
 void Spades::playCard(const Card &card)
 {
-    state.playCard(getTurnSeat(), card);
-    if (state.getPlayedTrickCardSeatPairs().size() == SeatUtils::numSeats)
-    {
-        state.trickTakers.push_back(trumpVariationController.getTrickTaker(state));
-    }
+    auto placeCommand = std::make_unique<PlaceCommand>(card);
+    placeCommand->execute(state, turn, trumpVariationController);
+    history.addCommand(std::move(placeCommand));
 }
 
 bool Spades::canPlayCard(const Card& card) const{

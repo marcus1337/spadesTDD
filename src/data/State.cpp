@@ -181,3 +181,4 @@ void State::playCard(const Seat &seat, const Card &card)
 {
     playedSeatCardPairs.push_back(std::make_pair(seat, card));
 }
+

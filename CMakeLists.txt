@@ -23,6 +23,8 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/rules/Turn.cpp"
 "src/rules/Trick.cpp"
 
+"src/history/SpadesHistory.cpp"
+"src/history/SpadesCommand.cpp"
 )
 target_include_directories(${PROJECT_NAME}
   PUBLIC

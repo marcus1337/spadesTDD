@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "history/SpadesHistory.h"
 #include "rules/BidVariationController.h"
 #include "rules/TrumpVariationController.h"
 #include "data/memento/SpadesMemento.h"
@@ -13,6 +14,7 @@ namespace spd
 {
     class Spades
     {
+        SpadesHistory history;
         State state;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
