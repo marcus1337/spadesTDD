@@ -54,5 +54,11 @@ namespace spd
         void playCard(const Card& card);
         bool canPlayCard(const Card& card) const;
 
+        std::vector<Card> getTrumpCardsDescending() const;
+        std::array<Card,2> getExcludedCards() const;
+
+        void undo();
+        bool canUndo() const;
+
     };
 }

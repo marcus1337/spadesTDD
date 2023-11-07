@@ -11,15 +11,12 @@ namespace spd
 {
     class State
     {
-        Deck deck;
         std::vector<int> getMadeRoundBids() const;
         std::array<Seat, SeatUtils::numSeats> getRoundBidOrder() const;
         std::array<std::optional<std::pair<Seat, int>>, SeatUtils::numSeats> getRoundBids() const;
 
     public:
-
-        void setSeed(unsigned int seed);
-        unsigned int getSeed() const;
+        Deck deck;
 
         std::array<std::pair<Seat, Card>, SeatUtils::numSeats> getTrick() const;
         std::vector<std::pair<Seat, Card>> getPlayedTrickCardSeatPairs() const;

@@ -30,12 +30,13 @@ void Spades::setTrumpVariation(TrumpVariationType type)
 {
     assert(!state.hasGameStarted());
     trumpVariationController.setTrumpVariationType(type);
+    state.deck.setExcludeCards(trumpVariationController.getExcludedCards());
 }
 
 void Spades::setSeed(unsigned int seed)
 {
     assert(!state.hasGameStarted());
-    state.setSeed(seed);
+    state.deck.setSeed(seed);
 }
 
 Spades::Spades()
@@ -108,7 +109,7 @@ Score Spades::getScore() const
 
 unsigned int Spades::getSeed() const
 {
-    return state.getSeed();
+    return state.deck.getSeed();
 }
 
 Seat Spades::getTurnSeat() const
@@ -168,6 +169,27 @@ void Spades::playCard(const Card &card)
     history.addCommand(std::move(placeCommand));
 }
 
-bool Spades::canPlayCard(const Card& card) const{
+bool Spades::canPlayCard(const Card &card) const
+{
     return trumpVariationController.canPlaceCard(state, card, turn.getTurnSeat(state));
+}
+
+std::vector<Card> Spades::getTrumpCardsDescending() const
+{
+    return trumpVariationController.getTrumpCardsOrderedByValueDescending();
+}
+
+std::array<Card, 2> Spades::getExcludedCards() const
+{
+    return trumpVariationController.getExcludedCards();
+}
+
+void Spades::undo()
+{
+
+}
+
+bool Spades::canUndo() const
+{
+    return false;
 }

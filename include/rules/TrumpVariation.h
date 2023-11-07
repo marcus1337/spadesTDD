@@ -23,11 +23,27 @@ namespace spd
 
     class AceHigh : public TrumpVariation
     {
-
     public:
-        AceHigh();
         virtual std::vector<Card> getTrumpCardsOrderedByValueDescending() const override;
         virtual std::array<Card, 2> getExcludedCards() const override;
+    };
 
+    class JokerJoker : public TrumpVariation
+    {
+    public:
+        virtual std::vector<Card> getTrumpCardsOrderedByValueDescending() const override;
+        virtual std::array<Card, 2> getExcludedCards() const override;
+    };
+    class JokerJokerDeuce : public TrumpVariation
+    {
+    public:
+        virtual std::vector<Card> getTrumpCardsOrderedByValueDescending() const override;
+        virtual std::array<Card, 2> getExcludedCards() const override;
+    };
+    class JokerJokerDeuceDeuce : public TrumpVariation
+    {
+    public:
+        virtual std::vector<Card> getTrumpCardsOrderedByValueDescending() const override;
+        virtual std::array<Card, 2> getExcludedCards() const override;
     };
 }
