@@ -5,7 +5,7 @@
 using namespace spd;
 
 Card::Card() : value(NormalCardValue()) {}
-Card::Card(int serializedValue) : value(CardValueSerialization::deserialize(serializedValue)) {}
+Card::Card(unsigned int serializedValue) : value(CardValueSerialization::deserialize(serializedValue)) {}
 Card::Card(const CardValue &value) : value(value) {}
 Card::Card(const Rank &rank, const Suit &suit) : value(NormalCardValue(rank, suit)) {}
 Card::Card(const Joker &joker) : value(JokerValue(joker)) {}
@@ -28,7 +28,7 @@ bool Card::operator<(const Card &other) const
     return CardValueComparison(getValue()) < other.getValue();
 }
 
-int Card::serialize() const
+unsigned int Card::serialize() const
 {
     return CardValueSerialization::serialize(getValue());
 }

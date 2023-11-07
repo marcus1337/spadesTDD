@@ -2,7 +2,7 @@
 
 using namespace spd;
 
-int CardValueSerialization::serialize(const CardValue &value)
+unsigned int CardValueSerialization::serialize(const CardValue &value)
 {
     if (std::holds_alternative<NormalCardValue>(value))
     {
@@ -18,7 +18,7 @@ int CardValueSerialization::serialize(const CardValue &value)
     }
     return 0;
 }
-CardValue CardValueSerialization::deserialize(int value)
+CardValue CardValueSerialization::deserialize(unsigned int value)
 {
     if (value < maxNormalCardValue)
     {

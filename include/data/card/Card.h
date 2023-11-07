@@ -12,7 +12,7 @@ namespace spd
 
     public:
         Card();
-        explicit Card(int serializedValue);
+        explicit Card(unsigned int serializedValue);
         Card(const CardValue &value);
         Card(const Rank &rank, const Suit &suit);
         Card(const Joker &joker);
@@ -23,7 +23,7 @@ namespace spd
         bool operator!=(const Card &other) const;
         bool operator<(const Card &other) const;
 
-        int serialize() const;
+        unsigned int serialize() const;
 
         static std::vector<Card> getNormalCards();
         static std::vector<Card> getCards();

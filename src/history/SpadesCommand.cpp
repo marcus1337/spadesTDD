@@ -44,3 +44,15 @@ void BidOptionCommand::undo(State &state, const Turn &turn, const TrumpVariation
 {
     state.roundBidOptions[state.getRound()].erase(std::make_pair(seat, bidOption));
 }
+
+std::vector<unsigned int> BidCommand::serialize() const{
+    return {(unsigned int)bid};
+}
+
+std::vector<unsigned int> PlaceCommand::serialize() const{
+    return {card.serialize()};
+}
+
+std::vector<unsigned int> BidOptionCommand::serialize() const{
+    return {(unsigned int)bidOption, (unsigned int) seat};
+}
