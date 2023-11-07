@@ -52,13 +52,19 @@ TEST_F(CardSerializationTest, DeserializeCards) {
 
 TEST(Serialization, History){
     SpadesHistory history;
-    history.addCommand(std::make_unique<PlaceCommand>(Card(Rank::ACE, Suit::DIAMOND)));
-    history.addCommand(std::make_unique<PlaceCommand>(Card(Rank::TWO, Suit::CLOVER)));
+    const auto c1a = Card(Rank::ACE, Suit::DIAMOND);
+    const auto c2a = Card(Rank::TWO, Suit::CLOVER);
+    history.addCommand(std::make_unique<PlaceCommand>(c1a));
+    history.addCommand(std::make_unique<PlaceCommand>(c2a));
     std::vector<int> encodedValues;
     std::istringstream iss(history.serialize());
     int num;
     while (iss >> num) {
         encodedValues.push_back(num);
     }
-    EXPECT_TRUE(encodedValues.size() == 4);
+    ASSERT_TRUE(encodedValues.size() == 4);
+    Card c1b(encodedValues[1]);
+    Card c2b(encodedValues[3]);
+    EXPECT_EQ(c1a, c1b);
+    EXPECT_EQ(c2a, c2b);
 }
