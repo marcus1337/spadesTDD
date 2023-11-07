@@ -2,6 +2,7 @@
 #include "history/SpadesCommand.h"
 #include <memory>
 #include <vector>
+#include <string>
 
 namespace spd
 {
@@ -16,6 +17,9 @@ namespace spd
         void undo(State &state, const Turn& turn, const TrumpVariationController& trumpVariationController);
         void redo(State &state, const Turn& turn, const TrumpVariationController& trumpVariationController);
         void addCommand(std::unique_ptr<SpadesCommand> command);
+
+        bool deserialize(const std::string& encodedData);
+        std::string serialize() const;
 
     };
 }

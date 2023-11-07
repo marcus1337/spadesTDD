@@ -5,6 +5,8 @@
 #include <set>
 #include <unordered_set>
 #include "data/card/Card.h"
+#include "history/SpadesHistory.h"
+#include <sstream>
 
 using namespace spd;
 
@@ -46,4 +48,17 @@ TEST_F(CardSerializationTest, DeserializeCards) {
     for (size_t i = 0; i < allCards.size(); ++i) {
         ASSERT_EQ(allCards[i], deserializedCards[i]) << "Cards at index " << i << " are not the same.";
     }
+}
+
+TEST(Serialization, History){
+    SpadesHistory history;
+    history.addCommand(std::make_unique<PlaceCommand>(Card(Rank::ACE, Suit::DIAMOND)));
+    history.addCommand(std::make_unique<PlaceCommand>(Card(Rank::TWO, Suit::CLOVER)));
+    std::vector<int> encodedValues;
+    std::istringstream iss(history.serialize());
+    int num;
+    while (iss >> num) {
+        encodedValues.push_back(num);
+    }
+    EXPECT_TRUE(encodedValues.size() == 4);
 }
