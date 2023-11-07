@@ -186,10 +186,10 @@ std::array<Card, 2> Spades::getExcludedCards() const
 
 void Spades::undo()
 {
-
+    history.undo(state, turn, trumpVariationController);
 }
 
 bool Spades::canUndo() const
 {
-    return false;
+    return history.canUndo();
 }

@@ -12,11 +12,9 @@ namespace spd
 
         void clear();
         bool canUndo() const;
-        void undo(State& state);
+        void undo(State &state, const Turn& turn, const TrumpVariationController& trumpVariationController);
+        void redo(State &state, const Turn& turn, const TrumpVariationController& trumpVariationController);
         void addCommand(std::unique_ptr<SpadesCommand> command);
-        //void addPlaceCommand(const Card& card);
-        //void addBidCommand(int bid);
-        //void addBidOptionCommand(const BidOption& bidOption, const Seat& seat);
 
     };
 }
