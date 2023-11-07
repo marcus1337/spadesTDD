@@ -12,6 +12,7 @@ namespace spd
 
         void clear();
         bool canUndo() const;
+        bool canRedo() const;
         void undo(State &state, const Turn& turn, const TrumpVariationController& trumpVariationController);
         void redo(State &state, const Turn& turn, const TrumpVariationController& trumpVariationController);
         void addCommand(std::unique_ptr<SpadesCommand> command);

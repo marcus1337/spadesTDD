@@ -19,11 +19,21 @@ void SpadesHistory::undo(State &state, const Turn &turn, const TrumpVariationCon
     command->undo(state, turn, trumpVariationController);
     redoCommands.push_back(std::move(command));
 }
+
 void SpadesHistory::redo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
 {
+    std::unique_ptr<SpadesCommand> command = std::move(redoCommands.back());
+    redoCommands.pop_back();
+    command->execute(state, turn, trumpVariationController);
+    undoCommands.push_back(std::move(command));
+}
+
+bool SpadesHistory::canRedo() const{
+    return !redoCommands.empty();
 }
 
 void SpadesHistory::addCommand(std::unique_ptr<SpadesCommand> command)
 {
-    this->undoCommands.push_back(std::move(command));
+    undoCommands.push_back(std::move(command));
+    redoCommands.clear();
 }

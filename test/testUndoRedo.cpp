@@ -14,3 +14,12 @@ TEST(UndoRedo, CanUndo){
     spades.undo();
     EXPECT_FALSE(spades.canUndo());
 }
+
+TEST(UndoRedo, CanRedo){
+    Spades spades;
+    EXPECT_FALSE(spades.canRedo());
+    spades.addBid(1);
+    EXPECT_FALSE(spades.canRedo());
+    spades.undo();
+    EXPECT_TRUE(spades.canRedo());
+}

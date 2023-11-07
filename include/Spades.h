@@ -59,6 +59,8 @@ namespace spd
 
         void undo();
         bool canUndo() const;
+        void redo();
+        bool canRedo() const;
 
     };
 }

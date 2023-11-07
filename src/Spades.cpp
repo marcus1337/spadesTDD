@@ -197,3 +197,13 @@ bool Spades::canUndo() const
 {
     return history.canUndo();
 }
+
+void Spades::redo(){
+    history.redo(state, turn, trumpVariationController);
+}
+
+bool Spades::canRedo() const
+{
+    return history.canRedo();
+}
+
