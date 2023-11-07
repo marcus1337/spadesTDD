@@ -22,4 +22,16 @@ TEST(UndoRedo, CanRedo){
     EXPECT_FALSE(spades.canRedo());
     spades.undo();
     EXPECT_TRUE(spades.canRedo());
+    spades.addBid(1);
+    EXPECT_FALSE(spades.canRedo());
+}
+
+TEST(UndoRedo, redo){
+    Spades spades;
+    spades.addBid(1);
+    spades.addBid(2);
+    spades.undo();
+    spades.undo();
+    spades.redo();
+    EXPECT_EQ(spades.getTurnSeat(), Seat::WEST);
 }
