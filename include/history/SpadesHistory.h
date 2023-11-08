@@ -9,16 +9,17 @@ namespace spd
     class SpadesHistory
     {
         std::vector<std::unique_ptr<SpadesCommand>> undoCommands, redoCommands;
-        const unsigned int placeCmdValue = 0;
-        const unsigned int bidCmdValue = placeCmdValue + 1;
-        const unsigned int bidOptCmdValue = bidCmdValue + 1;
-        const unsigned int undoCmdValue = 0;
-        const unsigned int redoCmdValue = 1;
-
+        static constexpr unsigned int placeCmdValue = 0;
+        static constexpr unsigned int bidCmdValue = placeCmdValue + 1;
+        static constexpr unsigned int bidOptCmdValue = bidCmdValue + 1;
+        static constexpr int separationValue = -1;
+    
         std::string serializeCommand(const SpadesCommand& command) const;
         int getCommandID(const SpadesCommand& command) const;
-        std::vector<int> getEncoding(const std::string& encodedData) const;
-
+        std::vector<int> getUndoEncoding(const std::vector<int>& encoding) const;
+        std::vector<int> getRedoEncoding(const std::vector<int>& encoding) const;
+        std::vector<int> getEncoding(const std::string& data) const;
+        std::vector<std::unique_ptr<SpadesCommand>> deserializeCommands(const std::vector<int> encoding) const;
     public:
         void clear();
         bool canUndo() const;

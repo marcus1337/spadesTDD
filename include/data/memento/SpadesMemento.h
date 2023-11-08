@@ -14,6 +14,7 @@ namespace spd
         unsigned int trumpVariationType;
         unsigned int seed;
         std::vector<int> bids;
+        std::string historyEncoding;
 
         SpadesMemento();
         SpadesMemento(const std::string &data);

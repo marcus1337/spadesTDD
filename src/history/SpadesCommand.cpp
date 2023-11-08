@@ -3,6 +3,7 @@
 using namespace spd;
 
 PlaceCommand::PlaceCommand(const Card &card) : card(card) {}
+PlaceCommand::PlaceCommand(int cardValue) : card(Card(cardValue)){}
 void PlaceCommand::execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
 {
     state.playCard(turn.getTurnSeat(state), card);
@@ -21,7 +22,7 @@ void PlaceCommand::undo(State &state, const Turn &turn, const TrumpVariationCont
     state.playedSeatCardPairs.pop_back();
 }
 
-BidCommand::BidCommand(int bid) : bid(bid)
+BidCommand::BidCommand(int bid) : bid(std::clamp<int>(bid, 0, 13))
 {
 }
 void BidCommand::execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
@@ -33,9 +34,23 @@ void BidCommand::undo(State &state, const Turn &turn, const TrumpVariationContro
     state.bids.pop_back();
 }
 
-BidOptionCommand::BidOptionCommand(const BidOption& bidOption, const Seat& seat) : bidOption(bidOption), seat(seat)
+BidOptionCommand::BidOptionCommand(const BidOption &bidOption, const Seat &seat) : bidOption(bidOption), seat(seat)
 {
 }
+
+BidOptionCommand::BidOptionCommand(int serializedValue) : seat(deserialize(serializedValue).second), bidOption(deserialize(serializedValue).first) 
+{
+}
+
+std::pair<BidOption,Seat> BidOptionCommand::deserialize(int serializedValue) const{
+    int seatValue = abs(serializedValue % SeatUtils::numSeats);
+    int bidOptValue = abs((serializedValue - seatValue) / SeatUtils::numSeats);
+    if(bidOptValue > (int)BidOption::SHOW_HAND){
+        bidOptValue = 0;
+    }
+    return std::make_pair((BidOption)bidOptValue, (Seat)seatValue);
+}
+
 void BidOptionCommand::execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
 {
     state.setBidOption(seat, bidOption);
@@ -45,14 +60,17 @@ void BidOptionCommand::undo(State &state, const Turn &turn, const TrumpVariation
     state.roundBidOptions[state.getRound()].erase(std::make_pair(seat, bidOption));
 }
 
-std::vector<unsigned int> BidCommand::serialize() const{
-    return {(unsigned int)bid};
+int BidCommand::serialize() const
+{
+    return bid;
 }
 
-std::vector<unsigned int> PlaceCommand::serialize() const{
-    return {card.serialize()};
+int PlaceCommand::serialize() const
+{
+    return card.serialize();
 }
 
-std::vector<unsigned int> BidOptionCommand::serialize() const{
-    return {(unsigned int)bidOption, (unsigned int) seat};
+int BidOptionCommand::serialize() const
+{
+    return ((int)bidOption) * SeatUtils::numSeats + (int)seat;
 }

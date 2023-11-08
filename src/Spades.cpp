@@ -11,6 +11,7 @@ SpadesMemento Spades::makeMemento() const
     memento.bidVariationType = (unsigned int)getBidVariationType();
     memento.trumpVariationType = (unsigned int)getTrumpVariationType();
     memento.bids = state.bids;
+    memento.historyEncoding = history.serialize();
     return memento;
 }
 
@@ -18,6 +19,10 @@ void Spades::loadMemento(const SpadesMemento &memento)
 {
     reset(memento.seed, memento.getBidVariationType(), memento.getTrumpVariationType());
     state.bids = memento.bids;
+    if(!history.deserialize(memento.historyEncoding)){
+        std::cerr << "Failed deserializing history\n";
+        reset();
+    }
 }
 
 void Spades::setBidVariation(BidVariationType type)

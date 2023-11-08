@@ -50,6 +50,7 @@ std::string SpadesMemento::serialize() const
     {
         j["bids"].push_back(bid);
     }
+    j["history"] = historyEncoding;
     return j.dump();
 }
 
@@ -67,4 +68,5 @@ void SpadesMemento::deserialize(const std::string &data)
             bids.push_back(element);
         }
     }
+    historyEncoding = j["history"];
 }

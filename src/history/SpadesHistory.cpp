@@ -40,35 +40,74 @@ void SpadesHistory::addCommand(std::unique_ptr<SpadesCommand> command)
     redoCommands.clear();
 }
 
-bool SpadesHistory::deserialize(const std::string &encodedData)
+bool SpadesHistory::deserialize(const std::string &data)
 {
     clear();
-    std::vector<int> encoding = getEncoding(encodedData);
-    for(int i = 0; i < encoding.size(); i++){
-        
-    }
-    return encodedData.empty() || !encoding.empty();
+    const auto encoding = getEncoding(data);
+    const auto undoEncoding = getUndoEncoding(encoding);
+    const auto redoEncoding = getRedoEncoding(encoding);
+    undoCommands = deserializeCommands(undoEncoding);
+    redoCommands = deserializeCommands(redoEncoding);
+    return undoEncoding.size() / 2 == undoCommands.size() && redoEncoding.size() / 2 == redoCommands.size();
 }
 
-std::vector<int> SpadesHistory::getEncoding(const std::string &encodedData) const
+std::vector<std::unique_ptr<SpadesCommand>> SpadesHistory::deserializeCommands(const std::vector<int> encoding) const
+{
+    std::vector<std::unique_ptr<SpadesCommand>> commands;
+    for (int i = 0; i+1 < encoding.size(); i += 2)
+    {
+        int cmdValue = encoding[i];
+        int serializedValue = encoding[i + 1];
+        if (cmdValue == placeCmdValue)
+        {
+            commands.push_back(std::make_unique<PlaceCommand>(serializedValue));
+        }
+        else if (cmdValue == bidCmdValue)
+        {
+            commands.push_back(std::make_unique<BidCommand>(serializedValue));
+        }
+        else if (cmdValue == bidOptCmdValue)
+        {
+            commands.push_back(std::make_unique<BidOptionCommand>(serializedValue));
+        }
+        else
+        {
+            std::cerr << "Error: wrong command deserialization value " << i << " " << cmdValue << " " << serializedValue << "\n";
+        }
+    }
+    return commands;
+}
+
+std::vector<int> SpadesHistory::getEncoding(const std::string &data) const
 {
     std::vector<int> encoding;
-    std::istringstream iss(encodedData);
+    std::istringstream iss(data);
     int value;
     while (iss >> value)
     {
         encoding.push_back(value);
-        if (iss.peek() == ' ')
-        {
-            iss.ignore();
-        }
-        if (iss.fail())
-        {
-            encoding.clear();
-            break;
-        }
     }
     return encoding;
+}
+
+std::vector<int> SpadesHistory::getUndoEncoding(const std::vector<int> &encoding) const
+{
+    std::vector<int> undoEncoding;
+    for (int i = 0; i < encoding.size() && encoding[i] != separationValue; i++)
+    {
+        undoEncoding.push_back(encoding[i]);
+    }
+    return undoEncoding;
+}
+std::vector<int> SpadesHistory::getRedoEncoding(const std::vector<int> &encoding) const
+{
+    std::vector<int> redoEncoding;
+    const int startIndex = getUndoEncoding(encoding).size() + 1;
+    for (int i = startIndex; i < encoding.size(); i++)
+    {
+        redoEncoding.push_back(encoding[i]);
+    }
+    return redoEncoding;
 }
 
 std::string SpadesHistory::serialize() const
@@ -76,11 +115,12 @@ std::string SpadesHistory::serialize() const
     std::stringstream ss;
     for (const auto &command : undoCommands)
     {
-        ss << undoCmdValue << " " << serializeCommand(*command);
+        ss << " " << serializeCommand(*command);
     }
+    ss << " " << separationValue;
     for (const auto &command : redoCommands)
     {
-        ss << redoCmdValue << " " << serializeCommand(*command);
+        ss << " " << serializeCommand(*command);
     }
     return ss.str();
 }
@@ -88,11 +128,7 @@ std::string SpadesHistory::serialize() const
 std::string SpadesHistory::serializeCommand(const SpadesCommand &command) const
 {
     std::stringstream ss;
-    ss << getCommandID(command) << " ";
-    for (const auto &value : command.serialize())
-    {
-        ss << value << " ";
-    }
+    ss << getCommandID(command) << " " << command.serialize();
     return ss.str();
 }
 

@@ -14,7 +14,7 @@ namespace spd
         virtual ~SpadesCommand() = default;
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) = 0;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) = 0;
-        virtual std::vector<unsigned int> serialize() const = 0;
+        virtual int serialize() const = 0;
     };
 
     class PlaceCommand : public SpadesCommand
@@ -23,9 +23,10 @@ namespace spd
 
     public:
         PlaceCommand(const Card &card);
+        explicit PlaceCommand(int cardValue);
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual std::vector<unsigned int> serialize() const override;
+        virtual int serialize() const override;
     };
 
     class BidCommand : public SpadesCommand
@@ -36,18 +37,20 @@ namespace spd
         BidCommand(int bid);
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual std::vector<unsigned int> serialize() const override;
+        virtual int serialize() const override;
     };
 
     class BidOptionCommand : public SpadesCommand
     {
         const BidOption bidOption;
         const Seat seat;
+        std::pair<BidOption,Seat> deserialize(int serializedValue) const;
     public:
         BidOptionCommand(const BidOption& bidOption, const Seat& seat);
+        explicit BidOptionCommand(int serializedValue);
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual std::vector<unsigned int> serialize() const override;
+        virtual int serialize() const override;
     };
 
 }
