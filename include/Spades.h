@@ -62,5 +62,7 @@ namespace spd
         void redo();
         bool canRedo() const;
 
+        std::vector<std::pair<Seat, Card>> getPlayedTrickSeatCardPairs() const;
+
     };
 }

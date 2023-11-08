@@ -198,7 +198,8 @@ bool Spades::canUndo() const
     return history.canUndo();
 }
 
-void Spades::redo(){
+void Spades::redo()
+{
     history.redo(state, turn, trumpVariationController);
 }
 
@@ -207,3 +208,7 @@ bool Spades::canRedo() const
     return history.canRedo();
 }
 
+std::vector<std::pair<Seat, Card>> Spades::getPlayedTrickSeatCardPairs() const
+{
+    return state.getPlayedTrickCardSeatPairs();
+}

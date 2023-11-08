@@ -51,20 +51,28 @@ TEST_F(CardSerializationTest, DeserializeCards) {
 }
 
 TEST(Serialization, History){
-    SpadesHistory history;
+
+    Spades spades;
     const auto c1a = Card(Rank::ACE, Suit::DIAMOND);
     const auto c2a = Card(Rank::TWO, Suit::CLOVER);
-    history.addCommand(std::make_unique<PlaceCommand>(c1a));
-    history.addCommand(std::make_unique<PlaceCommand>(c2a));
-    std::vector<int> encodedValues;
-    std::istringstream iss(history.serialize());
-    int num;
-    while (iss >> num) {
-        encodedValues.push_back(num);
-    }
-    ASSERT_TRUE(encodedValues.size() == 4);
-    Card c1b(encodedValues[1]);
-    Card c2b(encodedValues[3]);
+    for(int i = 0; i < 4; i++)
+        spades.addBid(1);
+    spades.playCard(c1a);
+    spades.playCard(c2a);
+    spades.undo();
+    spades.undo();
+    const auto encoding = spades.serialize();
+    spades.reset();
+    spades.deserialize(encoding);
+    ASSERT_TRUE(spades.canRedo());
+    spades.redo();
+    ASSERT_TRUE(spades.canRedo());
+    spades.redo();
+    const auto playedTrickSeatCardPairs = spades.getPlayedTrickSeatCardPairs();
+    ASSERT_EQ(playedTrickSeatCardPairs.size(), 2);
+    const auto c1b = playedTrickSeatCardPairs[0].second;
+    const auto c2b = playedTrickSeatCardPairs[1].second;
     EXPECT_EQ(c1a, c1b);
     EXPECT_EQ(c2a, c2b);
 }
+
