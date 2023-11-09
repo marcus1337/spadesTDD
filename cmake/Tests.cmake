@@ -22,6 +22,7 @@ add_executable(unit_tests
 "test/testTrumpVariation.cpp"
 "test/testBidVariation.cpp"
 "test/testUndoRedo.cpp"
+"test/testStateValidity.cpp"
 )
 
 target_link_libraries(unit_tests GTest::gtest_main ${PROJECT_NAME})
