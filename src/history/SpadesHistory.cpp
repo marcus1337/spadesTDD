@@ -72,7 +72,8 @@ std::vector<std::unique_ptr<SpadesCommand>> SpadesHistory::deserializeCommands(c
         }
         else
         {
-            std::cerr << "Error: wrong command deserialization value " << i << " " << cmdValue << " " << serializedValue << "\n";
+            commands.clear();
+            break;
         }
     }
     return commands;

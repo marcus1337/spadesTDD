@@ -8,13 +8,12 @@
 
 using namespace spd;
 
-static constexpr int UNSET_VALUE = std::numeric_limits<int>::min();
 static constexpr const char *BID_VAR_KEY = "BidVariationType";
 static constexpr const char *TRUMP_VAR_KEY = "TrumpVariationType";
 static constexpr const char *SEED_KEY = "seed";
 static constexpr const char *BIDS_KEY = "bids";
 static constexpr const char *HISTORY_KEY = "history";
-SpadesMemento::SpadesMemento() : bidVariationType(UNSET_VALUE), trumpVariationType(UNSET_VALUE), seed(UNSET_VALUE)
+SpadesMemento::SpadesMemento() : bidVariationType(0), trumpVariationType(0), seed(0)
 {
 }
 SpadesMemento::SpadesMemento(const std::string &data)
@@ -40,10 +39,6 @@ TrumpVariationType SpadesMemento::getTrumpVariationType() const
 
 std::string SpadesMemento::serialize() const
 {
-    assert(bidVariationType != UNSET_VALUE);
-    assert(trumpVariationType != UNSET_VALUE);
-    assert(seed != UNSET_VALUE);
-
     nlohmann::json j;
     j[BID_VAR_KEY] = bidVariationType;
     j[TRUMP_VAR_KEY] = trumpVariationType;
