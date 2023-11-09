@@ -10,7 +10,7 @@
 namespace spd
 {
     enum class BidOption{
-        SHOW_HAND
+        SHOW_HAND, LAST
     };
 
 }

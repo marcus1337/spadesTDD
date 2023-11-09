@@ -76,17 +76,77 @@ void SpadesMemento::deserialize(const std::string &data)
 std::vector<std::pair<Seat, Card>> SpadesMemento::getPlayedSeatCardPairs() const
 {
     std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
+    for (int i = 0; i + 1 < playedSeatCardPairData.size(); i += 2)
+    {
+        unsigned int seatValue = playedSeatCardPairData[i];
+        unsigned int cardValue = playedSeatCardPairData[i + 1];
+        Seat seat = (Seat)(seatValue % 4);
+        Card card(cardValue);
+        playedSeatCardPairs.push_back(std::make_pair(seat, card));
+    }
 
     return playedSeatCardPairs;
 }
+
 std::map<int, std::set<std::pair<Seat, BidOption>>> SpadesMemento::getRoundBidOptions() const
 {
     std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
+    for (int i = 0; i + 2 < roundBidOptionsData.size(); i += 3)
+    {
+        unsigned int roundIndex = roundBidOptionsData[i];
+        unsigned int seatValue = roundBidOptionsData[i + 1];
+        unsigned int bidOptionValue = roundBidOptionsData[i + 2];
+        Seat seat = (Seat)(seatValue % 4);
+        BidOption bidOption = (BidOption)(bidOptionValue % ((int)BidOption::LAST));
+        if (!roundBidOptions.contains(roundIndex))
+        {
+            roundBidOptions[i] = std::set<std::pair<Seat, BidOption>>();
+        }
+        roundBidOptions[i].insert(std::make_pair(seat, bidOption));
+    }
     return roundBidOptions;
 }
+
 std::vector<Seat> SpadesMemento::getTrickTakers() const
 {
     std::vector<Seat> trickTakers;
-    
+    for (const unsigned int seatValue : trickTakersData)
+    {
+        Seat seat = (Seat)(seatValue % 4);
+        trickTakers.push_back(seat);
+    }
     return trickTakers;
+}
+
+void SpadesMemento::setPlayedSeatCardPairsData(const std::vector<std::pair<Seat, Card>> &playedSeatCardPairs)
+{
+    playedSeatCardPairData.clear();
+    for (const auto &pair : playedSeatCardPairs)
+    {
+        playedSeatCardPairData.push_back((unsigned int)pair.first);
+        playedSeatCardPairData.push_back(pair.second.serialize());
+    }
+}
+
+void SpadesMemento::setRoundBidOptionsData(const std::map<int, std::set<std::pair<Seat, BidOption>>> &roundBidOptions)
+{
+    roundBidOptionsData.clear();
+    for (const auto &[key, value] : roundBidOptions)
+    {
+        for (const auto &pair : value)
+        {
+            roundBidOptionsData.push_back(key);
+            roundBidOptionsData.push_back((unsigned int)pair.first);
+            roundBidOptionsData.push_back((unsigned int)pair.second);
+        }
+    }
+}
+
+void SpadesMemento::setTrickTakersData(const std::vector<Seat> &seats)
+{
+    trickTakersData.clear();
+    for (const auto &seat : seats)
+    {
+        trickTakersData.push_back((unsigned int)seat);
+    }
 }

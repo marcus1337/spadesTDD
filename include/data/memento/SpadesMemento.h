@@ -24,6 +24,9 @@ namespace spd
         std::vector<unsigned int> roundBidOptionsData;
         std::vector<unsigned int> trickTakersData;
 
+        void setPlayedSeatCardPairsData(const std::vector<std::pair<Seat, Card>>& playedSeatCardPairs);
+        void setRoundBidOptionsData(const std::map<int, std::set<std::pair<Seat, BidOption>>>& roundBidOptions);
+        void setTrickTakersData(const std::vector<Seat>& seats);
         std::vector<std::pair<Seat, Card>> getPlayedSeatCardPairs() const;
         std::map<int, std::set<std::pair<Seat, BidOption>>> getRoundBidOptions() const;
         std::vector<Seat> getTrickTakers() const;
