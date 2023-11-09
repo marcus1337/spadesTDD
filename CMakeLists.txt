@@ -11,10 +11,10 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/data/card/CardComparison.cpp"
 "src/data/card/CardValue.cpp"
 "src/data/card/CardValueSerialization.cpp"
-
 "src/data/SpadesMemento.cpp"
 "src/data/Score.cpp"
 "src/data/State.cpp"
+"src/data/PortableRandom.cpp"
 
 "src/rules/BidVariation.cpp"
 "src/rules/BidVariationController.cpp"

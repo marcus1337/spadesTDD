@@ -62,26 +62,11 @@ namespace spd {
         unsigned int seed;
         std::mt19937 mt;
     public:
-        PortableRandom() : seed(makeRandomSeed()), mt(seed) {
-        }
-
-        static unsigned int makeRandomSeed() {
-            return (unsigned int)std::random_device()();
-        }
-
-        void setSeed(unsigned int newSeed) {
-            seed = newSeed;
-            mt = std::mt19937(seed);
-        }
-
-        unsigned int getSeed() const {
-            return seed;
-        }
-
-        int randInt(int from, int to) {
-            custom_uniform_int_distribution<int> dis(from, to);
-            return dis(mt);
-        }
+        PortableRandom();
+        static unsigned int makeRandomSeed();
+        void setSeed(unsigned int newSeed);
+        unsigned int getSeed() const;
+        int randInt(int from, int to);
 
         template<class T>
         void shuffle(std::vector<T>& vec) {

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include "table/PortableRandom.h"
 #include <array>
+#include "data/PortableRandom.h"
 #include "data/card/Card.h"
 #include "data/Seat.h"
 
