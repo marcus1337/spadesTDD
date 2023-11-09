@@ -22,7 +22,8 @@ void Spades::loadMemento(const SpadesMemento &memento)
 {
     reset(memento.seed, memento.getBidVariationType(), memento.getTrumpVariationType());
     state.bids = memento.bids;
-    if(!history.deserialize(memento.historyEncoding)){
+    if (!history.deserialize(memento.historyEncoding))
+    {
         std::cerr << "Failed deserializing history\n";
         reset();
     }
@@ -177,14 +178,14 @@ std::optional<int> Spades::getBidResult(const Seat &seat) const
     return bidVariationController.getBidResult(seat, state);
 }
 
-void Spades::playCard(const Card &card)
+void Spades::place(const Card &card)
 {
     auto placeCommand = std::make_unique<PlaceCommand>(card);
     placeCommand->execute(state, turn, trumpVariationController);
     history.addCommand(std::move(placeCommand));
 }
 
-bool Spades::canPlayCard(const Card &card) const
+bool Spades::canPlace(const Card &card) const
 {
     return trumpVariationController.canPlaceCard(state, card, turn.getTurnSeat(state));
 }
@@ -222,4 +223,9 @@ bool Spades::canRedo() const
 std::vector<std::pair<Seat, Card>> Spades::getPlayedTrickSeatCardPairs() const
 {
     return state.getPlayedTrickCardSeatPairs();
+}
+
+bool Spades::isStateValid() const
+{
+    return false;
 }

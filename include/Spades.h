@@ -51,8 +51,8 @@ namespace spd
         std::vector<Card> getHand(const Seat& seat) const;
         void setBidOption(const Seat &seat, const BidOption &bidOption);
         std::optional<int> getBidResult(const Seat& seat) const;
-        void playCard(const Card& card);
-        bool canPlayCard(const Card& card) const;
+        void place(const Card& card);
+        bool canPlace(const Card& card) const;
 
         std::vector<Card> getTrumpCardsDescending() const;
         std::array<Card,2> getExcludedCards() const;
@@ -62,6 +62,7 @@ namespace spd
         void redo();
         bool canRedo() const;
 
+        bool isStateValid() const;
         std::vector<std::pair<Seat, Card>> getPlayedTrickSeatCardPairs() const;
 
     };

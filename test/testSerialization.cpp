@@ -57,8 +57,8 @@ TEST(Serialization, History){
     const auto c2a = Card(Rank::TWO, Suit::CLOVER);
     for(int i = 0; i < 4; i++)
         spades.addBid(1);
-    spades.playCard(c1a);
-    spades.playCard(c2a);
+    spades.place(c1a);
+    spades.place(c2a);
     spades.undo();
     spades.undo();
     const auto encoding = spades.serialize();

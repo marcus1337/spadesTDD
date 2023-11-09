@@ -41,7 +41,7 @@ TEST_F(AceHighTrumpVariation, PlayableCards)
     }
     if (hasNonTrumpCard)
     {
-        EXPECT_FALSE(spades.canPlayCard(Card(Rank::ACE, Suit::SPADE)));
+        EXPECT_FALSE(spades.canPlace(Card(Rank::ACE, Suit::SPADE)));
     }
 }
 
@@ -53,7 +53,7 @@ TEST_F(AceHighTrumpVariation, PlayableCardsLead)
     while (spades.isBidPhase())
         spades.addBid(1);
     const auto leadCard = spades.getHand(spades.getTurnSeat()).front();
-    spades.playCard(leadCard);
+    spades.place(leadCard);
     bool hasLeadCardSuit = false;
     for (const auto &card : spades.getHand(spades.getTurnSeat()))
     {
@@ -68,11 +68,11 @@ TEST_F(AceHighTrumpVariation, PlayableCardsLead)
     {
         if (hasLeadCardSuit && !leadCard.is(card.getSuit().value()))
         {
-            ASSERT_FALSE(spades.canPlayCard(card));
+            ASSERT_FALSE(spades.canPlace(card));
         }
         else if (!hasLeadCardSuit)
         {
-            ASSERT_TRUE(spades.canPlayCard(card));
+            ASSERT_TRUE(spades.canPlace(card));
         }
     }
 }
