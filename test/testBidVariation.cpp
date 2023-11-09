@@ -1,6 +1,6 @@
 #include "test_pch.h"
 #include "Spades.h"
-#include "table/Deck.h"
+#include "rules/Deck.h"
 
 using namespace spd;
 

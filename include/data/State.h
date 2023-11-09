@@ -5,7 +5,7 @@
 #include <map>
 #include <set>
 #include "data/card/Card.h"
-#include "table/Deck.h"
+#include "rules/Deck.h"
 
 namespace spd
 {
