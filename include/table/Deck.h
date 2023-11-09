@@ -42,6 +42,7 @@ namespace spd
         }
 
     public:
+        
         Deck() : excludeCards({Card(Joker::LITTLE), Card(Joker::BIG)})
         {
         }

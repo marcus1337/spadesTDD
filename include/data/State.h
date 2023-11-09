@@ -16,7 +16,6 @@ namespace spd
         std::array<std::optional<std::pair<Seat, int>>, SeatUtils::numSeats> getRoundBids() const;
 
     public:
-        Deck deck;
 
         std::array<std::pair<Seat, Card>, SeatUtils::numSeats> getTrick() const;
         std::vector<std::pair<Seat, Card>> getPlayedTrickCardSeatPairs() const;
@@ -36,6 +35,7 @@ namespace spd
         std::vector<Card> getHand(const Seat &seat) const;
         void playCard(const Seat &seat, const Card &card);
 
+        Deck deck;
         std::vector<int> bids;
         std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
         std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
