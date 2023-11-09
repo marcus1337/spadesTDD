@@ -1,9 +1,6 @@
-#include <vector>
-#include <gtest/gtest.h>
+#include "test_pch.h"
 #include "Spades.h"
 #include "table/PortableRandom.h"
-#include <algorithm>
-#include <set>
 
 using namespace spd;
 

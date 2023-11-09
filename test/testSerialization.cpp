@@ -1,12 +1,7 @@
-#include <vector>
-#include <gtest/gtest.h>
+#include "test_pch.h"
 #include "Spades.h"
-#include <algorithm>
-#include <set>
-#include <unordered_set>
 #include "data/card/Card.h"
 #include "history/SpadesHistory.h"
-#include <sstream>
 
 using namespace spd;
 

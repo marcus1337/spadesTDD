@@ -1,11 +1,6 @@
-#include <vector>
-#include <gtest/gtest.h>
+#include "test_pch.h"
 #include "Spades.h"
-#include <algorithm>
 #include "table/Deck.h"
-#include <set>
-#include <cassert>
-#include <optional>
 
 using namespace spd;
 

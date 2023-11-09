@@ -25,5 +25,6 @@ add_executable(unit_tests
 "test/testStateValidity.cpp"
 )
 
+target_precompile_headers(unit_tests PRIVATE "test/test_pch.h")
 target_link_libraries(unit_tests GTest::gtest_main ${PROJECT_NAME})
 gtest_discover_tests(unit_tests)
