@@ -6,14 +6,14 @@ namespace spd
     struct InsertTime
     {
         Seat turnSeat;
-        int round;
+        unsigned int round;
     };
 
     class SpadesUndoCommands
     {
         std::vector<std::unique_ptr<BidCommand>> bidCommands;
         std::vector<std::unique_ptr<PlaceCommand>> placeCommands;
-        std::vector<std::pair<InsertTime, std::unique_ptr<BidOptionCommand>>> bidOptionCommands;
+        std::vector<std::pair<InsertTime, std::unique_ptr<BidOptionCommand>>> bidOptionCommandInsertions;
 
     public:
         std::vector<unsigned int> getBidsData() const;
@@ -24,8 +24,13 @@ namespace spd
         void setPlacedCards(const std::vector<unsigned int>& data);
         
         bool hasValidCommandOrdering() const;
-        bool canUndo() const;
-        void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController);
+        bool canUndoBid() const;
+        bool canUndoDealtCard() const;
+        bool canUndoBidOptionInsertion() const;
+        std::unique_ptr<BidCommand> popBidCommand();
+        std::unique_ptr<PlaceCommand> popPlaceCommand();
+        std::pair<InsertTime, std::unique_ptr<BidOptionCommand>> popBidOptionCommandInsertion();
+    
     };
 
 }

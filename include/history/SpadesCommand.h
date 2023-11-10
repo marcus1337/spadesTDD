@@ -13,7 +13,7 @@ namespace spd
         virtual ~SpadesCommand() = default;
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) = 0;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) = 0;
-        virtual int serialize() const = 0;
+        virtual unsigned int serialize() const = 0;
     };
 
     class PlaceCommand : public SpadesCommand
@@ -25,7 +25,7 @@ namespace spd
         explicit PlaceCommand(int cardValue);
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual int serialize() const override;
+        virtual unsigned int serialize() const override;
         Card getCard() const;
     };
 
@@ -34,10 +34,10 @@ namespace spd
         const int bid;
 
     public:
-        BidCommand(int bid);
+        explicit BidCommand(int bid);
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual int serialize() const override;
+        virtual unsigned int serialize() const override;
         int getBid() const;
     };
 
@@ -51,7 +51,7 @@ namespace spd
         explicit BidOptionCommand(int serializedValue);
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual int serialize() const override;
+        virtual unsigned int serialize() const override;
         BidOption getBidOption() const;
         Seat getSeat() const;
     };
