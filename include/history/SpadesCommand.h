@@ -6,7 +6,6 @@
 
 namespace spd
 {
-
     class SpadesCommand
     {
     public:
@@ -27,6 +26,7 @@ namespace spd
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual int serialize() const override;
+        Card getCard() const;
     };
 
     class BidCommand : public SpadesCommand
@@ -38,6 +38,7 @@ namespace spd
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual int serialize() const override;
+        int getBid() const;
     };
 
     class BidOptionCommand : public SpadesCommand
@@ -51,6 +52,8 @@ namespace spd
         virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
         virtual int serialize() const override;
+        BidOption getBidOption() const;
+        Seat getSeat() const;
     };
 
 }

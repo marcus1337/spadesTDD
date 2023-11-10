@@ -8,12 +8,7 @@
 
 using namespace spd;
 
-static constexpr const char *BID_VAR_KEY = "BidVariationType";
-static constexpr const char *TRUMP_VAR_KEY = "TrumpVariationType";
-static constexpr const char *SEED_KEY = "seed";
-static constexpr const char *BIDS_KEY = "bids";
-static constexpr const char *HISTORY_KEY = "history";
-SpadesMemento::SpadesMemento() : bidVariationType(0), trumpVariationType(0), seed(0)
+SpadesMemento::SpadesMemento(const SpadesHistory& history, const State& state, const TrumpVariationType& trumpVarType, const BidVariationType& bidVarType, unsigned int seed) : bidVariationType(0), trumpVariationType(0), seed(0)
 {
 }
 SpadesMemento::SpadesMemento(const std::string &data)
@@ -47,7 +42,6 @@ std::string SpadesMemento::serialize() const
     {
         j[BIDS_KEY].push_back(bid);
     }
-    j[HISTORY_KEY] = historyEncoding;
     return j.dump();
 }
 
@@ -65,7 +59,6 @@ void SpadesMemento::deserialize(const std::string &data)
             bids.push_back(element);
         }
     }
-    historyEncoding = j[HISTORY_KEY];
 }
 
 std::vector<std::pair<Seat, Card>> SpadesMemento::getPlayedSeatCardPairs() const

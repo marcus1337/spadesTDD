@@ -6,12 +6,11 @@ using namespace spd;
 
 SpadesMemento Spades::makeMemento() const
 {
-    auto memento = SpadesMemento();
+    auto memento = SpadesMemento(history, state, getTrumpVariationType(), getBidVariationType(), getSeed());
     memento.seed = getSeed();
     memento.bidVariationType = (unsigned int)getBidVariationType();
     memento.trumpVariationType = (unsigned int)getTrumpVariationType();
     memento.bids = state.bids;
-    memento.historyEncoding = history.serialize();
     memento.setPlayedSeatCardPairsData(state.playedSeatCardPairs);
     memento.setRoundBidOptionsData(state.roundBidOptions);
     memento.setTrickTakersData(state.trickTakers);
@@ -22,11 +21,6 @@ void Spades::loadMemento(const SpadesMemento &memento)
 {
     reset(memento.seed, memento.getBidVariationType(), memento.getTrumpVariationType());
     state.bids = memento.bids;
-    if (!history.deserialize(memento.historyEncoding))
-    {
-        std::cerr << "Failed deserializing history\n";
-        reset();
-    }
     state.playedSeatCardPairs = memento.getPlayedSeatCardPairs();
     state.roundBidOptions = memento.getRoundBidOptions();
     state.trickTakers = memento.getTrickTakers();

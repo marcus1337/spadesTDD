@@ -3,7 +3,7 @@
 using namespace spd;
 
 PlaceCommand::PlaceCommand(const Card &card) : card(card) {}
-PlaceCommand::PlaceCommand(int cardValue) : card(Card(cardValue)){}
+PlaceCommand::PlaceCommand(int cardValue) : card(Card(cardValue)) {}
 void PlaceCommand::execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
 {
     state.playCard(turn.getTurnSeat(state), card);
@@ -34,18 +34,25 @@ void BidCommand::undo(State &state, const Turn &turn, const TrumpVariationContro
     state.bids.pop_back();
 }
 
+int BidCommand::getBid() const
+{
+    return bid;
+}
+
 BidOptionCommand::BidOptionCommand(const BidOption &bidOption, const Seat &seat) : bidOption(bidOption), seat(seat)
 {
 }
 
-BidOptionCommand::BidOptionCommand(int serializedValue) : seat(deserialize(serializedValue).second), bidOption(deserialize(serializedValue).first) 
+BidOptionCommand::BidOptionCommand(int serializedValue) : seat(deserialize(serializedValue).second), bidOption(deserialize(serializedValue).first)
 {
 }
 
-std::pair<BidOption,Seat> BidOptionCommand::deserialize(int serializedValue) const{
+std::pair<BidOption, Seat> BidOptionCommand::deserialize(int serializedValue) const
+{
     int seatValue = abs(serializedValue % SeatUtils::numSeats);
     int bidOptValue = abs((serializedValue - seatValue) / SeatUtils::numSeats);
-    if(bidOptValue > (int)BidOption::SHOW_HAND){
+    if (bidOptValue > (int)BidOption::SHOW_HAND)
+    {
         bidOptValue = 0;
     }
     return std::make_pair((BidOption)bidOptValue, (Seat)seatValue);
@@ -70,7 +77,21 @@ int PlaceCommand::serialize() const
     return card.serialize();
 }
 
+Card PlaceCommand::getCard() const
+{
+    return card;
+}
+
 int BidOptionCommand::serialize() const
 {
     return ((int)bidOption) * SeatUtils::numSeats + (int)seat;
+}
+
+BidOption BidOptionCommand::getBidOption() const
+{
+    return bidOption;
+}
+Seat BidOptionCommand::getSeat() const
+{
+    return seat;
 }

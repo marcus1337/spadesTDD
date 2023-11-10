@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 
 "src/history/SpadesHistory.cpp"
 "src/history/SpadesCommand.cpp"
+"src/history/SpadesCommandOrder.cpp"
 )
 target_include_directories(${PROJECT_NAME}
   PUBLIC
