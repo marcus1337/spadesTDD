@@ -91,15 +91,15 @@ bool Trick::hasSameSuit(const Card &card, const Seat &seat) const
     return false;
 }
 
-bool Trick::canPlace(const Card &card) const
+bool Trick::canPlace(const Seat& turnSeat, const Card &card) const
 {
     const auto playedTrickCards = state.getPlayedTrickCards();
-    return playedTrickCards.empty() ? canPlaceFirst(card, state.getTurn()) : canPlaceContinuation(card, state.getTurn());
+    return playedTrickCards.empty() ? canPlaceFirst(card, turnSeat) : canPlaceContinuation(card, turnSeat);
 }
 
 Seat Trick::getTrickTaker() const
 {
-    const auto trick = state.getTrick();
+    const auto trick = state.getTricks().back();
     Card winCard = trick.front().second;
     Seat winSeat = trick.front().first;
     for (const auto &cardSeatPair : trick)

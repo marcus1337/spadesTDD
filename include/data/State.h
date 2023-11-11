@@ -15,7 +15,7 @@ namespace spd
         std::vector<int> getRoundBidValues() const;
     public:
         std::vector<std::pair<Seat, int>> getRoundBids() const;
-        std::array<std::pair<Seat, Card>, SeatUtils::numSeats> getTrick() const;
+        std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> getTricks() const;
         std::vector<std::pair<Seat, Card>> getPlayedTrickCardSeatPairs() const;
         std::vector<Card> getPlayedTrickCards() const;        
         std::vector<std::pair<Seat, Card>> getPlayedCardSeatPairs(int round) const;
@@ -32,17 +32,15 @@ namespace spd
         int getBid(const Seat &seat) const;
         bool hasGameStarted() const;
         std::vector<Card> getHand(const Seat &seat) const;
-        void playCard(const Card &card);
+        void playCard(const Seat& seat, const Card &card);
         void addBid(int bid);
         void popBid();
         void removeBidOption(const Seat &seat, const BidOption &bidOption);
-
-        Seat getTurn() const;
+        Seat getTurn(const Seat& trickStartSeat) const;
 
         Deck deck;
         std::vector<int> bids;
         std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
         std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
-        std::vector<Seat> trickTakers;
     };
 }

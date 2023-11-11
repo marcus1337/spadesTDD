@@ -122,7 +122,8 @@ unsigned int Spades::getSeed() const
 
 Seat Spades::getTurnSeat() const
 {
-    return state.getTurn();
+    const auto trickStartSeat = trumpVariationController.getTrickStartSeat(state);
+    return state.getTurn(trickStartSeat);
 }
 
 void Spades::addBid(int bid)

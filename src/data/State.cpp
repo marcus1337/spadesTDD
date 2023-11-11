@@ -38,15 +38,18 @@ std::vector<std::pair<Seat, int>> State::getRoundBids() const
     return roundBids;
 }
 
-std::array<std::pair<Seat, Card>, SeatUtils::numSeats> State::getTrick() const
+std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> State::getTricks() const
 {
-    std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
-    const int offset = playedSeatCardPairs.size() / SeatUtils::numSeats;
-    for (int i = offset; i < SeatUtils::numSeats + offset; i++)
-    {
-        trick[i] = playedSeatCardPairs[i];
+    std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> tricks;
+    const int numTricks = playedSeatCardPairs.size() / SeatUtils::numSeats;
+    for(int i = 0 ; i < numTricks; i++){
+        std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
+        for(int j = 0 ; j < SeatUtils::numSeats; j++){
+            trick[j] = playedSeatCardPairs[j + (i*SeatUtils::numSeats)];
+        }
+        tricks.push_back(trick);
     }
-    return trick;
+    return tricks;
 }
 
 std::vector<std::pair<Seat, Card>> State::getPlayedTrickCardSeatPairs() const
@@ -102,7 +105,6 @@ void State::clear()
     bids.clear();
     roundBidOptions.clear();
     playedSeatCardPairs.clear();
-    trickTakers.clear();
 }
 
 int State::getRound() const
@@ -174,9 +176,9 @@ std::vector<Card> State::getHand(const Seat &seat) const
     return hand;
 }
 
-void State::playCard(const Card &card)
+void State::playCard(const Seat& seat, const Card &card)
 {
-    playedSeatCardPairs.push_back(std::make_pair(getTurn(), card));
+    playedSeatCardPairs.push_back(std::make_pair(seat, card));
 }
 
 void State::addBid(int bid)
@@ -196,7 +198,7 @@ void State::removeBidOption(const Seat &seat, const BidOption &bidOption)
     }
 }
 
-Seat State::getTurn() const
+Seat State::getTurn(const Seat& trickStartSeat) const
 {
     const int round = getRound();
     const auto playedRoundSeatCardPairs = getPlayedCardSeatPairs(round);
@@ -213,8 +215,7 @@ Seat State::getTurn() const
     }
     else
     {
-        const auto startSeat = trickTakers.back();
         const int numTrickSteps = getPlayedTrickCardSeatPairs().size();
-        return SeatUtils::getNextSeats(startSeat, numTrickSteps).back();
+        return SeatUtils::getNextSeats(trickStartSeat, numTrickSteps).back();
     }
 }

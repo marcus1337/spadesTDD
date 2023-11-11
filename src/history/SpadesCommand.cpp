@@ -63,13 +63,12 @@ void SpadesCommandValueVisitor::execute(const BidCommandValueVariant &bidCommand
         state.setBidOption(bidOptionCommandValue->seat, bidOptionCommandValue->bidOption);
     }
 }
+
 void SpadesCommandValueVisitor::execute(const PlaceCommandValue &placeCommandValue, State &state, const TrumpVariationController &trumpVariationController)
 {
-    state.playCard(placeCommandValue.card);
-    if (state.getPlayedTrickCardSeatPairs().size() == SeatUtils::numSeats)
-    {
-        state.trickTakers.push_back(trumpVariationController.getTrickTaker(state));
-    }
+    const auto trickStartSeat = trumpVariationController.getTrickStartSeat(state);
+    auto turnSeat = state.getTurn(trickStartSeat);
+    state.playCard(turnSeat, placeCommandValue.card);
 }
 
 void SpadesCommandValueVisitor::undo(const BidCommandValueVariant &bidCommandValueVariant, State &state, const TrumpVariationController &trumpVariationController)
@@ -86,9 +85,5 @@ void SpadesCommandValueVisitor::undo(const BidCommandValueVariant &bidCommandVal
 
 void SpadesCommandValueVisitor::undo(const PlaceCommandValue &placeCommandValue, State &state, const TrumpVariationController &trumpVariationController)
 {
-    if (state.getPlayedTrickCardSeatPairs().size() == SeatUtils::numSeats)
-    {
-        state.trickTakers.pop_back();
-    }
     state.playedSeatCardPairs.pop_back();
 }

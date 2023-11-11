@@ -32,7 +32,8 @@ Seat TrumpVariationController::getTrickTaker(const State &state) const
 
 bool TrumpVariationController::canPlaceCard(const State &state, const Card &card) const
 {
-    return Trick(*getTrumpVariation(), state).canPlace(card);
+    const auto turnSeat = state.getTurn(getTrickStartSeat(state));
+    return Trick(*getTrumpVariation(), state).canPlace(turnSeat, card);
 }
 
 std::vector<Card> TrumpVariationController::getTrumpCardsOrderedByValueDescending() const
@@ -43,4 +44,22 @@ std::vector<Card> TrumpVariationController::getTrumpCardsOrderedByValueDescendin
 std::array<Card, 2> TrumpVariationController::getExcludedCards() const
 {
     return getTrumpVariation()->getExcludedCards();
+}
+
+std::vector<Seat> TrumpVariationController::getTrickTakers(const State& state) const{
+    std::vector<Seat> trickTakers;
+    for(const auto trick : state.getTricks()){
+        const auto trickTaker = Trick(*getTrumpVariation(), state).getTrickTaker();
+        trickTakers.push_back(trickTaker);
+    }
+    return trickTakers;
+}
+
+Seat TrumpVariationController::getTrickStartSeat(const State& state) const{
+    Seat seat = (Seat)0;
+    const auto trickTakers = getTrickTakers(state);
+    if(!trickTakers.empty()){
+        seat = trickTakers.back();
+    }
+    return seat;
 }
