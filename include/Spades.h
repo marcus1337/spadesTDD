@@ -14,11 +14,11 @@ namespace spd
 {
     class Spades
     {
+        BidVariationController bidVariationController;
+        TrumpVariationController trumpVariationController;
         Deck deck;
         SpadesHistory history;
         State state;
-        BidVariationController bidVariationController;
-        TrumpVariationController trumpVariationController;
 
         SpadesMemento createMemento() const;
         void loadMemento(const SpadesMemento &memento);
@@ -62,7 +62,7 @@ namespace spd
         void redo();
         bool canRedo() const;
 
-        bool isStateValid() const;
+        bool isCorrupt() const;
         std::vector<std::pair<Seat, Card>> getPlayedTrickSeatCardPairs() const;
 
     };

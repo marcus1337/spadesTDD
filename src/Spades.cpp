@@ -232,7 +232,7 @@ std::vector<std::pair<Seat, Card>> Spades::getPlayedTrickSeatCardPairs() const
     return state.getPlayedTrickCardSeatPairs();
 }
 
-bool Spades::isStateValid() const
+bool Spades::isCorrupt() const
 {
     return false;
 }

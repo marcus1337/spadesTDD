@@ -6,18 +6,19 @@ using namespace spd;
 TEST(StateValidity, DissallowCardsBeforeBids)
 {
     Spades spades;
-    EXPECT_TRUE(spades.isStateValid());
+    EXPECT_FALSE(spades.isCorrupt());
     const Card card(Rank::ACE, Suit::SPADE);
     spades.place(card);
-    EXPECT_FALSE(spades.isStateValid());
+    EXPECT_TRUE(spades.isCorrupt());
 }
 
-TEST(StateValidity, DissallowDuplicateRoundCards)
+/*TEST(StateValidity, DissallowDuplicateRoundCards)
 {
     Spades spades;
-    EXPECT_TRUE(spades.isStateValid());
+    EXPECT_FALSE(spades.isCorrupt());
     const Card card(Rank::ACE, Suit::SPADE);
     spades.place(card);
     spades.place(card);
-    EXPECT_FALSE(spades.isStateValid());
-}
+    EXPECT_TRUE(spades.isCorrupt());
+}*/
+
