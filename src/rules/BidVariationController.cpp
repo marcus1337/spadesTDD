@@ -15,9 +15,9 @@ BidVariationController::BidVariationController() : variationType((BidVariationTy
     bidVariations[BidVariationType::SUICIDE] = std::make_unique<Suicide>();
     assert(bidVariations.size() == (int)BidVariationType::LAST);
 }
-std::vector<int> BidVariationController::getBids(const Seat &seat, const State &state) const
+std::vector<int> BidVariationController::getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const
 {
-    return getBidVariation()->getBids(seat, state);
+    return getBidVariation()->getBids(seat, state, hand);
 }
 
 std::vector<BidOption> BidVariationController::getBidOptions(const Seat &seat, const State &state) const

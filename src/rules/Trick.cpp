@@ -43,15 +43,15 @@ bool Trick::sameSuit(const Card &card1, const Card &card2) const
 
 Trick::Trick(const TrumpVariation &trumpVariation, const State &state) : trumpVariation(trumpVariation), state(state) {}
 
-bool Trick::canPlaceFirst(const Card &card, const Seat &seat) const
+bool Trick::canPlaceFirst(const Card &card, const std::vector<Card>& hand) const
 {
-    return (!trumpVariation.isTrumpCard(card) || hasTrumpBeenPlayed()) ? true : hasOnlyTrumpCards(seat);
+    return (!trumpVariation.isTrumpCard(card) || hasTrumpBeenPlayed()) ? true : hasOnlyTrumpCards(hand);
 }
 
-bool Trick::hasOnlyTrumpCards(const Seat &seat) const
+bool Trick::hasOnlyTrumpCards(const std::vector<Card>& hand) const
 {
     bool hasOnlyTrumpCards = true;
-    for (const auto &handCard : state.getHand(seat))
+    for (const auto &handCard : hand)
     {
         if (!trumpVariation.isTrumpCard(handCard))
         {
@@ -73,17 +73,17 @@ bool Trick::hasTrumpBeenPlayed() const
     return false;
 }
 
-bool Trick::canPlaceContinuation(const Card &card, const Seat &seat) const
+bool Trick::canPlaceContinuation(const Card &card, const std::vector<Card>& hand) const
 {
     const auto leadCard = getLeadCard().value();
     if (sameSuit(card, leadCard))
         return true;
-    return !hasSameSuit(card, seat);
+    return !hasSameSuit(card, hand);
 }
 
-bool Trick::hasSameSuit(const Card &card, const Seat &seat) const
+bool Trick::hasSameSuit(const Card &card, const std::vector<Card>& hand) const
 {
-    for (const auto &handCard : state.getHand(seat))
+    for (const auto &handCard : hand)
     {
         if (sameSuit(handCard, card))
             return true;
@@ -91,10 +91,10 @@ bool Trick::hasSameSuit(const Card &card, const Seat &seat) const
     return false;
 }
 
-bool Trick::canPlace(const Seat& turnSeat, const Card &card) const
+bool Trick::canPlace(const Card &card, const std::vector<Card>& hand) const
 {
     const auto playedTrickCards = state.getPlayedTrickCards();
-    return playedTrickCards.empty() ? canPlaceFirst(card, turnSeat) : canPlaceContinuation(card, turnSeat);
+    return playedTrickCards.empty() ? canPlaceFirst(card, hand) : canPlaceContinuation(card, hand);
 }
 
 Seat Trick::getTrickTaker() const

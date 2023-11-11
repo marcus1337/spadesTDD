@@ -27,9 +27,8 @@ std::vector<int> BidVariation::getAdjustedBidsBasedOnTeam(const Seat &seat, cons
     return bids;
 }
 
-std::vector<int> BidVariation::getBidEqualToSpades(const Seat &seat, const State &state) const
+std::vector<int> BidVariation::getBidEqualToSpades(const Seat &seat, const State &state, const std::vector<Card>& hand) const
 {
-    const auto &hand = state.getHand(seat);
     const int numSpades = std::count_if(hand.begin(), hand.end(),
                                         [](const auto &card)
                                         { return card.is(Suit::SPADE); });
@@ -44,7 +43,7 @@ std::optional<int> BidVariation::getStandardBidResult(const Seat &seat, const St
         return std::nullopt;
 }
 
-std::vector<int> DoubleBlindNil::getBids(const Seat &seat, const State &state) const
+std::vector<int> DoubleBlindNil::getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const
 {
     return getAdjustedBidsBasedOnTeam(seat, state);
 }
@@ -66,7 +65,7 @@ std::optional<int> DoubleBlindNil::getBidResult(const Seat &seat, const State &s
     return getStandardBidResult(seat, state);
 }
 
-std::vector<int> DoubleNil::getBids(const Seat &seat, const State &state) const
+std::vector<int> DoubleNil::getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const
 {
     return getAdjustedBidsBasedOnTeam(seat, state);
 }
@@ -79,9 +78,9 @@ std::optional<int> DoubleNil::getBidResult(const Seat &seat, const State &state)
     return getStandardBidResult(seat, state);
 }
 
-std::vector<int> Mirror::getBids(const Seat &seat, const State &state) const
+std::vector<int> Mirror::getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const
 {
-    return getBidEqualToSpades(seat, state);
+    return getBidEqualToSpades(seat, state, hand);
 }
 std::vector<BidOption> Mirror::getBidOptions(const Seat &seat, const State &state) const
 {
@@ -139,7 +138,7 @@ bool Suicide::isFirstBidderInTeam(const Seat &seat, const State &state) const
     return seat == startBidSeat || seat == secondBidSeat;
 }
 
-std::vector<int> Suicide::getBids(const Seat &seat, const State &state) const
+std::vector<int> Suicide::getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const
 {
     if (state.hasBid(SeatUtils::getTeamSeat(seat)))
         return getPossibleSecondaryBids(seat, state);

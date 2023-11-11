@@ -159,23 +159,6 @@ bool State::hasGameStarted() const
     return !bids.empty();
 }
 
-std::vector<Card> State::getHand(const Seat &seat) const
-{
-    auto startHand = deck.getHand(seat, getRound());
-    auto playedRoundCards = getPlayedCardSeatPairs(getRound());
-    std::vector<Card> hand;
-    for (const auto &card : startHand)
-    {
-        if (!std::any_of(playedRoundCards.begin(), playedRoundCards.end(),
-                         [&](const auto &playedSeatCardPair)
-                         { return playedSeatCardPair.second == card; }))
-        {
-            hand.push_back(card);
-        }
-    }
-    return hand;
-}
-
 void State::playCard(const Seat& seat, const Card &card)
 {
     playedSeatCardPairs.push_back(std::make_pair(seat, card));

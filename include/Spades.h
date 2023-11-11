@@ -8,11 +8,13 @@
 #include "data/State.h"
 #include "data/Bid.h"
 #include "data/Score.h"
+#include "rules/Deck.h"
 
 namespace spd
 {
     class Spades
     {
+        Deck deck;
         SpadesHistory history;
         State state;
         BidVariationController bidVariationController;

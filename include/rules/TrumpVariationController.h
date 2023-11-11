@@ -14,7 +14,7 @@ namespace spd{
         TrumpVariationType getTrumpVariationType() const;
         void setTrumpVariationType(TrumpVariationType type);
         Seat getTrickTaker(const State& state) const;
-        bool canPlaceCard(const State& state, const Card& card) const;
+        bool canPlaceCard(const State& state, const Card& card, const std::vector<Card>& hand) const;
         std::vector<Card> getTrumpCardsOrderedByValueDescending() const;
         std::array<Card, 2> getExcludedCards() const;
         std::vector<Seat> getTrickTakers(const State& state) const;

@@ -5,7 +5,7 @@
 #include <map>
 #include <set>
 #include "data/card/Card.h"
-#include "rules/Deck.h"
+#include "data/Seat.h"
 
 namespace spd
 {
@@ -31,14 +31,12 @@ namespace spd
         bool hasBid(const Seat &seat) const;
         int getBid(const Seat &seat) const;
         bool hasGameStarted() const;
-        std::vector<Card> getHand(const Seat &seat) const;
         void playCard(const Seat& seat, const Card &card);
         void addBid(int bid);
         void popBid();
         void removeBidOption(const Seat &seat, const BidOption &bidOption);
         Seat getTurn(const Seat& trickStartSeat) const;
 
-        Deck deck;
         std::vector<int> bids;
         std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
         std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;

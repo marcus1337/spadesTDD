@@ -17,12 +17,16 @@ void Spades::loadMemento(const SpadesMemento &memento)
 
     int undoBidIndex = 0;
     int undoCardIndex = 0;
-    const auto& undoBids = history.undoCommandContainer.bidValueVariants;
-    const auto& undoCards = history.undoCommandContainer.placeCommandValues;
-    while(undoBidIndex < undoBids.size() || undoCardIndex < undoCards.size()){
-        if(state.isBidPhase()){
+    const auto &undoBids = history.undoCommandContainer.bidValueVariants;
+    const auto &undoCards = history.undoCommandContainer.placeCommandValues;
+    while (undoBidIndex < undoBids.size() || undoCardIndex < undoCards.size())
+    {
+        if (state.isBidPhase())
+        {
             SpadesCommandValueVisitor::execute(undoBids[undoBidIndex++], state, trumpVariationController);
-        }else{
+        }
+        else
+        {
             SpadesCommandValueVisitor::execute(undoCards[undoCardIndex++], state, trumpVariationController);
         }
     }
@@ -38,13 +42,13 @@ void Spades::setTrumpVariation(TrumpVariationType type)
 {
     assert(!state.hasGameStarted());
     trumpVariationController.setTrumpVariationType(type);
-    state.deck.setExcludeCards(trumpVariationController.getExcludedCards());
+    deck.setExcludeCards(trumpVariationController.getExcludedCards());
 }
 
 void Spades::setSeed(unsigned int seed)
 {
     assert(!state.hasGameStarted());
-    state.deck.setSeed(seed);
+    deck.setSeed(seed);
 }
 
 Spades::Spades()
@@ -117,7 +121,7 @@ Score Spades::getScore() const
 
 unsigned int Spades::getSeed() const
 {
-    return state.deck.getSeed();
+    return deck.getSeed();
 }
 
 Seat Spades::getTurnSeat() const
@@ -128,7 +132,7 @@ Seat Spades::getTurnSeat() const
 
 void Spades::addBid(int bid)
 {
-     history.addAndExecuteBidCommand(state, trumpVariationController, bid);
+    history.addAndExecuteBidCommand(state, trumpVariationController, bid);
 }
 
 bool Spades::hasBid(const Seat &seat) const
@@ -143,7 +147,7 @@ bool Spades::isBidPhase() const
 
 std::vector<int> Spades::getPossibleBids(const Seat &seat) const
 {
-    return bidVariationController.getBids(seat, state);
+    return bidVariationController.getBids(seat, state, getHand(seat));
 }
 
 std::vector<int> Spades::getPossibleBids() const
@@ -158,7 +162,19 @@ std::vector<BidOption> Spades::getBidOptions(const Seat &seat) const
 
 std::vector<Card> Spades::getHand(const Seat &seat) const
 {
-    return Spades::state.getHand(seat);
+    auto startHand = deck.getHand(seat, state.getRound());
+    auto playedRoundCards = state.getPlayedCardSeatPairs(state.getRound());
+    std::vector<Card> hand;
+    for (const auto &card : startHand)
+    {
+        if (!std::any_of(playedRoundCards.begin(), playedRoundCards.end(),
+                         [&](const auto &playedSeatCardPair)
+                         { return playedSeatCardPair.second == card; }))
+        {
+            hand.push_back(card);
+        }
+    }
+    return hand;
 }
 
 void Spades::setBidOption(const Seat &seat, const BidOption &bidOption)
@@ -178,7 +194,7 @@ void Spades::place(const Card &card)
 
 bool Spades::canPlace(const Card &card) const
 {
-    return trumpVariationController.canPlaceCard(state, card);
+    return trumpVariationController.canPlaceCard(state, card, getHand(getTurnSeat()));
 }
 
 std::vector<Card> Spades::getTrumpCardsDescending() const

@@ -13,7 +13,7 @@ namespace spd
 
     public:
         BidVariationController();
-        std::vector<int> getBids(const Seat &seat, const State &state) const;
+        std::vector<int> getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const;
         std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const;
         std::optional<int> getBidResult(const Seat &seat, const State &state) const;
         void setBidVariationType(BidVariationType type);
