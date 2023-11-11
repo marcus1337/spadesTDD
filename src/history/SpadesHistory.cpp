@@ -13,26 +13,27 @@ bool SpadesHistory::canUndo() const
 {
     return !undoCommandContainer.bidValueVariants.empty();
 }
-void SpadesHistory::undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+
+void SpadesHistory::undo(State &state, const TrumpVariationController &trumpVariationController)
 {
 
     if (state.getRoundBids().empty() || !state.getPlayedRoundCards().empty())
     {
         auto commandValue = undoCommandContainer.placeCommandValues.back();
         undoCommandContainer.placeCommandValues.pop_back();
-        SpadesCommandValueVisitor::undo(commandValue, state, turn, trumpVariationController);
+        SpadesCommandValueVisitor::undo(commandValue, state, trumpVariationController);
         redoCommandContainer.placeCommandValues.push_back(commandValue);
     }
     else
     {
         auto commandValue = undoCommandContainer.bidValueVariants.back();
         undoCommandContainer.bidValueVariants.pop_back();
-        SpadesCommandValueVisitor::undo(commandValue, state, turn, trumpVariationController);
+        SpadesCommandValueVisitor::undo(commandValue, state, trumpVariationController);
         redoCommandContainer.bidValueVariants.push_back(commandValue);
     }
 }
 
-void SpadesHistory::redo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+void SpadesHistory::redo(State &state, const TrumpVariationController &trumpVariationController)
 {
     const auto roundBids = state.getRoundBids();
     const auto roundCards = state.getPlayedRoundCards();
@@ -40,14 +41,14 @@ void SpadesHistory::redo(State &state, const Turn &turn, const TrumpVariationCon
     {
         auto commandValue = redoCommandContainer.bidValueVariants.back();
         redoCommandContainer.bidValueVariants.pop_back();
-        SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+        SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
         undoCommandContainer.bidValueVariants.push_back(commandValue);
     }
     else
     {
         auto commandValue = redoCommandContainer.placeCommandValues.back();
         redoCommandContainer.placeCommandValues.pop_back();
-        SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+        SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
         undoCommandContainer.placeCommandValues.push_back(commandValue);
     }
 }
@@ -57,24 +58,24 @@ bool SpadesHistory::canRedo() const
     return !redoCommandContainer.bidValueVariants.empty() || !redoCommandContainer.placeCommandValues.empty();
 }
 
-void SpadesHistory::addAndExecuteBidCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, unsigned int bid)
+void SpadesHistory::addAndExecuteBidCommand(State &state, const TrumpVariationController &trumpVariationController, unsigned int bid)
 {
     redoCommandContainer.clear();
     BidCommandValue commandValue{bid};
-    SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+    SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
     undoCommandContainer.bidValueVariants.push_back(commandValue);
 }
-void SpadesHistory::addAndExecutePlaceCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, const Card &card)
+void SpadesHistory::addAndExecutePlaceCommand(State &state, const TrumpVariationController &trumpVariationController, const Card &card)
 {
     redoCommandContainer.clear();
     PlaceCommandValue commandValue{card};
-    SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+    SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
     undoCommandContainer.placeCommandValues.push_back(commandValue);
 }
-void SpadesHistory::addAndExecuteBidOptionCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, const Seat &seat, const BidOption &bidOption)
+void SpadesHistory::addAndExecuteBidOptionCommand(State &state, const TrumpVariationController &trumpVariationController, const Seat &seat, const BidOption &bidOption)
 {
     redoCommandContainer.clear();
     BidOptionCommandValue commandValue{bidOption, seat};
-    SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+    SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
     undoCommandContainer.bidValueVariants.push_back(commandValue);
 }

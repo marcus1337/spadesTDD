@@ -4,26 +4,28 @@
 
 using namespace spd;
 
-SpadesMemento Spades::makeMemento() const
+SpadesMemento Spades::createMemento() const
 {
-    auto memento = SpadesMemento(history, state, getTrumpVariationType(), getBidVariationType(), getSeed());
-    memento.seed = getSeed();
-    memento.bidVariationType = (unsigned int)getBidVariationType();
-    memento.trumpVariationType = (unsigned int)getTrumpVariationType();
-    memento.bids = state.bids;
-    memento.setPlayedSeatCardPairsData(state.playedSeatCardPairs);
-    memento.setRoundBidOptionsData(state.roundBidOptions);
-    memento.setTrickTakersData(state.trickTakers);
-    return memento;
+    return SpadesMemento(history.undoCommandContainer, history.redoCommandContainer, state, getTrumpVariationType(), getBidVariationType(), getSeed());
 }
 
 void Spades::loadMemento(const SpadesMemento &memento)
 {
-    reset(memento.seed, memento.getBidVariationType(), memento.getTrumpVariationType());
-    state.bids = memento.bids;
-    state.playedSeatCardPairs = memento.getPlayedSeatCardPairs();
-    state.roundBidOptions = memento.getRoundBidOptions();
-    state.trickTakers = memento.getTrickTakers();
+    reset(memento.getSeed(), memento.getBidVariationType(), memento.getTrumpVariationType());
+    history.undoCommandContainer = memento.getUndoContainer();
+    history.redoCommandContainer = memento.getRedoContainer();
+
+    int undoBidIndex = 0;
+    int undoCardIndex = 0;
+    const auto& undoBids = history.undoCommandContainer.bidValueVariants;
+    const auto& undoCards = history.undoCommandContainer.placeCommandValues;
+    while(undoBidIndex < undoBids.size() || undoCardIndex < undoCards.size()){
+        if(state.isBidPhase()){
+            SpadesCommandValueVisitor::execute(undoBids[undoBidIndex++], state, trumpVariationController);
+        }else{
+            SpadesCommandValueVisitor::execute(undoCards[undoCardIndex++], state, trumpVariationController);
+        }
+    }
 }
 
 void Spades::setBidVariation(BidVariationType type)
@@ -100,7 +102,7 @@ TrumpVariationType Spades::getTrumpVariationType() const
 
 std::string Spades::serialize() const
 {
-    return makeMemento().serialize();
+    return createMemento().serialize();
 }
 
 void Spades::deserialize(const std::string &data)
@@ -120,12 +122,12 @@ unsigned int Spades::getSeed() const
 
 Seat Spades::getTurnSeat() const
 {
-    return turn.getTurnSeat(state);
+    return state.getTurn();
 }
 
 void Spades::addBid(int bid)
 {
-     history.addAndExecuteBidCommand(state, turn, trumpVariationController, bid);
+     history.addAndExecuteBidCommand(state, trumpVariationController, bid);
 }
 
 bool Spades::hasBid(const Seat &seat) const
@@ -160,7 +162,7 @@ std::vector<Card> Spades::getHand(const Seat &seat) const
 
 void Spades::setBidOption(const Seat &seat, const BidOption &bidOption)
 {
-    history.addAndExecuteBidOptionCommand(state, turn, trumpVariationController, seat, bidOption);
+    history.addAndExecuteBidOptionCommand(state, trumpVariationController, seat, bidOption);
 }
 
 std::optional<int> Spades::getBidResult(const Seat &seat) const
@@ -170,12 +172,12 @@ std::optional<int> Spades::getBidResult(const Seat &seat) const
 
 void Spades::place(const Card &card)
 {
-    history.addAndExecutePlaceCommand(state, turn, trumpVariationController, card);
+    history.addAndExecutePlaceCommand(state, trumpVariationController, card);
 }
 
 bool Spades::canPlace(const Card &card) const
 {
-    return trumpVariationController.canPlaceCard(state, card, turn.getTurnSeat(state));
+    return trumpVariationController.canPlaceCard(state, card);
 }
 
 std::vector<Card> Spades::getTrumpCardsDescending() const
@@ -190,7 +192,7 @@ std::array<Card, 2> Spades::getExcludedCards() const
 
 void Spades::undo()
 {
-    history.undo(state, turn, trumpVariationController);
+    history.undo(state, trumpVariationController);
 }
 
 bool Spades::canUndo() const
@@ -200,7 +202,7 @@ bool Spades::canUndo() const
 
 void Spades::redo()
 {
-    history.redo(state, turn, trumpVariationController);
+    history.redo(state, trumpVariationController);
 }
 
 bool Spades::canRedo() const

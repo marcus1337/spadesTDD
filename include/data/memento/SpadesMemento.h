@@ -18,33 +18,32 @@ namespace spd
         static constexpr const char *BID_VAR_KEY = "BidVariationType";
         static constexpr const char *TRUMP_VAR_KEY = "TrumpVariationType";
         static constexpr const char *SEED_KEY = "seed";
-        static constexpr const char *BIDS_KEY = "bids";
-        static constexpr const char *HISTORY_KEY = "history";
+        static constexpr const char *UNDO_BIDS_KEY = "undo_bids";
+        static constexpr const char *UNDO_CARDS_KEY = "undo_cards";
+        static constexpr const char *REDO_BIDS_KEY = "redo_bids";
+        static constexpr const char *REDO_CARDS_KEY = "redo_cards";
 
-    public:
-
-        SpadesMemento(const SpadesHistory& history, const State& state, const TrumpVariationType& trumpVarType, const BidVariationType& bidVarType, unsigned int seed);
         unsigned int bidVariationType;
         unsigned int trumpVariationType;
         unsigned int seed;
-        std::vector<int> bids;
-        std::vector<unsigned int> undoCommandsData;
-        std::vector<unsigned int> redoCommandsData;
-        std::vector<unsigned int> playedSeatCardPairData;
-        std::vector<unsigned int> roundBidOptionsData;
-        std::vector<unsigned int> trickTakersData;
 
-        void setPlayedSeatCardPairsData(const std::vector<std::pair<Seat, Card>> &playedSeatCardPairs);
-        void setRoundBidOptionsData(const std::map<int, std::set<std::pair<Seat, BidOption>>> &roundBidOptions);
-        void setTrickTakersData(const std::vector<Seat> &seats);
-        std::vector<std::pair<Seat, Card>> getPlayedSeatCardPairs() const;
-        std::map<int, std::set<std::pair<Seat, BidOption>>> getRoundBidOptions() const;
-        std::vector<Seat> getTrickTakers() const;
+        std::vector<unsigned int> undoBidsData;
+        std::vector<unsigned int> undoCardsData;
+        std::vector<unsigned int> redoBidsData;
+        std::vector<unsigned int> redoCardsData;
 
+        void deserializeArray(const std::string& data, std::vector<unsigned int>& arr, const char* KEY);
+
+    public:
+        SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const State &state, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed);
         SpadesMemento(const std::string &data);
-        BidVariationType getBidVariationType() const;
-        TrumpVariationType getTrumpVariationType() const;
         std::string serialize() const;
         void deserialize(const std::string &data);
+
+        unsigned int getSeed() const;
+        BidVariationType getBidVariationType() const;
+        TrumpVariationType getTrumpVariationType() const;
+        SpadesCommandContainer getUndoContainer() const;
+        SpadesCommandContainer getRedoContainer() const;
     };
 }

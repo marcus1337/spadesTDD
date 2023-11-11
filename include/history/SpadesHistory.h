@@ -15,11 +15,11 @@ namespace spd
         void clear();
         bool canUndo() const;
         bool canRedo() const;
-        void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController);
-        void redo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController);
-        void addAndExecuteBidCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, unsigned int bid);
-        void addAndExecutePlaceCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, const Card& card);
-        void addAndExecuteBidOptionCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, const Seat& seat, const BidOption& bidOption);
+        void undo(State &state, const TrumpVariationController &trumpVariationController);
+        void redo(State &state, const TrumpVariationController &trumpVariationController);
+        void addAndExecuteBidCommand(State &state, const TrumpVariationController &trumpVariationController, unsigned int bid);
+        void addAndExecutePlaceCommand(State &state, const TrumpVariationController &trumpVariationController, const Card& card);
+        void addAndExecuteBidOptionCommand(State &state, const TrumpVariationController &trumpVariationController, const Seat& seat, const BidOption& bidOption);
 
     };
 }

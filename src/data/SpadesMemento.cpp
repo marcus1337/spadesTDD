@@ -8,8 +8,15 @@
 
 using namespace spd;
 
-SpadesMemento::SpadesMemento(const SpadesHistory& history, const State& state, const TrumpVariationType& trumpVarType, const BidVariationType& bidVarType, unsigned int seed) : bidVariationType(0), trumpVariationType(0), seed(0)
+SpadesMemento::SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const State &state, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed)
 {
+    this->seed = seed;
+    this->bidVariationType = (unsigned int)bidVarType;
+    this->trumpVariationType = (unsigned int)trumpVariationType;
+    this->undoBidsData = undoContainer.getBidsData();
+    this->undoCardsData = undoContainer.getCardsData();
+    this->redoBidsData = redoContainer.getBidsData();
+    this->redoCardsData = redoContainer.getCardsData();
 }
 SpadesMemento::SpadesMemento(const std::string &data)
 {
@@ -38,9 +45,21 @@ std::string SpadesMemento::serialize() const
     j[BID_VAR_KEY] = bidVariationType;
     j[TRUMP_VAR_KEY] = trumpVariationType;
     j[SEED_KEY] = seed;
-    for (const auto &bid : bids)
+    for (const auto &bid : undoBidsData)
     {
-        j[BIDS_KEY].push_back(bid);
+        j[UNDO_BIDS_KEY].push_back(bid);
+    }
+    for (const auto &card : undoCardsData)
+    {
+        j[UNDO_CARDS_KEY].push_back(card);
+    }
+    for (const auto &bid : redoBidsData)
+    {
+        j[REDO_BIDS_KEY].push_back(bid);
+    }
+    for (const auto &card : redoCardsData)
+    {
+        j[REDO_CARDS_KEY].push_back(card);
     }
     return j.dump();
 }
@@ -51,90 +70,42 @@ void SpadesMemento::deserialize(const std::string &data)
     bidVariationType = j[BID_VAR_KEY];
     trumpVariationType = j[TRUMP_VAR_KEY];
     seed = j[SEED_KEY];
-    bids.clear();
-    if (j.find(BIDS_KEY) != j.end() && j[BIDS_KEY].is_array())
+    deserializeArray(data, undoCardsData, UNDO_CARDS_KEY);
+    deserializeArray(data, undoBidsData, UNDO_BIDS_KEY);
+    deserializeArray(data, redoCardsData, REDO_CARDS_KEY);
+    deserializeArray(data, redoBidsData, REDO_BIDS_KEY);
+}
+
+void SpadesMemento::deserializeArray(const std::string &data, std::vector<unsigned int> &arr, const char *KEY)
+{
+    nlohmann::json j = nlohmann::json::parse(data);
+    arr.clear();
+    if (j.find(KEY) != j.end() && j[KEY].is_array())
     {
-        for (const auto &element : j[BIDS_KEY])
+        for (const auto &element : j[KEY])
         {
-            bids.push_back(element);
+            arr.push_back(element);
         }
     }
 }
 
-std::vector<std::pair<Seat, Card>> SpadesMemento::getPlayedSeatCardPairs() const
+unsigned int SpadesMemento::getSeed() const
 {
-    std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
-    for (int i = 0; i + 1 < playedSeatCardPairData.size(); i += 2)
-    {
-        unsigned int seatValue = playedSeatCardPairData[i];
-        unsigned int cardValue = playedSeatCardPairData[i + 1];
-        Seat seat = (Seat)(seatValue % 4);
-        Card card(cardValue);
-        playedSeatCardPairs.push_back(std::make_pair(seat, card));
-    }
-
-    return playedSeatCardPairs;
+    return seed;
 }
 
-std::map<int, std::set<std::pair<Seat, BidOption>>> SpadesMemento::getRoundBidOptions() const
+SpadesCommandContainer SpadesMemento::getUndoContainer() const
 {
-    std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
-    for (int i = 0; i + 2 < roundBidOptionsData.size(); i += 3)
-    {
-        unsigned int roundIndex = roundBidOptionsData[i];
-        unsigned int seatValue = roundBidOptionsData[i + 1];
-        unsigned int bidOptionValue = roundBidOptionsData[i + 2];
-        Seat seat = (Seat)(seatValue % 4);
-        BidOption bidOption = (BidOption)(bidOptionValue % ((int)BidOption::LAST));
-        if (!roundBidOptions.contains(roundIndex))
-        {
-            roundBidOptions[i] = std::set<std::pair<Seat, BidOption>>();
-        }
-        roundBidOptions[i].insert(std::make_pair(seat, bidOption));
-    }
-    return roundBidOptions;
+    SpadesCommandContainer container;
+    container.setBidValueVariants(undoBidsData);
+    container.setPlacedCards(undoCardsData);
+    return container;
 }
 
-std::vector<Seat> SpadesMemento::getTrickTakers() const
+SpadesCommandContainer SpadesMemento::getRedoContainer() const
 {
-    std::vector<Seat> trickTakers;
-    for (const unsigned int seatValue : trickTakersData)
-    {
-        Seat seat = (Seat)(seatValue % 4);
-        trickTakers.push_back(seat);
-    }
-    return trickTakers;
-}
-
-void SpadesMemento::setPlayedSeatCardPairsData(const std::vector<std::pair<Seat, Card>> &playedSeatCardPairs)
-{
-    playedSeatCardPairData.clear();
-    for (const auto &pair : playedSeatCardPairs)
-    {
-        playedSeatCardPairData.push_back((unsigned int)pair.first);
-        playedSeatCardPairData.push_back(pair.second.serialize());
-    }
-}
-
-void SpadesMemento::setRoundBidOptionsData(const std::map<int, std::set<std::pair<Seat, BidOption>>> &roundBidOptions)
-{
-    roundBidOptionsData.clear();
-    for (const auto &[key, value] : roundBidOptions)
-    {
-        for (const auto &pair : value)
-        {
-            roundBidOptionsData.push_back(key);
-            roundBidOptionsData.push_back((unsigned int)pair.first);
-            roundBidOptionsData.push_back((unsigned int)pair.second);
-        }
-    }
-}
-
-void SpadesMemento::setTrickTakersData(const std::vector<Seat> &seats)
-{
-    trickTakersData.clear();
-    for (const auto &seat : seats)
-    {
-        trickTakersData.push_back((unsigned int)seat);
-    }
+    SpadesCommandContainer container;
+    container.setBidValueVariants(redoBidsData);
+    container.setPlacedCards(redoCardsData);
+    return container;
 }

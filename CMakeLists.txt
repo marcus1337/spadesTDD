@@ -20,7 +20,6 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/rules/BidVariationController.cpp"
 "src/rules/TrumpVariation.cpp"
 "src/rules/TrumpVariationController.cpp"
-"src/rules/Turn.cpp"
 "src/rules/Trick.cpp"
 "src/rules/Deck.cpp"
 

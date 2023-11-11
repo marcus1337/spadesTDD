@@ -1,7 +1,6 @@
 #pragma once
 #include "data/State.h"
 #include "rules/TrumpVariationController.h"
-#include "rules/Turn.h"
 #include <string>
 #include <variant>
 
@@ -81,7 +80,7 @@ namespace spd
             }
         }
 
-        static void execute(const BidCommandValueVariant &bidCommandValueVariant, State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+        static void execute(const BidCommandValueVariant &bidCommandValueVariant, State &state, const TrumpVariationController &trumpVariationController)
         {
             if (const auto bidCommandValue = std::get_if<BidCommandValue>(&bidCommandValueVariant))
             {
@@ -92,15 +91,16 @@ namespace spd
                 state.setBidOption(bidOptionCommandValue->seat, bidOptionCommandValue->bidOption);
             }
         }
-        static void execute(const PlaceCommandValue &placeCommandValue, State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+        static void execute(const PlaceCommandValue &placeCommandValue, State &state, const TrumpVariationController &trumpVariationController)
         {
-            state.playCard(turn.getTurnSeat(state), placeCommandValue.card);
+            state.playCard(placeCommandValue.card);
             if (state.getPlayedTrickCardSeatPairs().size() == SeatUtils::numSeats)
             {
                 state.trickTakers.push_back(trumpVariationController.getTrickTaker(state));
             }
         }
-        static void undo(const BidCommandValueVariant &bidCommandValueVariant, State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+
+        static void undo(const BidCommandValueVariant &bidCommandValueVariant, State &state, const TrumpVariationController &trumpVariationController)
         {
             if (const auto bidCommandValue = std::get_if<BidCommandValue>(&bidCommandValueVariant))
             {
@@ -111,7 +111,7 @@ namespace spd
                 state.removeBidOption(bidOptionCommandValue->seat, bidOptionCommandValue->bidOption);
             }
         }
-        static void undo(const PlaceCommandValue &placeCommandValue, State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+        static void undo(const PlaceCommandValue &placeCommandValue, State &state, const TrumpVariationController &trumpVariationController)
         {
             if (state.getPlayedTrickCardSeatPairs().size() == SeatUtils::numSeats)
             {

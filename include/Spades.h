@@ -6,7 +6,6 @@
 #include "rules/TrumpVariationController.h"
 #include "data/memento/SpadesMemento.h"
 #include "data/State.h"
-#include "rules/Turn.h"
 #include "data/Bid.h"
 #include "data/Score.h"
 
@@ -18,9 +17,8 @@ namespace spd
         State state;
         BidVariationController bidVariationController;
         TrumpVariationController trumpVariationController;
-        Turn turn;
 
-        SpadesMemento makeMemento() const;
+        SpadesMemento createMemento() const;
         void loadMemento(const SpadesMemento &memento);
         void setBidVariation(BidVariationType type);
         void setTrumpVariation(TrumpVariationType type);

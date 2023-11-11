@@ -41,7 +41,7 @@ namespace spd
 
     public:
         Trick(const TrumpVariation &trumpVariation, const State &state);
-        bool canPlace(const Card &card, const Seat& seat) const;
+        bool canPlace(const Card &card) const;
         Seat getTrickTaker() const;
     };
 }

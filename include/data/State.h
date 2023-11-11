@@ -32,10 +32,12 @@ namespace spd
         int getBid(const Seat &seat) const;
         bool hasGameStarted() const;
         std::vector<Card> getHand(const Seat &seat) const;
-        void playCard(const Seat &seat, const Card &card);
+        void playCard(const Card &card);
         void addBid(int bid);
         void popBid();
         void removeBidOption(const Seat &seat, const BidOption &bidOption);
+
+        Seat getTurn() const;
 
         Deck deck;
         std::vector<int> bids;

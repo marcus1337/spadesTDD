@@ -174,9 +174,9 @@ std::vector<Card> State::getHand(const Seat &seat) const
     return hand;
 }
 
-void State::playCard(const Seat &seat, const Card &card)
+void State::playCard(const Card &card)
 {
-    playedSeatCardPairs.push_back(std::make_pair(seat, card));
+    playedSeatCardPairs.push_back(std::make_pair(getTurn(), card));
 }
 
 void State::addBid(int bid)
@@ -193,5 +193,28 @@ void State::removeBidOption(const Seat &seat, const BidOption &bidOption)
     if (roundBidOptions.contains(getRound()))
     {
         roundBidOptions[getRound()].erase(std::make_pair(seat, bidOption));
+    }
+}
+
+Seat State::getTurn() const
+{
+    const int round = getRound();
+    const auto playedRoundSeatCardPairs = getPlayedCardSeatPairs(round);
+    const int startBidIndex = round % SeatUtils::numSeats;
+
+    if (isBidPhase())
+    {
+        int playerIndex = (bids.size() + startBidIndex) % SeatUtils::numSeats;
+        return (Seat)playerIndex;
+    }
+    else if (trickTakers.empty())
+    {
+        return (Seat)playedRoundSeatCardPairs.size();
+    }
+    else
+    {
+        const auto startSeat = trickTakers.back();
+        const int numTrickSteps = getPlayedTrickCardSeatPairs().size();
+        return SeatUtils::getNextSeats(startSeat, numTrickSteps).back();
     }
 }

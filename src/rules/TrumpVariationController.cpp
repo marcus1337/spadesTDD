@@ -30,9 +30,9 @@ Seat TrumpVariationController::getTrickTaker(const State &state) const
     return Trick(*getTrumpVariation(), state).getTrickTaker();
 }
 
-bool TrumpVariationController::canPlaceCard(const State &state, const Card &card, const Seat &seat) const
+bool TrumpVariationController::canPlaceCard(const State &state, const Card &card) const
 {
-    return Trick(*getTrumpVariation(), state).canPlace(card, seat);
+    return Trick(*getTrumpVariation(), state).canPlace(card);
 }
 
 std::vector<Card> TrumpVariationController::getTrumpCardsOrderedByValueDescending() const
