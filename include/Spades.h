@@ -43,7 +43,7 @@ namespace spd
         TrumpVariationType getTrumpVariationType() const;
         unsigned int getSeed() const;
         Seat getTurnSeat() const;
-        Score getScore() const;
+        std::pair<Score, Score> getScore() const;
 
         bool hasBid(const Seat &seat) const;
         bool isBidPhase() const;

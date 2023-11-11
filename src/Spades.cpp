@@ -111,9 +111,11 @@ void Spades::deserialize(const std::string &data)
     loadMemento(SpadesMemento(data));
 }
 
-Score Spades::getScore() const
+std::pair<Score, Score> Spades::getScore() const
 {
-    return Score{};
+    Score scoreSouthNorth({Seat::SOUTH, Seat::NORTH}, trumpVariationController.getTrickTakers(state), state);
+    Score scoreWestEast({Seat::WEST, Seat::EAST}, trumpVariationController.getTrickTakers(state), state);
+    return std::make_pair(scoreSouthNorth, scoreWestEast);
 }
 
 unsigned int Spades::getSeed() const

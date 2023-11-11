@@ -9,11 +9,18 @@
 
 using namespace spd;
 
-int TeamScore::getTotalPoints() const
-{
-    return std::accumulate(roundPoints.begin(), roundPoints.end(), 0);
+Score::Score(const std::array<Seat, 2> &team, const std::vector<Seat> &trickTakers, const State &state){
+
 }
-int TeamScore::getTotalBags() const
-{
-    return std::accumulate(roundBags.begin(), roundBags.end(), 0);
+
+std::vector<int> Score::getRoundBags() const{
+    return {};
+}
+
+std::vector<int> Score::getRoundPoints() const{
+    return {};
+}
+
+int Score::getPoints() const{
+    return 0;
 }
