@@ -26,6 +26,9 @@ namespace spd
         void setTrumpVariation(TrumpVariationType type);
         void setSeed(unsigned int seed);
 
+        bool hasCorruptCards() const;
+        bool hasCorruptBids() const;
+
     public:
         Spades();
         void reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);

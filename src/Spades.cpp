@@ -234,11 +234,15 @@ std::vector<std::pair<Seat, Card>> Spades::getPlayedTrickSeatCardPairs() const
 
 bool Spades::isCorrupt() const
 {
+    return hasCorruptCards() || hasCorruptBids();
+}
+
+bool Spades::hasCorruptCards() const
+{
     const int cardsPerRound = 52;
     const int numBidSets = state.bids.size() / SeatUtils::numSeats;
     const int maxPlayedCards = numBidSets * cardsPerRound;
     bool corrupt = false;
-
     if (state.playedSeatCardPairs.size() > maxPlayedCards)
     {
         corrupt = true;
@@ -255,8 +259,13 @@ bool Spades::isCorrupt() const
             roundCards.insert(card);
         }
     }
+    return corrupt;
+}
 
+bool Spades::hasCorruptBids() const
+{
     const int maxBid = 13;
+    bool corrupt = false;
     for (const auto &bid : state.bids)
     {
         if (bid > maxBid)
@@ -264,7 +273,6 @@ bool Spades::isCorrupt() const
             corrupt = true;
         }
     }
-
     for (int i = 0; i + 2 < state.bids.size(); i++)
     {
         if (state.bids[i] + state.bids[i + 2] > maxBid)
@@ -272,6 +280,5 @@ bool Spades::isCorrupt() const
             corrupt = true;
         }
     }
-
     return corrupt;
 }
