@@ -234,5 +234,11 @@ std::vector<std::pair<Seat, Card>> Spades::getPlayedTrickSeatCardPairs() const
 
 bool Spades::isCorrupt() const
 {
+    const int cardsPerRound = 52;
+    const int numBidSets = state.bids.size() / SeatUtils::numSeats;
+    const int maxPlayedCards = numBidSets * cardsPerRound;
+    if(state.playedSeatCardPairs.size() > maxPlayedCards){
+        return true;
+    }
     return false;
 }

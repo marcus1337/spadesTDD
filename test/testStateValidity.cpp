@@ -12,13 +12,17 @@ TEST(StateValidity, DissallowCardsBeforeBids)
     EXPECT_TRUE(spades.isCorrupt());
 }
 
-/*TEST(StateValidity, DissallowDuplicateRoundCards)
+TEST(StateValidity, DissallowDuplicateRoundCards)
 {
     Spades spades;
+    spades.addBid(1);
+    spades.addBid(1);
+    spades.addBid(1);
+    spades.addBid(1);
     EXPECT_FALSE(spades.isCorrupt());
     const Card card(Rank::ACE, Suit::SPADE);
     spades.place(card);
     spades.place(card);
     EXPECT_TRUE(spades.isCorrupt());
-}*/
+}
 
