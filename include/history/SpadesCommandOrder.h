@@ -14,6 +14,7 @@ namespace spd
         void setBidValueVariants(const std::vector<unsigned int>& data);
         void setPlacedCards(const std::vector<unsigned int>& data);
         void clear();
+        void addCommandValue(const SpadesCommandValue& commandValue);
     };
 
 }

@@ -45,7 +45,7 @@ namespace spd
         Score getScore() const;
         unsigned int getSeed() const;
         Seat getTurnSeat() const;
-        void addBid(int bid);
+        void addBid(unsigned int bid);
         bool hasBid(const Seat &seat) const;
         bool isBidPhase() const;
         std::vector<int> getPossibleBids(const Seat &seat) const;

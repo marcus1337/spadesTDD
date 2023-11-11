@@ -52,23 +52,25 @@ BidCommandValueVariant SpadesCommandValueVisitor::deserializeBidCommandValueVari
     }
 }
 
-void SpadesCommandValueVisitor::execute(const BidCommandValueVariant &bidCommandValueVariant, State &state, const TrumpVariationController &trumpVariationController)
+void SpadesCommandValueVisitor::execute(const SpadesCommandValue &commandValue, State &state, const TrumpVariationController &trumpVariationController)
 {
-    if (const auto bidCommandValue = std::get_if<BidCommandValue>(&bidCommandValueVariant))
+    if (const auto placeCommandValue = std::get_if<PlaceCommandValue>(&commandValue))
     {
-        state.addBid(bidCommandValue->bid);
+        const auto trickStartSeat = trumpVariationController.getTrickStartSeat(state);
+        auto turnSeat = state.getTurn(trickStartSeat);
+        state.playCard(turnSeat, placeCommandValue->card);
     }
-    else if (const auto bidOptionCommandValue = std::get_if<BidOptionCommandValue>(&bidCommandValueVariant))
+    else if (const auto bidVariant = std::get_if<BidCommandValueVariant>(&commandValue))
     {
-        state.setBidOption(bidOptionCommandValue->seat, bidOptionCommandValue->bidOption);
+        if (const auto bidOptValue = std::get_if<BidOptionCommandValue>(bidVariant))
+        {
+            state.setBidOption(bidOptValue->seat, bidOptValue->bidOption);
+        }
+        else if (const auto bidCommandValue = std::get_if<BidCommandValue>(bidVariant))
+        {
+            state.addBid(bidCommandValue->bid);
+        }
     }
-}
-
-void SpadesCommandValueVisitor::execute(const PlaceCommandValue &placeCommandValue, State &state, const TrumpVariationController &trumpVariationController)
-{
-    const auto trickStartSeat = trumpVariationController.getTrickStartSeat(state);
-    auto turnSeat = state.getTurn(trickStartSeat);
-    state.playCard(turnSeat, placeCommandValue.card);
 }
 
 void SpadesCommandValueVisitor::undo(const BidCommandValueVariant &bidCommandValueVariant, State &state, const TrumpVariationController &trumpVariationController)

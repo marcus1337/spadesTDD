@@ -9,6 +9,35 @@ void SpadesHistory::clear()
     redoCommandContainer.clear();
 }
 
+void SpadesHistory::undoBid(State &state, const TrumpVariationController &trumpVariationController)
+{
+    auto commandValue = undoCommandContainer.bidValueVariants.back();
+    undoCommandContainer.bidValueVariants.pop_back();
+    SpadesCommandValueVisitor::undo(commandValue, state, trumpVariationController);
+    redoCommandContainer.addCommandValue(commandValue);
+}
+void SpadesHistory::undoCard(State &state, const TrumpVariationController &trumpVariationController)
+{
+    auto commandValue = undoCommandContainer.placeCommandValues.back();
+    undoCommandContainer.placeCommandValues.pop_back();
+    SpadesCommandValueVisitor::undo(commandValue, state, trumpVariationController);
+    redoCommandContainer.addCommandValue(commandValue);
+}
+void SpadesHistory::redoBid(State &state, const TrumpVariationController &trumpVariationController)
+{
+    auto commandValue = redoCommandContainer.bidValueVariants.back();
+    redoCommandContainer.bidValueVariants.pop_back();
+    SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
+    undoCommandContainer.addCommandValue(commandValue);
+}
+void SpadesHistory::redoCard(State &state, const TrumpVariationController &trumpVariationController)
+{
+    auto commandValue = redoCommandContainer.placeCommandValues.back();
+    redoCommandContainer.placeCommandValues.pop_back();
+    SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
+    undoCommandContainer.addCommandValue(commandValue);
+}
+
 bool SpadesHistory::canUndo() const
 {
     return !undoCommandContainer.bidValueVariants.empty();
@@ -16,40 +45,25 @@ bool SpadesHistory::canUndo() const
 
 void SpadesHistory::undo(State &state, const TrumpVariationController &trumpVariationController)
 {
-
     if (state.getRoundBids().empty() || !state.getPlayedRoundCards().empty())
     {
-        auto commandValue = undoCommandContainer.placeCommandValues.back();
-        undoCommandContainer.placeCommandValues.pop_back();
-        SpadesCommandValueVisitor::undo(commandValue, state, trumpVariationController);
-        redoCommandContainer.placeCommandValues.push_back(commandValue);
+        undoCard(state, trumpVariationController);
     }
     else
     {
-        auto commandValue = undoCommandContainer.bidValueVariants.back();
-        undoCommandContainer.bidValueVariants.pop_back();
-        SpadesCommandValueVisitor::undo(commandValue, state, trumpVariationController);
-        redoCommandContainer.bidValueVariants.push_back(commandValue);
+        undoBid(state, trumpVariationController);
     }
 }
 
 void SpadesHistory::redo(State &state, const TrumpVariationController &trumpVariationController)
 {
-    const auto roundBids = state.getRoundBids();
-    const auto roundCards = state.getPlayedRoundCards();
     if (state.isBidPhase())
     {
-        auto commandValue = redoCommandContainer.bidValueVariants.back();
-        redoCommandContainer.bidValueVariants.pop_back();
-        SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
-        undoCommandContainer.bidValueVariants.push_back(commandValue);
+        redoBid(state, trumpVariationController);
     }
     else
     {
-        auto commandValue = redoCommandContainer.placeCommandValues.back();
-        redoCommandContainer.placeCommandValues.pop_back();
-        SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
-        undoCommandContainer.placeCommandValues.push_back(commandValue);
+        redoCard(state, trumpVariationController);
     }
 }
 
@@ -58,24 +72,9 @@ bool SpadesHistory::canRedo() const
     return !redoCommandContainer.bidValueVariants.empty() || !redoCommandContainer.placeCommandValues.empty();
 }
 
-void SpadesHistory::addAndExecuteBidCommand(State &state, const TrumpVariationController &trumpVariationController, unsigned int bid)
+void SpadesHistory::addAndExecuteCommand(const SpadesCommandValue &commandValue, State &state, const TrumpVariationController &trumpVariationController)
 {
     redoCommandContainer.clear();
-    BidCommandValue commandValue{bid};
     SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
-    undoCommandContainer.bidValueVariants.push_back(commandValue);
-}
-void SpadesHistory::addAndExecutePlaceCommand(State &state, const TrumpVariationController &trumpVariationController, const Card &card)
-{
-    redoCommandContainer.clear();
-    PlaceCommandValue commandValue{card};
-    SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
-    undoCommandContainer.placeCommandValues.push_back(commandValue);
-}
-void SpadesHistory::addAndExecuteBidOptionCommand(State &state, const TrumpVariationController &trumpVariationController, const Seat &seat, const BidOption &bidOption)
-{
-    redoCommandContainer.clear();
-    BidOptionCommandValue commandValue{bidOption, seat};
-    SpadesCommandValueVisitor::execute(commandValue, state, trumpVariationController);
-    undoCommandContainer.bidValueVariants.push_back(commandValue);
+    undoCommandContainer.addCommandValue(commandValue);
 }

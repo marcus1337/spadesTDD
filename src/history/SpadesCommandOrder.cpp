@@ -40,7 +40,20 @@ void SpadesCommandContainer::setPlacedCards(const std::vector<unsigned int> &dat
     }
 }
 
-void SpadesCommandContainer::clear(){
+void SpadesCommandContainer::clear()
+{
     placeCommandValues.clear();
     bidValueVariants.clear();
+}
+
+void SpadesCommandContainer::addCommandValue(const SpadesCommandValue &commandValue)
+{
+    if (const auto placeCommandValue = std::get_if<PlaceCommandValue>(&commandValue))
+    {
+        placeCommandValues.push_back(*placeCommandValue);
+    }
+    else if (const auto bidCommandValueVariant = std::get_if<BidCommandValueVariant>(&commandValue))
+    {
+        bidValueVariants.push_back(*bidCommandValueVariant);
+    }
 }

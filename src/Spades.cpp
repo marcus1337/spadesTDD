@@ -130,9 +130,9 @@ Seat Spades::getTurnSeat() const
     return state.getTurn(trickStartSeat);
 }
 
-void Spades::addBid(int bid)
+void Spades::addBid(unsigned int bid)
 {
-    history.addAndExecuteBidCommand(state, trumpVariationController, bid);
+    history.addAndExecuteCommand(BidCommandValue{bid}, state, trumpVariationController);
 }
 
 bool Spades::hasBid(const Seat &seat) const
@@ -179,7 +179,7 @@ std::vector<Card> Spades::getHand(const Seat &seat) const
 
 void Spades::setBidOption(const Seat &seat, const BidOption &bidOption)
 {
-    history.addAndExecuteBidOptionCommand(state, trumpVariationController, seat, bidOption);
+    history.addAndExecuteCommand(BidOptionCommandValue{bidOption, seat}, state, trumpVariationController);
 }
 
 std::optional<int> Spades::getBidResult(const Seat &seat) const
@@ -189,7 +189,7 @@ std::optional<int> Spades::getBidResult(const Seat &seat) const
 
 void Spades::place(const Card &card)
 {
-    history.addAndExecutePlaceCommand(state, trumpVariationController, card);
+    history.addAndExecuteCommand(PlaceCommandValue{card}, state, trumpVariationController);
 }
 
 bool Spades::canPlace(const Card &card) const

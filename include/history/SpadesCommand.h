@@ -23,6 +23,7 @@ namespace spd
     };
 
     using BidCommandValueVariant = std::variant<BidCommandValue, BidOptionCommandValue>;
+    using SpadesCommandValue = std::variant<PlaceCommandValue, BidCommandValueVariant>;
 
     class SpadesCommandValueVisitor
     {
@@ -32,8 +33,7 @@ namespace spd
         static unsigned int serialize(const std::variant<PlaceCommandValue, BidCommandValueVariant> &value);
         static PlaceCommandValue deserializePlaceCommandValue(unsigned int data);
         static BidCommandValueVariant deserializeBidCommandValueVariant(unsigned int data);
-        static void execute(const BidCommandValueVariant &bidCommandValueVariant, State &state, const TrumpVariationController &trumpVariationController);
-        static void execute(const PlaceCommandValue &placeCommandValue, State &state, const TrumpVariationController &trumpVariationController);
+        static void execute(const SpadesCommandValue& commandValue, State &state, const TrumpVariationController &trumpVariationController);
         static void undo(const BidCommandValueVariant &bidCommandValueVariant, State &state, const TrumpVariationController &trumpVariationController);
         static void undo(const PlaceCommandValue &placeCommandValue, State &state, const TrumpVariationController &trumpVariationController);
     };

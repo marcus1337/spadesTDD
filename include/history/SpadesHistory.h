@@ -9,6 +9,10 @@ namespace spd
 {
     class SpadesHistory
     {
+        void undoBid(State &state, const TrumpVariationController &trumpVariationController);
+        void undoCard(State &state, const TrumpVariationController &trumpVariationController);
+        void redoBid(State &state, const TrumpVariationController &trumpVariationController);
+        void redoCard(State &state, const TrumpVariationController &trumpVariationController);
     public:
         SpadesCommandContainer undoCommandContainer;
         SpadesCommandContainer redoCommandContainer;
@@ -17,9 +21,6 @@ namespace spd
         bool canRedo() const;
         void undo(State &state, const TrumpVariationController &trumpVariationController);
         void redo(State &state, const TrumpVariationController &trumpVariationController);
-        void addAndExecuteBidCommand(State &state, const TrumpVariationController &trumpVariationController, unsigned int bid);
-        void addAndExecutePlaceCommand(State &state, const TrumpVariationController &trumpVariationController, const Card& card);
-        void addAndExecuteBidOptionCommand(State &state, const TrumpVariationController &trumpVariationController, const Seat& seat, const BidOption& bidOption);
-
+        void addAndExecuteCommand(const SpadesCommandValue& commandValue, State &state, const TrumpVariationController &trumpVariationController);
     };
 }
