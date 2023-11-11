@@ -41,7 +41,7 @@ std::vector<std::pair<Seat, int>> State::getRoundBids() const
 std::array<std::pair<Seat, Card>, SeatUtils::numSeats> State::getTrick() const
 {
     std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
-    const int offset = trickTakers.size() * SeatUtils::numSeats;
+    const int offset = playedSeatCardPairs.size() / SeatUtils::numSeats;
     for (int i = offset; i < SeatUtils::numSeats + offset; i++)
     {
         trick[i] = playedSeatCardPairs[i];
@@ -52,7 +52,7 @@ std::array<std::pair<Seat, Card>, SeatUtils::numSeats> State::getTrick() const
 std::vector<std::pair<Seat, Card>> State::getPlayedTrickCardSeatPairs() const
 {
     std::vector<std::pair<Seat, Card>> trickCards;
-    const int offset = trickTakers.size() * SeatUtils::numSeats;
+    const int offset = playedSeatCardPairs.size() / SeatUtils::numSeats;
     for (int i = offset; i < SeatUtils::numSeats + offset && i < playedSeatCardPairs.size(); i++)
     {
         trickCards.push_back(playedSeatCardPairs[i]);
@@ -107,8 +107,8 @@ void State::clear()
 
 int State::getRound() const
 {
-    const int tricksPerRound = 13;
-    return trickTakers.size() / tricksPerRound;
+    const int cardsPerRound = 52;
+    return playedSeatCardPairs.size() / cardsPerRound;
 }
 
 bool State::isBidPhase() const
@@ -207,7 +207,7 @@ Seat State::getTurn() const
         int playerIndex = (bids.size() + startBidIndex) % SeatUtils::numSeats;
         return (Seat)playerIndex;
     }
-    else if (trickTakers.empty())
+    else if (playedRoundSeatCardPairs.size() < SeatUtils::numSeats)
     {
         return (Seat)playedRoundSeatCardPairs.size();
     }
