@@ -5,147 +5,76 @@ using namespace spd;
 
 void SpadesHistory::clear()
 {
-    undoCommands.clear();
-    redoCommands.clear();
+    undoCommandContainer.clear();
+    redoCommandContainer.clear();
 }
 
 bool SpadesHistory::canUndo() const
 {
-    return !undoCommands.empty();
+    return !undoCommandContainer.bidValueVariants.empty();
 }
 void SpadesHistory::undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
 {
-    std::unique_ptr<SpadesCommand> command = std::move(undoCommands.back());
-    undoCommands.pop_back();
-    command->undo(state, turn, trumpVariationController);
-    redoCommands.push_back(std::move(command));
+
+    if (state.getRoundBids().empty() || !state.getPlayedRoundCards().empty())
+    {
+        auto commandValue = undoCommandContainer.placeCommandValues.back();
+        undoCommandContainer.placeCommandValues.pop_back();
+        SpadesCommandValueVisitor::undo(commandValue, state, turn, trumpVariationController);
+        redoCommandContainer.placeCommandValues.push_back(commandValue);
+    }
+    else
+    {
+        auto commandValue = undoCommandContainer.bidValueVariants.back();
+        undoCommandContainer.bidValueVariants.pop_back();
+        SpadesCommandValueVisitor::undo(commandValue, state, turn, trumpVariationController);
+        redoCommandContainer.bidValueVariants.push_back(commandValue);
+    }
 }
 
 void SpadesHistory::redo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
 {
-    std::unique_ptr<SpadesCommand> command = std::move(redoCommands.back());
-    redoCommands.pop_back();
-    command->execute(state, turn, trumpVariationController);
-    undoCommands.push_back(std::move(command));
+    const auto roundBids = state.getRoundBids();
+    const auto roundCards = state.getPlayedRoundCards();
+    if (state.isBidPhase())
+    {
+        auto commandValue = redoCommandContainer.bidValueVariants.back();
+        redoCommandContainer.bidValueVariants.pop_back();
+        SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+        undoCommandContainer.bidValueVariants.push_back(commandValue);
+    }
+    else
+    {
+        auto commandValue = redoCommandContainer.placeCommandValues.back();
+        redoCommandContainer.placeCommandValues.pop_back();
+        SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+        undoCommandContainer.placeCommandValues.push_back(commandValue);
+    }
 }
 
 bool SpadesHistory::canRedo() const
 {
-    return !redoCommands.empty();
+    return !redoCommandContainer.bidValueVariants.empty() || !redoCommandContainer.placeCommandValues.empty();
 }
 
-void SpadesHistory::addCommand(std::unique_ptr<SpadesCommand> command)
+void SpadesHistory::addAndExecuteBidCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, unsigned int bid)
 {
-    undoCommands.push_back(std::move(command));
-    redoCommands.clear();
+    redoCommandContainer.clear();
+    BidCommandValue commandValue{bid};
+    SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+    undoCommandContainer.bidValueVariants.push_back(commandValue);
 }
-
-bool SpadesHistory::deserialize(const std::string &data)
+void SpadesHistory::addAndExecutePlaceCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, const Card &card)
 {
-    clear();
-    const auto encoding = getEncoding(data);
-    const auto undoEncoding = getUndoEncoding(encoding);
-    const auto redoEncoding = getRedoEncoding(encoding);
-    undoCommands = deserializeCommands(undoEncoding);
-    redoCommands = deserializeCommands(redoEncoding);
-    return undoEncoding.size() / 2 == undoCommands.size() && redoEncoding.size() / 2 == redoCommands.size();
+    redoCommandContainer.clear();
+    PlaceCommandValue commandValue{card};
+    SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+    undoCommandContainer.placeCommandValues.push_back(commandValue);
 }
-
-std::vector<std::unique_ptr<SpadesCommand>> SpadesHistory::deserializeCommands(const std::vector<int> encoding) const
+void SpadesHistory::addAndExecuteBidOptionCommand(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController, const Seat &seat, const BidOption &bidOption)
 {
-    std::vector<std::unique_ptr<SpadesCommand>> commands;
-    for (int i = 0; i+1 < encoding.size(); i += 2)
-    {
-        int cmdValue = encoding[i];
-        int serializedValue = encoding[i + 1];
-        if (cmdValue == placeCmdValue)
-        {
-            commands.push_back(std::make_unique<PlaceCommand>(serializedValue));
-        }
-        else if (cmdValue == bidCmdValue)
-        {
-            commands.push_back(std::make_unique<BidCommand>(serializedValue));
-        }
-        else if (cmdValue == bidOptCmdValue)
-        {
-            commands.push_back(std::make_unique<BidOptionCommand>(serializedValue));
-        }
-        else
-        {
-            commands.clear();
-            break;
-        }
-    }
-    return commands;
-}
-
-std::vector<int> SpadesHistory::getEncoding(const std::string &data) const
-{
-    std::vector<int> encoding;
-    std::istringstream iss(data);
-    int value;
-    while (iss >> value)
-    {
-        encoding.push_back(value);
-    }
-    return encoding;
-}
-
-std::vector<int> SpadesHistory::getUndoEncoding(const std::vector<int> &encoding) const
-{
-    std::vector<int> undoEncoding;
-    for (int i = 0; i < encoding.size() && encoding[i] != separationValue; i++)
-    {
-        undoEncoding.push_back(encoding[i]);
-    }
-    return undoEncoding;
-}
-std::vector<int> SpadesHistory::getRedoEncoding(const std::vector<int> &encoding) const
-{
-    std::vector<int> redoEncoding;
-    const int startIndex = getUndoEncoding(encoding).size() + 1;
-    for (int i = startIndex; i < encoding.size(); i++)
-    {
-        redoEncoding.push_back(encoding[i]);
-    }
-    return redoEncoding;
-}
-
-std::string SpadesHistory::serialize() const
-{
-    std::stringstream ss;
-    for (const auto &command : undoCommands)
-    {
-        ss << " " << serializeCommand(*command);
-    }
-    ss << " " << separationValue;
-    for (const auto &command : redoCommands)
-    {
-        ss << " " << serializeCommand(*command);
-    }
-    return ss.str();
-}
-
-std::string SpadesHistory::serializeCommand(const SpadesCommand &command) const
-{
-    std::stringstream ss;
-    ss << getCommandID(command) << " " << command.serialize();
-    return ss.str();
-}
-
-int SpadesHistory::getCommandID(const SpadesCommand &command) const
-{
-    if (dynamic_cast<const PlaceCommand *>(&command) != nullptr)
-    {
-        return placeCmdValue;
-    }
-    else if (dynamic_cast<const BidCommand *>(&command) != nullptr)
-    {
-        return bidCmdValue;
-    }
-    else if (dynamic_cast<const BidOptionCommand *>(&command) != nullptr)
-    {
-        return bidOptCmdValue;
-    }
-    return -1;
+    redoCommandContainer.clear();
+    BidOptionCommandValue commandValue{bidOption, seat};
+    SpadesCommandValueVisitor::execute(commandValue, state, turn, trumpVariationController);
+    undoCommandContainer.bidValueVariants.push_back(commandValue);
 }

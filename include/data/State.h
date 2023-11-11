@@ -11,17 +11,16 @@ namespace spd
 {
     class State
     {
-        std::vector<int> getMadeRoundBids() const;
         std::array<Seat, SeatUtils::numSeats> getRoundBidOrder() const;
-        std::array<std::optional<std::pair<Seat, int>>, SeatUtils::numSeats> getRoundBids() const;
-
+        std::vector<int> getRoundBidValues() const;
     public:
-
+        std::vector<std::pair<Seat, int>> getRoundBids() const;
         std::array<std::pair<Seat, Card>, SeatUtils::numSeats> getTrick() const;
         std::vector<std::pair<Seat, Card>> getPlayedTrickCardSeatPairs() const;
         std::vector<Card> getPlayedTrickCards() const;        
         std::vector<std::pair<Seat, Card>> getPlayedCardSeatPairs(int round) const;
         std::vector<Card> getPlayedCards(int round) const;
+        std::vector<Card> getPlayedRoundCards() const;
         State() = default;
 
         void clear();
@@ -34,6 +33,9 @@ namespace spd
         bool hasGameStarted() const;
         std::vector<Card> getHand(const Seat &seat) const;
         void playCard(const Seat &seat, const Card &card);
+        void addBid(int bid);
+        void popBid();
+        void removeBidOption(const Seat &seat, const BidOption &bidOption);
 
         Deck deck;
         std::vector<int> bids;

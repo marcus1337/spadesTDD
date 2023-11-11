@@ -3,57 +3,122 @@
 #include "rules/TrumpVariationController.h"
 #include "rules/Turn.h"
 #include <string>
+#include <variant>
 
 namespace spd
 {
-    class SpadesCommand
-    {
-    public:
-        SpadesCommand() = default;
-        virtual ~SpadesCommand() = default;
-        virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) = 0;
-        virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) = 0;
-        virtual unsigned int serialize() const = 0;
-    };
 
-    class PlaceCommand : public SpadesCommand
+    struct PlaceCommandValue
     {
         const Card card;
-
-    public:
-        PlaceCommand(const Card &card);
-        explicit PlaceCommand(int cardValue);
-        virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual unsigned int serialize() const override;
-        Card getCard() const;
     };
 
-    class BidCommand : public SpadesCommand
+    struct BidCommandValue
     {
-        const int bid;
-
-    public:
-        explicit BidCommand(int bid);
-        virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual unsigned int serialize() const override;
-        int getBid() const;
+        const unsigned int bid;
     };
 
-    class BidOptionCommand : public SpadesCommand
+    struct BidOptionCommandValue
     {
         const BidOption bidOption;
         const Seat seat;
-        std::pair<BidOption,Seat> deserialize(int serializedValue) const;
+    };
+
+    using BidCommandValueVariant = std::variant<BidCommandValue, BidOptionCommandValue>;
+
+    class SpadesCommandValueVisitor
+    {
+        static constexpr unsigned int BID_OPTION_ENCODING_OFFSET = 0xFF;
+
+        static unsigned int serialize(const BidOptionCommandValue &value)
+        {
+            return static_cast<unsigned int>(value.bidOption) * static_cast<unsigned int>(SeatUtils::numSeats) + static_cast<unsigned int>(value.seat);
+        }
+
     public:
-        BidOptionCommand(const BidOption& bidOption, const Seat& seat);
-        explicit BidOptionCommand(int serializedValue);
-        virtual void execute(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual void undo(State &state, const Turn &turn, const TrumpVariationController &trumpVariationController) override;
-        virtual unsigned int serialize() const override;
-        BidOption getBidOption() const;
-        Seat getSeat() const;
+        static unsigned int serialize(const std::variant<PlaceCommandValue, BidCommandValueVariant> &value)
+        {
+            unsigned int serializedValue = 0;
+            if (const auto placeCommandValue = std::get_if<PlaceCommandValue>(&value))
+            {
+                serializedValue = placeCommandValue->card.serialize();
+            }
+            else if (const auto bidCommandValueVariant = std::get_if<BidCommandValueVariant>(&value))
+            {
+                if (const auto bidCommandValue = std::get_if<BidCommandValue>(bidCommandValueVariant))
+                {
+                    serializedValue = bidCommandValue->bid;
+                }
+                else if (const auto bidOptionCommandValue = std::get_if<BidOptionCommandValue>(bidCommandValueVariant))
+                {
+                    serializedValue = serialize(*bidOptionCommandValue) + BID_OPTION_ENCODING_OFFSET;
+                }
+            }
+            return serializedValue;
+        }
+
+        static PlaceCommandValue deserializePlaceCommandValue(unsigned int data)
+        {
+            return PlaceCommandValue{.card = Card(data)};
+        }
+
+        static BidCommandValueVariant deserializeBidCommandValueVariant(unsigned int data)
+        {
+            if (data >= BID_OPTION_ENCODING_OFFSET)
+            {
+                data -= BID_OPTION_ENCODING_OFFSET;
+                unsigned int seatValue = data % SeatUtils::numSeats;
+                unsigned int bidOptValue = (data - seatValue) / SeatUtils::numSeats;
+                if (bidOptValue >= (unsigned int)BidOption::LAST)
+                {
+                    bidOptValue = 0;
+                }
+                return BidOptionCommandValue{.bidOption = (BidOption)bidOptValue, .seat = (Seat)seatValue};
+            }
+            else
+            {
+                return BidCommandValue{.bid = data};
+            }
+        }
+
+        static void execute(const BidCommandValueVariant &bidCommandValueVariant, State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+        {
+            if (const auto bidCommandValue = std::get_if<BidCommandValue>(&bidCommandValueVariant))
+            {
+                state.addBid(bidCommandValue->bid);
+            }
+            else if (const auto bidOptionCommandValue = std::get_if<BidOptionCommandValue>(&bidCommandValueVariant))
+            {
+                state.setBidOption(bidOptionCommandValue->seat, bidOptionCommandValue->bidOption);
+            }
+        }
+        static void execute(const PlaceCommandValue &placeCommandValue, State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+        {
+            state.playCard(turn.getTurnSeat(state), placeCommandValue.card);
+            if (state.getPlayedTrickCardSeatPairs().size() == SeatUtils::numSeats)
+            {
+                state.trickTakers.push_back(trumpVariationController.getTrickTaker(state));
+            }
+        }
+        static void undo(const BidCommandValueVariant &bidCommandValueVariant, State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+        {
+            if (const auto bidCommandValue = std::get_if<BidCommandValue>(&bidCommandValueVariant))
+            {
+                state.popBid();
+            }
+            else if (const auto bidOptionCommandValue = std::get_if<BidOptionCommandValue>(&bidCommandValueVariant))
+            {
+                state.removeBidOption(bidOptionCommandValue->seat, bidOptionCommandValue->bidOption);
+            }
+        }
+        static void undo(const PlaceCommandValue &placeCommandValue, State &state, const Turn &turn, const TrumpVariationController &trumpVariationController)
+        {
+            if (state.getPlayedTrickCardSeatPairs().size() == SeatUtils::numSeats)
+            {
+                state.trickTakers.pop_back();
+            }
+            state.playedSeatCardPairs.pop_back();
+        }
     };
 
 }

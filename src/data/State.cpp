@@ -5,7 +5,7 @@
 
 using namespace spd;
 
-std::vector<int> State::getMadeRoundBids() const
+std::vector<int> State::getRoundBidValues() const
 {
     std::vector<int> madeRoundBids;
     const int fromIndex = getRound() * SeatUtils::numSeats;
@@ -26,14 +26,14 @@ std::array<Seat, SeatUtils::numSeats> State::getRoundBidOrder() const
     return bidOrder;
 }
 
-std::array<std::optional<std::pair<Seat, int>>, SeatUtils::numSeats> State::getRoundBids() const
+std::vector<std::pair<Seat, int>> State::getRoundBids() const
 {
-    std::array<std::optional<std::pair<Seat, int>>, SeatUtils::numSeats> roundBids{};
+    std::vector<std::pair<Seat, int>> roundBids;
     const auto roundBidOrder = getRoundBidOrder();
-    const auto madeRoundBids = getMadeRoundBids();
-    for (int i = 0; i < madeRoundBids.size(); i++)
+    const auto roundBidValues = getRoundBidValues();
+    for (int i = 0; i < roundBidValues.size(); i++)
     {
-        roundBids[i] = std::make_optional(std::make_pair(roundBidOrder[i], madeRoundBids[i]));
+        roundBids.push_back(std::make_pair(roundBidOrder[i], roundBidValues[i]));
     }
     return roundBids;
 }
@@ -82,12 +82,19 @@ std::vector<std::pair<Seat, Card>> State::getPlayedCardSeatPairs(int round) cons
     return roundCards;
 }
 
-std::vector<Card> State::getPlayedCards(int round) const{
+std::vector<Card> State::getPlayedCards(int round) const
+{
     std::vector<Card> cards;
-    for(const auto&[seat, card] : getPlayedCardSeatPairs(round)){
+    for (const auto &[seat, card] : getPlayedCardSeatPairs(round))
+    {
         cards.push_back(card);
     }
     return cards;
+}
+
+std::vector<Card> State::getPlayedRoundCards() const
+{
+    return getPlayedCards(getRound());
 }
 
 void State::clear()
@@ -129,7 +136,7 @@ bool State::hasBid(const Seat &seat) const
     return std::any_of(roundBids.begin(), roundBids.end(),
                        [&seat](const auto &roundBid)
                        {
-                           return roundBid.has_value() && roundBid->first == seat;
+                           return roundBid.first == seat;
                        });
 }
 
@@ -139,10 +146,10 @@ int State::getBid(const Seat &seat) const
     auto it = std::find_if(roundBids.begin(), roundBids.end(),
                            [&seat](const auto &roundBid)
                            {
-                               return roundBid.has_value() && roundBid->first == seat;
+                               return roundBid.first == seat;
                            });
     assert(it != roundBids.end());
-    return (*it)->second;
+    return (*it).second;
 }
 
 bool State::hasGameStarted() const
@@ -172,3 +179,19 @@ void State::playCard(const Seat &seat, const Card &card)
     playedSeatCardPairs.push_back(std::make_pair(seat, card));
 }
 
+void State::addBid(int bid)
+{
+    bids.push_back(bid);
+}
+void State::popBid()
+{
+    bids.pop_back();
+}
+
+void State::removeBidOption(const Seat &seat, const BidOption &bidOption)
+{
+    if (roundBidOptions.contains(getRound()))
+    {
+        roundBidOptions[getRound()].erase(std::make_pair(seat, bidOption));
+    }
+}
