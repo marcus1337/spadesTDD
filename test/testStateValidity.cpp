@@ -26,3 +26,14 @@ TEST(StateValidity, DissallowDuplicateRoundCards)
     EXPECT_TRUE(spades.isCorrupt());
 }
 
+TEST(StateValidity, DissallowHighTeamBids)
+{
+    Spades spades;
+    spades.addBid(14);
+    EXPECT_TRUE(spades.isCorrupt());
+    spades.reset();
+    spades.addBid(7);
+    spades.addBid(1);
+    spades.addBid(7);
+    EXPECT_TRUE(spades.isCorrupt());
+}

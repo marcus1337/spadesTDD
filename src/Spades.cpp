@@ -237,8 +237,20 @@ bool Spades::isCorrupt() const
     const int cardsPerRound = 52;
     const int numBidSets = state.bids.size() / SeatUtils::numSeats;
     const int maxPlayedCards = numBidSets * cardsPerRound;
+    bool corrupt = false;
+
     if(state.playedSeatCardPairs.size() > maxPlayedCards){
-        return true;
+        corrupt = true;
     }
-    return false;
+    for(int round = 0 ; round <= state.getRound(); round++){
+        std::set<Card> roundCards;
+        for(const auto& card : state.getPlayedCards(round)){
+            if(roundCards.contains(card)){
+                corrupt = true;
+            }
+            roundCards.insert(card);
+        }
+    }
+
+    return corrupt;
 }
