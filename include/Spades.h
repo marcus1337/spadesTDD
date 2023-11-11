@@ -4,11 +4,11 @@
 #include "history/SpadesHistory.h"
 #include "rules/BidVariationController.h"
 #include "rules/TrumpVariationController.h"
+#include "rules/Deck.h"
 #include "data/memento/SpadesMemento.h"
 #include "data/State.h"
 #include "data/Bid.h"
 #include "data/Score.h"
-#include "rules/Deck.h"
 
 namespace spd
 {
@@ -30,7 +30,7 @@ namespace spd
         bool hasCorruptBids() const;
 
     public:
-        Spades();
+        Spades() = default;
         void reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType);
@@ -38,35 +38,36 @@ namespace spd
         void reset(unsigned int seed);
         void reset();
         void resetAndRandomizeSeed();
+
         BidVariationType getBidVariationType() const;
         TrumpVariationType getTrumpVariationType() const;
-        std::string serialize() const;
-        void deserialize(const std::string &data);
-        Score getScore() const;
         unsigned int getSeed() const;
         Seat getTurnSeat() const;
-        void addBid(unsigned int bid);
+        Score getScore() const;
+
         bool hasBid(const Seat &seat) const;
         bool isBidPhase() const;
+        bool canPlace(const Card &card) const;
+
         std::vector<int> getPossibleBids(const Seat &seat) const;
         std::vector<int> getPossibleBids() const;
         std::vector<BidOption> getBidOptions(const Seat &seat) const;
-        std::vector<Card> getHand(const Seat& seat) const;
-        void setBidOption(const Seat &seat, const BidOption &bidOption);
-        std::optional<int> getBidResult(const Seat& seat) const;
-        void place(const Card& card);
-        bool canPlace(const Card& card) const;
-
+        std::vector<Card> getHand(const Seat &seat) const;
+        std::optional<int> getBidResult(const Seat &seat) const;
         std::vector<Card> getTrumpCardsDescending() const;
-        std::array<Card,2> getExcludedCards() const;
+        std::array<Card, 2> getExcludedCards() const;
+        std::vector<std::pair<Seat, Card>> getPlayedTrickSeatCardPairs() const;
 
+        void place(const Card &card);
+        void addBid(unsigned int bid);
+        void setBidOption(const Seat &seat, const BidOption &bidOption);
+
+        bool isCorrupt() const;
+        std::string serialize() const;
+        void deserialize(const std::string &data);
         void undo();
         bool canUndo() const;
         void redo();
         bool canRedo() const;
-
-        bool isCorrupt() const;
-        std::vector<std::pair<Seat, Card>> getPlayedTrickSeatCardPairs() const;
-
     };
 }

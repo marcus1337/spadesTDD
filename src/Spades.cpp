@@ -1,6 +1,7 @@
 #include "Spades.h"
 #include <cassert>
 #include "history/SpadesCommand.h"
+#include "rules/Deck.h"
 
 using namespace spd;
 
@@ -49,10 +50,6 @@ void Spades::setSeed(unsigned int seed)
 {
     assert(!state.hasGameStarted());
     deck.setSeed(seed);
-}
-
-Spades::Spades()
-{
 }
 
 void Spades::reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
