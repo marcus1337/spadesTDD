@@ -1,14 +1,14 @@
 #pragma once
 
 #include <vector>
-#include "rules/BidVariationType.h"
-#include "rules/TrumpVariationType.h"
 #include <string>
-#include "data/Seat.h"
-#include "data/card/Card.h"
 #include <set>
 #include <map>
-#include "data/State.h"
+
+#include "rules/BidVariationType.h"
+#include "rules/TrumpVariationType.h"
+#include "data/Seat.h"
+#include "data/card/Card.h"
 #include "history/SpadesHistory.h"
 
 namespace spd
@@ -35,7 +35,7 @@ namespace spd
         void deserializeArray(const std::string& data, std::vector<unsigned int>& arr, const char* KEY);
 
     public:
-        SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const State &state, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed);
+        SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed);
         SpadesMemento(const std::string &data);
         std::string serialize() const;
         void deserialize(const std::string &data);

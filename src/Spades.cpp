@@ -7,7 +7,7 @@ using namespace spd;
 
 SpadesMemento Spades::createMemento() const
 {
-    return SpadesMemento(history.undoCommandContainer, history.redoCommandContainer, state, getTrumpVariationType(), getBidVariationType(), getSeed());
+    return SpadesMemento(history.undoCommandContainer, history.redoCommandContainer, getTrumpVariationType(), getBidVariationType(), getSeed());
 }
 
 void Spades::loadMemento(const SpadesMemento &memento)

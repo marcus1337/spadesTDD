@@ -8,7 +8,7 @@
 
 using namespace spd;
 
-SpadesMemento::SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const State &state, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed)
+SpadesMemento::SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed)
 {
     this->seed = seed;
     this->bidVariationType = (unsigned int)bidVarType;
