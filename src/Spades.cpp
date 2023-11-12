@@ -257,6 +257,7 @@ bool Spades::hasCorruptCards() const
             }
             roundCards.insert(card);
         }
+        
     }
     return corrupt;
 }
@@ -288,12 +289,12 @@ std::vector<std::vector<Seat>> Spades::getCompletedRoundTrickTakers() const
     std::vector<std::vector<Seat>> roundTrickTakers;
     const auto trickTakers = trumpVariationController.getTrickTakers(state);
     const int tricksPerRound = 13;
-    for (int i = 0; i < tricksPerRound && trickTakers.size() >= i * tricksPerRound + tricksPerRound; i++)
+    for (int round = 0; round < state.getRound(); round++)
     {
         std::vector<Seat> roundTricks;
-        for (int j = 0; j < tricksPerRound; j++)
+        for (int i = 0; i < tricksPerRound; i++)
         {
-            roundTricks.push_back(trickTakers[j + i * tricksPerRound]);
+            roundTricks.push_back(trickTakers[i + round * tricksPerRound]);
         }
         roundTrickTakers.push_back(roundTricks);
     }

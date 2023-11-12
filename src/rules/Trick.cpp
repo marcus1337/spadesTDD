@@ -163,10 +163,10 @@ bool Trick::isNewTopCard(const Card &topCard, const Card &newCard) const
 
 std::optional<Card> Trick::getLeadCard() const
 {
-    const auto playedCards = state.getPlayedCardSeatPairs(state.getRound());
-    if (!playedCards.empty())
+    const auto trickCardSeatPairs = state.getPlayedTrickCardSeatPairs();
+    if (!trickCardSeatPairs.empty())
     {
-        return std::make_optional(playedCards.front().second);
+        return std::make_optional(trickCardSeatPairs.front().second);
     }
     return std::nullopt;
 }

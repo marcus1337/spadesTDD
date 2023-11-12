@@ -37,3 +37,18 @@ TEST(StateValidity, DissallowHighTeamBids)
     spades.addBid(7);
     EXPECT_TRUE(spades.isCorrupt());
 }
+
+TEST(StateValidity, UniqueCards)
+{
+    Spades spades;
+    spades.addBid(1);
+    spades.addBid(1);
+    spades.addBid(1);
+    spades.addBid(1);
+    for (int i = 0; i < 52; i++)
+    {
+        spades.place(spades.getHand(spades.getTurnSeat()).front());
+    }
+    
+    EXPECT_FALSE(spades.isCorrupt());
+}

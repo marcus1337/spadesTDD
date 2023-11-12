@@ -123,9 +123,9 @@ std::vector<Card> State::getPlayedTrickCards() const
 std::vector<std::pair<Seat, Card>> State::getPlayedCardSeatPairs(int round) const
 {
     std::vector<std::pair<Seat, Card>> roundCards;
-    const int numCardsPerRound = 13;
+    const int numCardsPerRound = 52;
     const int fromIndex = round * numCardsPerRound;
-    for (int i = fromIndex; i < numCardsPerRound && i < playedSeatCardPairs.size(); i++)
+    for (int i = fromIndex; i < fromIndex + numCardsPerRound && i < playedSeatCardPairs.size(); i++)
     {
         roundCards.push_back(playedSeatCardPairs[i]);
     }
