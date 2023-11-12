@@ -37,20 +37,32 @@ bool TrumpVariationController::canPlaceCard(const State &state, const Card &card
     else
     {
         const auto leadCard = playedTrickCards.front().second;
-        for (const auto &card : hand)
+        if (trumpVariation.isTrumpCard(leadCard) && trumpVariation.isTrumpCard(card))
         {
-            if (trumpVariation.isTrumpCard(card) && trumpVariation.isTrumpCard(leadCard))
-            {
-                return true;
-            }
-            const auto leadSuitOptional = leadCard.getSuit();
-            const auto cardSuitOptional = card.getSuit();
-            if (leadSuitOptional.has_value() && cardSuitOptional.has_value() && leadSuitOptional == cardSuitOptional)
+            return true;
+        }
+        for (const auto &suit : {Suit::SPADE, Suit::DIAMOND, Suit::CLOVER, Suit::HEART})
+        {
+            if (card.is(suit) && leadCard.is(suit))
             {
                 return true;
             }
         }
-        return false;
+
+        bool hasLeadCardSuit = false;
+        for (const auto &handCard : hand)
+        {
+            if (trumpVariation.isTrumpCard(card) && trumpVariation.isTrumpCard(leadCard))
+            {
+                hasLeadCardSuit = true;
+            }
+            for (const auto &suit : {Suit::SPADE, Suit::DIAMOND, Suit::CLOVER, Suit::HEART})
+            {
+                if (handCard.is(suit) && leadCard.is(suit))
+                    hasLeadCardSuit = true;
+            }
+        }
+        return !hasLeadCardSuit;
     }
 }
 
