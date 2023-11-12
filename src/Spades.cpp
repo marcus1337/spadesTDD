@@ -239,10 +239,10 @@ bool Spades::isCorrupt() const
 bool Spades::hasCorruptCards() const
 {
     const int cardsPerRound = 52;
-    const int numBidSets = state.bids.size() / SeatUtils::numSeats;
+    const int numBidSets = state.getCompletedRoundBids().size();
     const int maxPlayedCards = numBidSets * cardsPerRound;
     bool corrupt = false;
-    if (state.playedSeatCardPairs.size() > maxPlayedCards)
+    if (state.getAllPlayedSeatCardPairs().size() > maxPlayedCards)
     {
         corrupt = true;
     }
@@ -265,16 +265,17 @@ bool Spades::hasCorruptBids() const
 {
     const int maxBid = 13;
     bool corrupt = false;
-    for (const auto &bid : state.bids)
+    const auto bids = state.getBids();
+    for (const auto &bid : bids)
     {
-        if (bid > maxBid)
+        if (bid.second > maxBid)
         {
             corrupt = true;
         }
     }
-    for (int i = 0; i + 2 < state.bids.size(); i++)
+    for (int i = 0; i + 2 < bids.size(); i++)
     {
-        if (state.bids[i] + state.bids[i + 2] > maxBid)
+        if (bids[i].second + bids[i + 2].second > maxBid)
         {
             corrupt = true;
         }

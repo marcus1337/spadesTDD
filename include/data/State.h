@@ -13,6 +13,10 @@ namespace spd
     {
         std::array<Seat, SeatUtils::numSeats> getRoundBidOrder() const;
         std::vector<int> getRoundBidValues() const;
+
+        std::vector<int> bids;
+        std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
+        std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
     public:
         std::vector<std::pair<Seat,int>> getBids() const;
         std::vector<std::array<std::pair<Seat,int>, SeatUtils::numSeats>> getCompletedRoundBids() const;
@@ -20,7 +24,8 @@ namespace spd
         std::vector<std::pair<Seat, int>> getRoundBids() const;
         std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> getTricks() const;
         std::vector<std::pair<Seat, Card>> getPlayedTrickCardSeatPairs() const;
-        std::vector<Card> getPlayedTrickCards() const;        
+        std::vector<Card> getPlayedTrickCards() const;
+        std::vector<std::pair<Seat, Card>> getAllPlayedSeatCardPairs() const;
         std::vector<std::pair<Seat, Card>> getPlayedCardSeatPairs(int round) const;
         std::vector<Card> getPlayedCards(int round) const;
         std::vector<Card> getPlayedRoundCards() const;
@@ -37,11 +42,8 @@ namespace spd
         void playCard(const Seat& seat, const Card &card);
         void addBid(int bid);
         void popBid();
+        void popCard();
         void removeBidOption(const Seat &seat, const BidOption &bidOption);
         Seat getTurn(const Seat& trickStartSeat) const;
-
-        std::vector<int> bids;
-        std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
-        std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
     };
 }

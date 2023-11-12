@@ -132,6 +132,11 @@ std::vector<std::pair<Seat, Card>> State::getPlayedCardSeatPairs(int round) cons
     return roundCards;
 }
 
+std::vector<std::pair<Seat, Card>> State::getAllPlayedSeatCardPairs() const
+{
+    return playedSeatCardPairs;
+}
+
 std::vector<Card> State::getPlayedCards(int round) const
 {
     std::vector<Card> cards;
@@ -218,6 +223,10 @@ void State::addBid(int bid)
 void State::popBid()
 {
     bids.pop_back();
+}
+void State::popCard()
+{
+    playedSeatCardPairs.pop_back();
 }
 
 void State::removeBidOption(const Seat &seat, const BidOption &bidOption)

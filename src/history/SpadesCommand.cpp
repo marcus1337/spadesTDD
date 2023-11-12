@@ -87,5 +87,5 @@ void SpadesCommandValueVisitor::undo(const BidCommandValueVariant &bidCommandVal
 
 void SpadesCommandValueVisitor::undo(const PlaceCommandValue &placeCommandValue, State &state, const TrumpVariationController &trumpVariationController)
 {
-    state.playedSeatCardPairs.pop_back();
+    state.popCard();
 }

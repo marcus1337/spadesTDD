@@ -12,10 +12,10 @@ protected:
     void SetUp() override
     {
         variationController.setTrumpVariationType(TrumpVariationType::ACE_HIGH);
-        state.bids.push_back(1);
-        state.bids.push_back(1);
-        state.bids.push_back(1);
-        state.bids.push_back(1);
+        state.addBid(1);
+        state.addBid(1);
+        state.addBid(1);
+        state.addBid(1);
     }
 };
 
