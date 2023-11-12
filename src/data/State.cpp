@@ -99,21 +99,21 @@ std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> State::getTr
     return tricks;
 }
 
-std::vector<std::pair<Seat, Card>> State::getPlayedTrickCardSeatPairs() const
+std::vector<std::pair<Seat, Card>> State::getCurrentTrickCardSeatPairs() const
 {
     std::vector<std::pair<Seat, Card>> trickCards;
-    const int offset = playedSeatCardPairs.size() / SeatUtils::numSeats;
-    for (int i = offset; i < SeatUtils::numSeats + offset && i < playedSeatCardPairs.size(); i++)
+    const int fromIndex = (playedSeatCardPairs.size() / SeatUtils::numSeats) * SeatUtils::numSeats;
+    for (int i = fromIndex; i < SeatUtils::numSeats + fromIndex && i < playedSeatCardPairs.size(); i++)
     {
         trickCards.push_back(playedSeatCardPairs[i]);
     }
     return trickCards;
 }
 
-std::vector<Card> State::getPlayedTrickCards() const
+std::vector<Card> State::getCurrentTrickCards() const
 {
     std::vector<Card> playedTrickCards;
-    for (const auto &[seat, card] : getPlayedTrickCardSeatPairs())
+    for (const auto &[seat, card] : getCurrentTrickCardSeatPairs())
     {
         playedTrickCards.push_back(card);
     }
@@ -239,22 +239,16 @@ void State::removeBidOption(const Seat &seat, const BidOption &bidOption)
 
 Seat State::getTurn(const Seat &trickStartSeat) const
 {
-    const int round = getRound();
-    const auto playedRoundSeatCardPairs = getPlayedCardSeatPairs(round);
-    const int startBidIndex = round % SeatUtils::numSeats;
-
     if (isBidPhase())
     {
+        const int startBidIndex = getRound() % SeatUtils::numSeats;
         int playerIndex = (bids.size() + startBidIndex) % SeatUtils::numSeats;
         return (Seat)playerIndex;
     }
-    else if (playedRoundSeatCardPairs.size() < SeatUtils::numSeats)
-    {
-        return (Seat)playedRoundSeatCardPairs.size();
-    }
     else
     {
-        const int numTrickSteps = getPlayedTrickCardSeatPairs().size();
-        return SeatUtils::getNextSeats(trickStartSeat, numTrickSteps).back();
+        const int numTrickSteps = getCurrentTrickCardSeatPairs().size();
+        assert(numTrickSteps < SeatUtils::numSeats);
+        return (Seat)(((int)trickStartSeat + numTrickSteps) % SeatUtils::numSeats);
     }
 }

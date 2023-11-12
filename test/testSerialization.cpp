@@ -63,7 +63,7 @@ TEST(Serialization, History){
     spades.redo();
     ASSERT_TRUE(spades.canRedo());
     spades.redo();
-    const auto playedTrickSeatCardPairs = spades.getPlayedTrickSeatCardPairs();
+    const auto playedTrickSeatCardPairs = spades.getCurrentTrickCardSeatPairs();
     ASSERT_EQ(playedTrickSeatCardPairs.size(), 2);
     const auto c1b = playedTrickSeatCardPairs[0].second;
     const auto c2b = playedTrickSeatCardPairs[1].second;

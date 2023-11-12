@@ -226,9 +226,9 @@ bool Spades::canRedo() const
     return history.canRedo();
 }
 
-std::vector<std::pair<Seat, Card>> Spades::getPlayedTrickSeatCardPairs() const
+std::vector<std::pair<Seat, Card>> Spades::getCurrentTrickCardSeatPairs() const
 {
-    return state.getPlayedTrickCardSeatPairs();
+    return state.getCurrentTrickCardSeatPairs();
 }
 
 bool Spades::isCorrupt() const
@@ -257,7 +257,7 @@ bool Spades::hasCorruptCards() const
             }
             roundCards.insert(card);
         }
-        
+
     }
     return corrupt;
 }

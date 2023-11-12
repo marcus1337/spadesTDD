@@ -93,7 +93,7 @@ bool Trick::hasSameSuit(const Card &card, const std::vector<Card>& hand) const
 
 bool Trick::canPlace(const Card &card, const std::vector<Card>& hand) const
 {
-    const auto playedTrickCards = state.getPlayedTrickCards();
+    const auto playedTrickCards = state.getCurrentTrickCardSeatPairs();
     return playedTrickCards.empty() ? canPlaceFirst(card, hand) : canPlaceContinuation(card, hand);
 }
 
@@ -163,7 +163,7 @@ bool Trick::isNewTopCard(const Card &topCard, const Card &newCard) const
 
 std::optional<Card> Trick::getLeadCard() const
 {
-    const auto trickCardSeatPairs = state.getPlayedTrickCardSeatPairs();
+    const auto trickCardSeatPairs = state.getCurrentTrickCardSeatPairs();
     if (!trickCardSeatPairs.empty())
     {
         return std::make_optional(trickCardSeatPairs.front().second);

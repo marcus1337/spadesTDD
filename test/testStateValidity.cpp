@@ -41,14 +41,18 @@ TEST(StateValidity, DissallowHighTeamBids)
 TEST(StateValidity, UniqueCards)
 {
     Spades spades;
+    spades.reset(0);
     spades.addBid(1);
     spades.addBid(1);
     spades.addBid(1);
     spades.addBid(1);
     for (int i = 0; i < 52; i++)
     {
-        spades.place(spades.getHand(spades.getTurnSeat()).front());
+        const auto hand = spades.getHand(spades.getTurnSeat());
+        ASSERT_FALSE(hand.empty());
+        spades.place(hand.front());
     }
-    
+
     EXPECT_FALSE(spades.isCorrupt());
 }
+

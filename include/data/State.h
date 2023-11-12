@@ -23,8 +23,8 @@ namespace spd
         std::vector<std::set<std::pair<Seat, BidOption>>> getCompletedRoundBidOptions() const;
         std::vector<std::pair<Seat, int>> getRoundBids() const;
         std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> getTricks() const;
-        std::vector<std::pair<Seat, Card>> getPlayedTrickCardSeatPairs() const;
-        std::vector<Card> getPlayedTrickCards() const;
+        std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
+        std::vector<Card> getCurrentTrickCards() const;
         std::vector<std::pair<Seat, Card>> getAllPlayedSeatCardPairs() const;
         std::vector<std::pair<Seat, Card>> getPlayedCardSeatPairs(int round) const;
         std::vector<Card> getPlayedCards(int round) const;
