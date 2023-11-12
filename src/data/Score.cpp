@@ -12,6 +12,9 @@ using namespace spd;
 
 struct SeatScore
 {
+    static constexpr int trickValue = 10;
+    static constexpr int nilValue = 100;
+
     int numTricks;
     int bid;
     bool nilFail;
@@ -27,7 +30,6 @@ struct SeatScore
         nilSuccess = numTricks == 0 && bid == 0;
         nilMultiplier = roundBidOptions.contains({seat, BidOption::SHOW_HAND}) ? 1 : 2;
 
-        const int nilValue = 100;
         if (nilSuccess)
         {
             nilScore = nilValue * nilMultiplier;
@@ -72,7 +74,6 @@ struct SeatScore
     {
         int nilScore = nilScore + teamScore.nilScore;
         int trickScore = 0;
-        const int trickValue = 10;
         const int teamTricks = getTeamTricks(teamScore);
         if (teamTricks >= bid + teamScore.bid)
         {
@@ -90,31 +91,14 @@ Score::Score(const std::pair<Seat, Seat> &team, const std::vector<std::vector<Se
     const int numRounds = completedRoundTrickTakers.size();
     for (int round = 0; round < numRounds; round++)
     {
-        auto trickTakers = completedRoundTrickTakers[round];
-        auto bids = completedRoundBids[round];
-        auto bidOptions = completedRoundBidOptions[round];
-        auto seatScore1 = SeatScore(team.first, trickTakers, bids, bidOptions);
-        auto seatScore2 = SeatScore(team.second, trickTakers, bids, bidOptions);
+        const auto trickTakers = completedRoundTrickTakers[round];
+        const auto bids = completedRoundBids[round];
+        const auto bidOptions = completedRoundBidOptions[round];
+        const auto seatScore1 = SeatScore(team.first, trickTakers, bids, bidOptions);
+        const auto seatScore2 = SeatScore(team.second, trickTakers, bids, bidOptions);
         roundPoints.push_back(seatScore1.getRoundPoints(seatScore2));
         roundBags.push_back(seatScore1.getTeamBags(seatScore2));
     }
-}
-
-int Score::getNumTakenTricks(const Seat &seat, const std::vector<Seat> &trickTakers) const
-{
-    return std::count(trickTakers.begin(), trickTakers.end(), seat);
-}
-
-int Score::getBid(const Seat &seat, const std::array<std::pair<Seat, int>, SeatUtils::numSeats> &bids) const
-{
-    for (const auto bid : bids)
-    {
-        if (bid.first == seat)
-        {
-            return bid.second;
-        }
-    }
-    return 0;
 }
 
 std::vector<int> Score::getRoundBags() const
