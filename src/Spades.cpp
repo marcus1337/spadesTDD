@@ -113,8 +113,8 @@ void Spades::deserialize(const std::string &data)
 
 std::pair<Score, Score> Spades::getScore() const
 {
-    Score scoreSouthNorth({Seat::SOUTH, Seat::NORTH}, trumpVariationController.getTrickTakers(state), state);
-    Score scoreWestEast({Seat::WEST, Seat::EAST}, trumpVariationController.getTrickTakers(state), state);
+    Score scoreSouthNorth({Seat::SOUTH, Seat::NORTH}, getCompletedRoundTrickTakers(), state.getCompletedRoundBids(), state.getCompletedRoundBidOptions());
+    Score scoreWestEast({Seat::WEST, Seat::EAST}, getCompletedRoundTrickTakers(), state.getCompletedRoundBids(), state.getCompletedRoundBidOptions());
     return std::make_pair(scoreSouthNorth, scoreWestEast);
 }
 
@@ -280,4 +280,21 @@ bool Spades::hasCorruptBids() const
         }
     }
     return corrupt;
+}
+
+std::vector<std::vector<Seat>> Spades::getCompletedRoundTrickTakers() const
+{
+    std::vector<std::vector<Seat>> roundTrickTakers;
+    const auto trickTakers = trumpVariationController.getTrickTakers(state);
+    const int tricksPerRound = 13;
+    for (int i = 0; i < tricksPerRound && trickTakers.size() >= i * tricksPerRound + tricksPerRound; i++)
+    {
+        std::vector<Seat> roundTricks;
+        for (int j = 0; j < tricksPerRound; j++)
+        {
+            roundTricks.push_back(trickTakers[j + i * tricksPerRound]);
+        }
+        roundTrickTakers.push_back(roundTricks);
+    }
+    return roundTrickTakers;
 }

@@ -29,6 +29,8 @@ namespace spd
         bool hasCorruptCards() const;
         bool hasCorruptBids() const;
 
+        std::vector<std::vector<Seat>> getCompletedRoundTrickTakers() const;
+
     public:
         Spades() = default;
         void reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);

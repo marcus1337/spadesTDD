@@ -38,14 +38,61 @@ std::vector<std::pair<Seat, int>> State::getRoundBids() const
     return roundBids;
 }
 
+std::vector<std::pair<Seat, int>> State::getBids() const
+{
+    std::vector<std::pair<Seat, int>> allBids;
+    for (const int bid : bids)
+    {
+        const int round = allBids.size() / SeatUtils::numSeats;
+        const auto startSeat = SeatUtils::getStartBidSeat(round);
+        const auto seatIndex = (((int)startSeat) + allBids.size()) % SeatUtils::numSeats;
+        const auto seat = (Seat)seatIndex;
+        allBids.push_back(std::make_pair(seat, bid));
+    }
+    return allBids;
+}
+
+std::vector<std::array<std::pair<Seat, int>, SeatUtils::numSeats>> State::getCompletedRoundBids() const
+{
+    std::vector<std::array<std::pair<Seat, int>, SeatUtils::numSeats>> completedRoundBids;
+    const auto allBids = getBids();
+    for (int i = 0; i < getRound(); i++)
+    {
+        std::array<std::pair<Seat, int>, SeatUtils::numSeats> roundBids;
+        for (int j = 0; j < SeatUtils::numSeats; j++)
+        {
+            roundBids[j] = allBids[j + i * SeatUtils::numSeats];
+        }
+        completedRoundBids.push_back(roundBids);
+    }
+    return completedRoundBids;
+}
+
+std::vector<std::set<std::pair<Seat, BidOption>>> State::getCompletedRoundBidOptions() const
+{
+    std::vector<std::set<std::pair<Seat, BidOption>>> comepletedRoundBidOptions;
+    for (int i = 0; i < getRound(); i++)
+    {
+        std::set<std::pair<Seat, BidOption>> bidOptions;
+        if (roundBidOptions.contains(i))
+        {
+            bidOptions = roundBidOptions.at(i);
+        }
+        comepletedRoundBidOptions.push_back(bidOptions);
+    }
+    return comepletedRoundBidOptions;
+}
+
 std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> State::getTricks() const
 {
     std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> tricks;
     const int numTricks = playedSeatCardPairs.size() / SeatUtils::numSeats;
-    for(int i = 0 ; i < numTricks; i++){
+    for (int i = 0; i < numTricks; i++)
+    {
         std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
-        for(int j = 0 ; j < SeatUtils::numSeats; j++){
-            trick[j] = playedSeatCardPairs[j + (i*SeatUtils::numSeats)];
+        for (int j = 0; j < SeatUtils::numSeats; j++)
+        {
+            trick[j] = playedSeatCardPairs[j + (i * SeatUtils::numSeats)];
         }
         tricks.push_back(trick);
     }
@@ -159,7 +206,7 @@ bool State::hasGameStarted() const
     return !bids.empty();
 }
 
-void State::playCard(const Seat& seat, const Card &card)
+void State::playCard(const Seat &seat, const Card &card)
 {
     playedSeatCardPairs.push_back(std::make_pair(seat, card));
 }
@@ -181,7 +228,7 @@ void State::removeBidOption(const Seat &seat, const BidOption &bidOption)
     }
 }
 
-Seat State::getTurn(const Seat& trickStartSeat) const
+Seat State::getTurn(const Seat &trickStartSeat) const
 {
     const int round = getRound();
     const auto playedRoundSeatCardPairs = getPlayedCardSeatPairs(round);
