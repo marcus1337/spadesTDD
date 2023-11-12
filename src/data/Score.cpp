@@ -111,11 +111,24 @@ std::vector<int> Score::getRoundPoints() const
     return roundPoints;
 }
 
+int Score::getBags() const
+{
+    return getTotalBags() % numBagsPerSet;
+}
+
+int Score::getTotalBags() const
+{
+    return std::accumulate(roundBags.begin(), roundBags.end(), 0);
+}
+
+int Score::getNumBagSets() const
+{
+    return getTotalBags() / numBagsPerSet;
+}
+
 int Score::getPoints() const
 {
     const int bagSetPenalty = 100;
-    const int numBagsPerBagSet = 10;
-    const int numBags = std::accumulate(roundBags.begin(), roundBags.end(), 0);
     const int points = std::accumulate(roundPoints.begin(), roundPoints.end(), 0);
-    return points - (numBags / numBagsPerBagSet) * bagSetPenalty;
+    return points - getNumBagSets() * bagSetPenalty;
 }
