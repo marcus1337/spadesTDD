@@ -43,12 +43,12 @@ bool Trick::sameSuit(const Card &card1, const Card &card2) const
 
 Trick::Trick(const TrumpVariation &trumpVariation, const State &state) : trumpVariation(trumpVariation), state(state) {}
 
-bool Trick::canPlaceFirst(const Card &card, const std::vector<Card>& hand) const
+bool Trick::canPlaceFirst(const Card &card, const std::vector<Card> &hand) const
 {
     return (!trumpVariation.isTrumpCard(card) || hasTrumpBeenPlayed()) ? true : hasOnlyTrumpCards(hand);
 }
 
-bool Trick::hasOnlyTrumpCards(const std::vector<Card>& hand) const
+bool Trick::hasOnlyTrumpCards(const std::vector<Card> &hand) const
 {
     bool hasOnlyTrumpCards = true;
     for (const auto &handCard : hand)
@@ -73,7 +73,7 @@ bool Trick::hasTrumpBeenPlayed() const
     return false;
 }
 
-bool Trick::canPlaceContinuation(const Card &card, const std::vector<Card>& hand) const
+bool Trick::canPlaceContinuation(const Card &card, const std::vector<Card> &hand) const
 {
     const auto leadCard = getLeadCard().value();
     if (sameSuit(card, leadCard))
@@ -81,7 +81,7 @@ bool Trick::canPlaceContinuation(const Card &card, const std::vector<Card>& hand
     return !hasSameSuit(card, hand);
 }
 
-bool Trick::hasSameSuit(const Card &card, const std::vector<Card>& hand) const
+bool Trick::hasSameSuit(const Card &card, const std::vector<Card> &hand) const
 {
     for (const auto &handCard : hand)
     {
@@ -91,15 +91,14 @@ bool Trick::hasSameSuit(const Card &card, const std::vector<Card>& hand) const
     return false;
 }
 
-bool Trick::canPlace(const Card &card, const std::vector<Card>& hand) const
+bool Trick::canPlace(const Card &card, const std::vector<Card> &hand) const
 {
     const auto playedTrickCards = state.getCurrentTrickCardSeatPairs();
     return playedTrickCards.empty() ? canPlaceFirst(card, hand) : canPlaceContinuation(card, hand);
 }
 
-Seat Trick::getTrickTaker() const
+Seat Trick::getTrickTaker(const std::array<std::pair<Seat, Card>, SeatUtils::numSeats> &trick) const
 {
-    const auto trick = state.getTricks().back();
     Card winCard = trick.front().second;
     Seat winSeat = trick.front().first;
     for (const auto &cardSeatPair : trick)

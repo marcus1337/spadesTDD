@@ -56,3 +56,4 @@ TEST(StateValidity, UniqueCards)
     EXPECT_FALSE(spades.isCorrupt());
 }
 
+

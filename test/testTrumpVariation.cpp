@@ -78,6 +78,6 @@ TEST_F(AceHighTrumpVariation, TrickTakingSeat)
     state.playCard(Seat::WEST, Card(Rank::ACE, Suit::CLOVER));
     state.playCard(Seat::NORTH, Card(Rank::QUEEN, Suit::DIAMOND));
     state.playCard(Seat::EAST, Card(Rank::TWO, Suit::SPADE));
-    const auto seat = variationController.getTrickTaker(state);
+    const auto seat = variationController.getTrickTakers(state).back();
     EXPECT_EQ(seat, Seat::EAST) << "error, seat was(" << (int)seat << ")";
 }

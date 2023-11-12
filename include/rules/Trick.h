@@ -42,6 +42,7 @@ namespace spd
     public:
         Trick(const TrumpVariation &trumpVariation, const State &state);
         bool canPlace(const Card &card, const std::vector<Card>& hand) const;
-        Seat getTrickTaker() const;
+        Seat getTrickTaker(const std::array<std::pair<Seat, Card>, SeatUtils::numSeats>& trick) const;
+
     };
 }

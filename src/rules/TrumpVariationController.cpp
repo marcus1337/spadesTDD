@@ -25,12 +25,7 @@ void TrumpVariationController::setTrumpVariationType(TrumpVariationType type)
     this->variationType = type;
 }
 
-Seat TrumpVariationController::getTrickTaker(const State &state) const
-{
-    return Trick(*getTrumpVariation(), state).getTrickTaker();
-}
-
-bool TrumpVariationController::canPlaceCard(const State &state, const Card &card, const std::vector<Card>& hand) const
+bool TrumpVariationController::canPlaceCard(const State &state, const Card &card, const std::vector<Card> &hand) const
 {
     return Trick(*getTrumpVariation(), state).canPlace(card, hand);
 }
@@ -45,19 +40,24 @@ std::array<Card, 2> TrumpVariationController::getExcludedCards() const
     return getTrumpVariation()->getExcludedCards();
 }
 
-std::vector<Seat> TrumpVariationController::getTrickTakers(const State& state) const{
+std::vector<Seat> TrumpVariationController::getTrickTakers(const State &state) const
+{
     std::vector<Seat> trickTakers;
-    for(const auto trick : state.getTricks()){
-        const auto trickTaker = Trick(*getTrumpVariation(), state).getTrickTaker();
+    for (const auto &trick : state.getTricks())
+    {
+        const auto trickTaker = Trick(*getTrumpVariation(), state).getTrickTaker(trick);
         trickTakers.push_back(trickTaker);
     }
     return trickTakers;
 }
 
-Seat TrumpVariationController::getTrickStartSeat(const State& state) const{
-    Seat seat = (Seat)0;
+Seat TrumpVariationController::getTrickStartSeat(const State &state) const
+{
+    Seat seat = (Seat)(state.getRound() % SeatUtils::numSeats);
     const auto trickTakers = getTrickTakers(state);
-    if(!trickTakers.empty()){
+    const int tricksPerRound = 13;
+    if (trickTakers.size() % tricksPerRound != 0)
+    {
         seat = trickTakers.back();
     }
     return seat;

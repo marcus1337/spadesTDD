@@ -247,8 +247,13 @@ Seat State::getTurn(const Seat &trickStartSeat) const
     }
     else
     {
+        const int startIndex = (int)trickStartSeat;
         const int numTrickSteps = getCurrentTrickCardSeatPairs().size();
         assert(numTrickSteps < SeatUtils::numSeats);
-        return (Seat)(((int)trickStartSeat + numTrickSteps) % SeatUtils::numSeats);
+        const auto seat = (Seat)((startIndex + numTrickSteps) % SeatUtils::numSeats);
+        for(const auto& cardSeatPair : getCurrentTrickCardSeatPairs()){
+            assert(cardSeatPair.first != seat);
+        }
+        return seat;
     }
 }
