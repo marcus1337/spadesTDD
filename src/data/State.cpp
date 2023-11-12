@@ -102,8 +102,8 @@ std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> State::getTr
 std::vector<std::pair<Seat, Card>> State::getCurrentTrickCardSeatPairs() const
 {
     std::vector<std::pair<Seat, Card>> trickCards;
-    const int fromIndex = (playedSeatCardPairs.size() / SeatUtils::numSeats) * SeatUtils::numSeats;
-    for (int i = fromIndex; i < SeatUtils::numSeats + fromIndex && i < playedSeatCardPairs.size(); i++)
+    const int startIndex = (playedSeatCardPairs.size() / SeatUtils::numSeats) * SeatUtils::numSeats;
+    for (int i = startIndex; i < startIndex + SeatUtils::numSeats && i < playedSeatCardPairs.size(); i++)
     {
         trickCards.push_back(playedSeatCardPairs[i]);
     }
@@ -237,23 +237,21 @@ void State::removeBidOption(const Seat &seat, const BidOption &bidOption)
     }
 }
 
-Seat State::getTurn(const Seat &trickStartSeat) const
+Seat State::getTrickTurn(const Seat &startSeat) const
 {
-    if (isBidPhase())
+    const int numTrickSteps = getCurrentTrickCardSeatPairs().size();
+    const auto seat = (Seat)(((int)startSeat + numTrickSteps) % SeatUtils::numSeats);
+
+    assert(numTrickSteps < SeatUtils::numSeats);
+    for (const auto &cardSeatPair : getCurrentTrickCardSeatPairs())
     {
-        const int startBidIndex = getRound() % SeatUtils::numSeats;
-        int playerIndex = (bids.size() + startBidIndex) % SeatUtils::numSeats;
-        return (Seat)playerIndex;
+        assert(cardSeatPair.first != seat);
     }
-    else
-    {
-        const int startIndex = (int)trickStartSeat;
-        const int numTrickSteps = getCurrentTrickCardSeatPairs().size();
-        assert(numTrickSteps < SeatUtils::numSeats);
-        const auto seat = (Seat)((startIndex + numTrickSteps) % SeatUtils::numSeats);
-        for(const auto& cardSeatPair : getCurrentTrickCardSeatPairs()){
-            assert(cardSeatPair.first != seat);
-        }
-        return seat;
-    }
+
+    return seat;
+}
+
+Seat State::getBidTurn() const
+{
+    return (Seat)((bids.size() + getRound()) % SeatUtils::numSeats);
 }

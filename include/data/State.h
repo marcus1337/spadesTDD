@@ -44,6 +44,7 @@ namespace spd
         void popBid();
         void popCard();
         void removeBidOption(const Seat &seat, const BidOption &bidOption);
-        Seat getTurn(const Seat& trickStartSeat) const;
+        Seat getTrickTurn(const Seat& startSeat) const;
+        Seat getBidTurn() const;
     };
 }

@@ -57,8 +57,7 @@ void SpadesCommandValueVisitor::execute(const SpadesCommandValue &commandValue, 
     if (const auto placeCommandValue = std::get_if<PlaceCommandValue>(&commandValue))
     {
         const auto trickStartSeat = trumpVariationController.getTrickStartSeat(state);
-        auto turnSeat = state.getTurn(trickStartSeat);
-        state.playCard(turnSeat, placeCommandValue->card);
+        state.playCard(state.getTrickTurn(trickStartSeat), placeCommandValue->card);
     }
     else if (const auto bidVariant = std::get_if<BidCommandValueVariant>(&commandValue))
     {

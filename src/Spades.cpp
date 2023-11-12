@@ -125,8 +125,18 @@ unsigned int Spades::getSeed() const
 
 Seat Spades::getTurnSeat() const
 {
-    const auto trickStartSeat = trumpVariationController.getTrickStartSeat(state);
-    return state.getTurn(trickStartSeat);
+    if (state.isBidPhase())
+    {
+        return state.getBidTurn();
+    }
+    else
+    {
+        /*std::cout << (int)trumpVariationController.getTrickStartSeat(state) << " {" << (state.getAllPlayedSeatCardPairs().size() % 4) << "}\n";
+        if((state.getAllPlayedSeatCardPairs().size() % 4) == 3){
+            std::cout << "-------------------\n";
+        }*/
+        return state.getTrickTurn(trumpVariationController.getTrickStartSeat(state));
+    }
 }
 
 void Spades::addBid(unsigned int bid)
@@ -257,7 +267,6 @@ bool Spades::hasCorruptCards() const
             }
             roundCards.insert(card);
         }
-
     }
     return corrupt;
 }

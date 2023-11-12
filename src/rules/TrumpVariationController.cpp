@@ -27,7 +27,31 @@ void TrumpVariationController::setTrumpVariationType(TrumpVariationType type)
 
 bool TrumpVariationController::canPlaceCard(const State &state, const Card &card, const std::vector<Card> &hand) const
 {
-    return Trick(*getTrumpVariation(), state).canPlace(card, hand);
+    const auto playedTrickCards = state.getCurrentTrickCardSeatPairs();
+    const auto &trumpVariation = *getTrumpVariation();
+
+    if (playedTrickCards.empty())
+    {
+        return (!trumpVariation.isTrumpCard(card) || trumpVariation.hasTrumpBeenPlayed(state.getPlayedCards(state.getRound()))) ? true : trumpVariation.areAllTrump(hand);
+    }
+    else
+    {
+        const auto leadCard = playedTrickCards.front().second;
+        for (const auto &card : hand)
+        {
+            if (trumpVariation.isTrumpCard(card) && trumpVariation.isTrumpCard(leadCard))
+            {
+                return true;
+            }
+            const auto leadSuitOptional = leadCard.getSuit();
+            const auto cardSuitOptional = card.getSuit();
+            if (leadSuitOptional.has_value() && cardSuitOptional.has_value() && leadSuitOptional == cardSuitOptional)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 std::vector<Card> TrumpVariationController::getTrumpCardsOrderedByValueDescending() const
@@ -45,20 +69,20 @@ std::vector<Seat> TrumpVariationController::getTrickTakers(const State &state) c
     std::vector<Seat> trickTakers;
     for (const auto &trick : state.getTricks())
     {
-        const auto trickTaker = Trick(*getTrumpVariation(), state).getTrickTaker(trick);
-        trickTakers.push_back(trickTaker);
+        const auto seat = Trick(*getTrumpVariation(), state, trick).getTrickTaker();
+        trickTakers.push_back(seat);
     }
     return trickTakers;
 }
 
 Seat TrumpVariationController::getTrickStartSeat(const State &state) const
 {
-    Seat seat = (Seat)(state.getRound() % SeatUtils::numSeats);
+    Seat startSeat = (Seat)(state.getRound() % SeatUtils::numSeats);
     const auto trickTakers = getTrickTakers(state);
     const int tricksPerRound = 13;
     if (trickTakers.size() % tricksPerRound != 0)
     {
-        seat = trickTakers.back();
+        startSeat = trickTakers.back();
     }
-    return seat;
+    return startSeat;
 }

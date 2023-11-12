@@ -19,6 +19,8 @@ namespace spd
         bool isTrumpCard(const Card &card) const;
         virtual std::vector<Card> getTrumpCardsOrderedByValueDescending() const = 0;
         virtual std::array<Card, 2> getExcludedCards() const = 0;
+        bool hasTrumpBeenPlayed(const std::vector<Card>& playedCards) const;
+        bool areAllTrump(const std::vector<Card>& cards) const;
     };
 
     class AceHigh : public TrumpVariation

@@ -41,45 +41,7 @@ bool Trick::sameSuit(const Card &card1, const Card &card2) const
     }
 }
 
-Trick::Trick(const TrumpVariation &trumpVariation, const State &state) : trumpVariation(trumpVariation), state(state) {}
-
-bool Trick::canPlaceFirst(const Card &card, const std::vector<Card> &hand) const
-{
-    return (!trumpVariation.isTrumpCard(card) || hasTrumpBeenPlayed()) ? true : hasOnlyTrumpCards(hand);
-}
-
-bool Trick::hasOnlyTrumpCards(const std::vector<Card> &hand) const
-{
-    bool hasOnlyTrumpCards = true;
-    for (const auto &handCard : hand)
-    {
-        if (!trumpVariation.isTrumpCard(handCard))
-        {
-            hasOnlyTrumpCards = false;
-        }
-    }
-    return hasOnlyTrumpCards;
-}
-
-bool Trick::hasTrumpBeenPlayed() const
-{
-    for (const auto &card : state.getPlayedCards(state.getRound()))
-    {
-        if (trumpVariation.isTrumpCard(card))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Trick::canPlaceContinuation(const Card &card, const std::vector<Card> &hand) const
-{
-    const auto leadCard = getLeadCard().value();
-    if (sameSuit(card, leadCard))
-        return true;
-    return !hasSameSuit(card, hand);
-}
+Trick::Trick(const TrumpVariation &trumpVariation, const State &state, const std::array<std::pair<Seat, Card>, SeatUtils::numSeats> &trick) : trumpVariation(trumpVariation), state(state), trick(trick) {}
 
 bool Trick::hasSameSuit(const Card &card, const std::vector<Card> &hand) const
 {
@@ -91,13 +53,7 @@ bool Trick::hasSameSuit(const Card &card, const std::vector<Card> &hand) const
     return false;
 }
 
-bool Trick::canPlace(const Card &card, const std::vector<Card> &hand) const
-{
-    const auto playedTrickCards = state.getCurrentTrickCardSeatPairs();
-    return playedTrickCards.empty() ? canPlaceFirst(card, hand) : canPlaceContinuation(card, hand);
-}
-
-Seat Trick::getTrickTaker(const std::array<std::pair<Seat, Card>, SeatUtils::numSeats> &trick) const
+Seat Trick::getTrickTaker() const
 {
     Card winCard = trick.front().second;
     Seat winSeat = trick.front().first;
@@ -160,39 +116,25 @@ bool Trick::isNewTopCard(const Card &topCard, const Card &newCard) const
     return topCardComparator < newCardComparator;
 }
 
-std::optional<Card> Trick::getLeadCard() const
-{
-    const auto trickCardSeatPairs = state.getCurrentTrickCardSeatPairs();
-    if (!trickCardSeatPairs.empty())
-    {
-        return std::make_optional(trickCardSeatPairs.front().second);
-    }
-    return std::nullopt;
-}
 std::optional<Suit> Trick::getLeadSuit() const
 {
-    const auto leadCardOptional = getLeadCard();
-    if (leadCardOptional.has_value())
+    const auto leadCard = trick.front().second;
+    if (trumpVariation.isTrumpCard(leadCard))
+        return Suit::SPADE;
+    else
     {
-        Card leadCard = leadCardOptional.value();
-        if (trumpVariation.isTrumpCard(leadCard))
-            return std::make_optional(Suit::SPADE);
-        else
-        {
-            for (const auto suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART, Suit::SPADE})
-                if (leadCard.is(suit))
-                    return std::make_optional(suit);
-        }
+        for (const auto suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART, Suit::SPADE})
+            if (leadCard.is(suit))
+                return suit;
     }
     return std::nullopt;
 }
 bool Trick::isLeadSuit(const Card &card) const
 {
-    const auto leadCardOptional = getLeadCard();
-    if (leadCardOptional.has_value())
-    {
-        const auto leadCard = leadCardOptional.value();
-        return sameSuit(leadCard, card);
-    }
-    return false;
+    return sameSuit(getLeadCard(), card);
+}
+
+Card Trick::getLeadCard() const
+{
+    return trick.front().second;
 }
