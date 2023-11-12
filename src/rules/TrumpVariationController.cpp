@@ -27,43 +27,7 @@ void TrumpVariationController::setTrumpVariationType(TrumpVariationType type)
 
 bool TrumpVariationController::canPlaceCard(const State &state, const Card &card, const std::vector<Card> &hand) const
 {
-    const auto playedTrickCards = state.getCurrentTrickCardSeatPairs();
-    const auto &trumpVariation = *getTrumpVariation();
-
-    if (playedTrickCards.empty())
-    {
-        return (!trumpVariation.isTrumpCard(card) || trumpVariation.hasTrumpBeenPlayed(state.getPlayedCards(state.getRound()))) ? true : trumpVariation.areAllTrump(hand);
-    }
-    else
-    {
-        const auto leadCard = playedTrickCards.front().second;
-        if (trumpVariation.isTrumpCard(leadCard) && trumpVariation.isTrumpCard(card))
-        {
-            return true;
-        }
-        for (const auto &suit : {Suit::SPADE, Suit::DIAMOND, Suit::CLOVER, Suit::HEART})
-        {
-            if (card.is(suit) && leadCard.is(suit))
-            {
-                return true;
-            }
-        }
-
-        bool hasLeadCardSuit = false;
-        for (const auto &handCard : hand)
-        {
-            if (trumpVariation.isTrumpCard(card) && trumpVariation.isTrumpCard(leadCard))
-            {
-                hasLeadCardSuit = true;
-            }
-            for (const auto &suit : {Suit::SPADE, Suit::DIAMOND, Suit::CLOVER, Suit::HEART})
-            {
-                if (handCard.is(suit) && leadCard.is(suit))
-                    hasLeadCardSuit = true;
-            }
-        }
-        return !hasLeadCardSuit;
-    }
+    return getTrumpVariation()->canPlaceCard(state.getPlayedRoundCards(), state.getCurrentTrickCards(), hand, card);
 }
 
 std::vector<Card> TrumpVariationController::getTrumpCardsOrderedByValueDescending() const

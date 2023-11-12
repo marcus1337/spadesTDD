@@ -41,6 +41,43 @@ bool TrumpVariation::areAllTrump(const std::vector<Card> &cards) const
     return onlyTrumps;
 }
 
+bool TrumpVariation::sameSuit(const Card &cardA, const Card &cardB) const
+{
+    if (isTrumpCard(cardA) && isTrumpCard(cardB))
+    {
+        return true;
+    }
+    for (const auto &suit : {Suit::SPADE, Suit::DIAMOND, Suit::CLOVER, Suit::HEART})
+    {
+        if (cardA.is(suit) && cardB.is(suit))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool TrumpVariation::canPlaceCard(const std::vector<Card> &roundCards, const std::vector<Card> &trickCards, const std::vector<Card> &hand, const Card &card) const
+{
+    if (trickCards.empty())
+    {
+        return (!isTrumpCard(card) || hasTrumpBeenPlayed(roundCards)) ? true : areAllTrump(hand);
+    }
+    else
+    {
+        const auto leadCard = trickCards.front();
+        bool hasLeadCardSuit = false;
+        for (const auto &handCard : hand)
+        {
+            if (sameSuit(leadCard, handCard))
+            {
+                hasLeadCardSuit = true;
+            }
+        }
+        return sameSuit(card, leadCard) || !hasLeadCardSuit;
+    }
+}
+
 std::vector<Card> AceHigh::getTrumpCardsOrderedByValueDescending() const
 {
     std::vector<Card> trumpCards;
