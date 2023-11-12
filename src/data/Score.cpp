@@ -6,8 +6,82 @@
 #include <string>
 #include <optional>
 #include <numeric>
+#include <iterator>
 
 using namespace spd;
+
+struct SeatScore
+{
+    int numTricks;
+    int bid;
+    bool nilFail;
+    bool nilSuccess;
+    int nilMultiplier;
+    int nilScore = 0;
+
+    SeatScore(const Seat &seat, const std::vector<Seat> &trickTakers, const std::array<std::pair<Seat, int>, SeatUtils::numSeats> &roundBids, const std::set<std::pair<Seat, BidOption>> &roundBidOptions)
+    {
+        numTricks = std::count(trickTakers.begin(), trickTakers.end(), seat);
+        bid = getBid(seat, roundBids);
+        nilFail = numTricks > 0 && bid == 0;
+        nilSuccess = numTricks == 0 && bid == 0;
+        nilMultiplier = roundBidOptions.contains({seat, BidOption::SHOW_HAND}) ? 1 : 2;
+
+        const int nilValue = 100;
+        if (nilSuccess)
+        {
+            nilScore = nilValue * nilMultiplier;
+        }
+        else if (nilFail)
+        {
+            nilScore = -nilValue * nilMultiplier;
+        }
+    }
+
+    int getBid(const Seat &seat, const std::array<std::pair<Seat, int>, SeatUtils::numSeats> &bids) const
+    {
+        auto it = std::find_if(bids.begin(), bids.end(), [&seat](const auto &bid)
+                               { return bid.first == seat; });
+        assert(it != bids.end());
+        return (it != bids.end()) ? it->second : 0;
+    }
+
+    int getCountedTricks() const
+    {
+        if (bid != 0)
+        {
+            return numTricks;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    int getTeamTricks(const SeatScore &teamScore) const
+    {
+        return getCountedTricks() + teamScore.getCountedTricks();
+    }
+
+    int getTeamBags(const SeatScore &teamScore) const
+    {
+        return std::max(0, getTeamTricks(teamScore) - bid - teamScore.bid);
+    }
+
+    int getRoundPoints(const SeatScore &teamScore) const
+    {
+        int nilScore = nilScore + teamScore.nilScore;
+        int trickScore = 0;
+        const int trickValue = 10;
+        const int teamTricks = getTeamTricks(teamScore);
+        if (teamTricks >= bid + teamScore.bid)
+        {
+            trickScore += teamTricks * trickValue;
+            trickScore += getTeamBags(teamScore);
+        }
+        return nilScore + trickScore;
+    }
+};
 
 Score::Score(const std::pair<Seat, Seat> &team, const std::vector<std::vector<Seat>> &completedRoundTrickTakers, const std::vector<std::array<std::pair<Seat, int>, SeatUtils::numSeats>> &completedRoundBids, const std::vector<std::set<std::pair<Seat, BidOption>>> &completedRoundBidOptions)
 {
@@ -16,64 +90,13 @@ Score::Score(const std::pair<Seat, Seat> &team, const std::vector<std::vector<Se
     const int numRounds = completedRoundTrickTakers.size();
     for (int round = 0; round < numRounds; round++)
     {
-
         auto trickTakers = completedRoundTrickTakers[round];
         auto bids = completedRoundBids[round];
         auto bidOptions = completedRoundBidOptions[round];
-
-        int numTricks1 = getNumTakenTricks(team.first, trickTakers);
-        int numTricks2 = getNumTakenTricks(team.second, trickTakers);
-        int bid1 = getBid(team.first, bids);
-        int bid2 = getBid(team.second, bids);
-        bool failedNil1 = numTricks1 > 0 && bid1 == 0;
-        bool failedNil2 = numTricks2 > 0 && bid2 == 0;
-        bool nil1 = numTricks1 == 0 && bid1 == 0;
-        bool nil2 = numTricks2 == 0 && bid2 == 0;
-        int nilMultiplier1 = bidOptions.contains({team.first, BidOption::SHOW_HAND}) ? 1 : 2;
-        int nilMultiplier2 = bidOptions.contains({team.second, BidOption::SHOW_HAND}) ? 1 : 2;
-
-        int teamTricks = 0;
-        if (bid1 != 0)
-        {
-            teamTricks += numTricks1;
-        }
-        if (bid2 != 0)
-        {
-            teamTricks += numTricks2;
-        }
-
-        int points = 0;
-        const int trickValue = 10;
-        const int nilValue = 100;
-        if (teamTricks >= bid1 + bid2)
-        {
-            points += teamTricks * trickValue;
-            points += teamTricks - bid1 - bid2;
-        }
-        else
-        {
-            points -= teamTricks * trickValue;
-        }
-        if (nil1)
-        {
-            points += nilValue * nilMultiplier1;
-        }
-        else if (failedNil1)
-        {
-            points -= nilValue * nilMultiplier1;
-        }
-        if (nil2)
-        {
-            points += nilValue * nilMultiplier2;
-        }
-        else if (failedNil2)
-        {
-            points -= nilValue * nilMultiplier2;
-        }
-
-        int bags = std::max<int>(0, teamTricks - bid1 - bid2);
-        roundPoints.push_back(points);
-        roundBags.push_back(bags);
+        auto seatScore1 = SeatScore(team.first, trickTakers, bids, bidOptions);
+        auto seatScore2 = SeatScore(team.second, trickTakers, bids, bidOptions);
+        roundPoints.push_back(seatScore1.getRoundPoints(seatScore2));
+        roundBags.push_back(seatScore1.getTeamBags(seatScore2));
     }
 }
 
