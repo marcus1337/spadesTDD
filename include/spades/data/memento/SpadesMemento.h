@@ -5,11 +5,11 @@
 #include <set>
 #include <map>
 
-#include "rules/BidVariationType.h"
-#include "rules/TrumpVariationType.h"
-#include "data/Seat.h"
-#include "data/card/Card.h"
-#include "history/SpadesHistory.h"
+#include "spades/rules/BidVariationType.h"
+#include "spades/rules/TrumpVariationType.h"
+#include "spades/data/Seat.h"
+#include "spades/data/card/Card.h"
+#include "spades/history/SpadesHistory.h"
 
 namespace spd
 {

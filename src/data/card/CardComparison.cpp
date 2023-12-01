@@ -1,4 +1,4 @@
-#include "data/card/CardValueComparison.h"
+#include "spades/data/card/CardValueComparison.h"
 
 using namespace spd;
 

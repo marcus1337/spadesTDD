@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "data/Seat.h"
+#include "spades/data/Seat.h"
 #include <set>
-#include "data/Bid.h"
+#include "spades/data/Bid.h"
 
 namespace spd
 {

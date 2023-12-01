@@ -1,5 +1,5 @@
 #pragma once
-#include "history/SpadesCommand.h"
+#include "spades/history/SpadesCommand.h"
 
 namespace spd
 {

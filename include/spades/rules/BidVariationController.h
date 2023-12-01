@@ -1,6 +1,6 @@
 #pragma once
-#include "rules/BidVariation.h"
-#include "rules/BidVariationType.h"
+#include "spades/rules/BidVariation.h"
+#include "spades/rules/BidVariationType.h"
 #include <memory>
 
 namespace spd

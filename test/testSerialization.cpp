@@ -1,7 +1,7 @@
 #include "test_pch.h"
-#include "Spades.h"
-#include "data/card/Card.h"
-#include "history/SpadesHistory.h"
+#include "spades/Spades.h"
+#include "spades/data/card/Card.h"
+#include "spades/history/SpadesHistory.h"
 
 using namespace spd;
 

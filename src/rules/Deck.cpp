@@ -1,9 +1,5 @@
-#include "rules/Deck.h"
-#include <vector>
-#include <cassert>
-#include <algorithm>
-#include <iterator>
-#include <array>
+#include "spades/rules/Deck.h"
+#include "spades/pch.h"
 
 using namespace spd;
 

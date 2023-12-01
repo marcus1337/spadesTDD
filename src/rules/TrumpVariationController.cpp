@@ -1,5 +1,5 @@
-#include "rules/TrumpVariationController.h"
-#include "rules/Trick.h"
+#include "spades/rules/TrumpVariationController.h"
+#include "spades/rules/Trick.h"
 
 using namespace spd;
 

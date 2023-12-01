@@ -1,6 +1,6 @@
 #pragma once
-#include "history/SpadesCommand.h"
-#include "history/SpadesCommandOrder.h"
+#include "spades/history/SpadesCommand.h"
+#include "spades/history/SpadesCommandOrder.h"
 #include <memory>
 #include <vector>
 #include <string>

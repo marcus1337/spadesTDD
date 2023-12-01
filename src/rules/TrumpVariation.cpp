@@ -1,4 +1,4 @@
-#include "rules/TrumpVariation.h"
+#include "spades/rules/TrumpVariation.h"
 #include <cassert>
 #include <string>
 

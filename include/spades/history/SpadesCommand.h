@@ -1,6 +1,6 @@
 #pragma once
-#include "data/State.h"
-#include "rules/TrumpVariationController.h"
+#include "spades/data/State.h"
+#include "spades/rules/TrumpVariationController.h"
 #include <string>
 #include <variant>
 

@@ -1,4 +1,4 @@
-#include "history/SpadesHistory.h"
+#include "spades/history/SpadesHistory.h"
 #include <sstream>
 
 using namespace spd;

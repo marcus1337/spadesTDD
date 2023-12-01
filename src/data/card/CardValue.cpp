@@ -1,4 +1,4 @@
-#include "data/card/CardValue.h"
+#include "spades/data/card/CardValue.h"
 #include <cassert>
 #include <algorithm>
 

@@ -1,4 +1,4 @@
-#include "data/card/CardValueSerialization.h"
+#include "spades/data/card/CardValueSerialization.h"
 
 using namespace spd;
 

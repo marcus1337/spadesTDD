@@ -1,7 +1,7 @@
-#include "Spades.h"
+#include "spades/Spades.h"
 #include <cassert>
-#include "history/SpadesCommand.h"
-#include "rules/Deck.h"
+#include "spades/history/SpadesCommand.h"
+#include "spades/rules/Deck.h"
 
 using namespace spd;
 

@@ -1,14 +1,14 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "history/SpadesHistory.h"
-#include "rules/BidVariationController.h"
-#include "rules/TrumpVariationController.h"
-#include "rules/Deck.h"
-#include "data/memento/SpadesMemento.h"
-#include "data/State.h"
-#include "data/Bid.h"
-#include "data/Score.h"
+#include "spades/history/SpadesHistory.h"
+#include "spades/rules/BidVariationController.h"
+#include "spades/rules/TrumpVariationController.h"
+#include "spades/rules/Deck.h"
+#include "spades/data/memento/SpadesMemento.h"
+#include "spades/data/State.h"
+#include "spades/data/Bid.h"
+#include "spades/data/Score.h"
 
 namespace spd
 {

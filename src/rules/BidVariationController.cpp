@@ -1,4 +1,4 @@
-#include "rules/BidVariationController.h"
+#include "spades/rules/BidVariationController.h"
 
 using namespace spd;
 

@@ -2,7 +2,7 @@
 #pragma once
 #include <vector>
 #include <array>
-#include "data/Bid.h"
+#include "spades/data/Bid.h"
 
 namespace spd
 {

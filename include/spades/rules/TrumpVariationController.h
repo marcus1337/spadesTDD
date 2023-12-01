@@ -1,8 +1,8 @@
 #pragma once
-#include "rules/TrumpVariation.h"
+#include "spades/rules/TrumpVariation.h"
 #include <map>
 #include <memory>
-#include "rules/TrumpVariationType.h"
+#include "spades/rules/TrumpVariationType.h"
 
 namespace spd{
     class TrumpVariationController{

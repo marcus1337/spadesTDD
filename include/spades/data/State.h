@@ -4,8 +4,8 @@
 #include <optional>
 #include <map>
 #include <set>
-#include "data/card/Card.h"
-#include "data/Seat.h"
+#include "spades/data/card/Card.h"
+#include "spades/data/Seat.h"
 
 namespace spd
 {

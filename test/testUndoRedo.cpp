@@ -1,5 +1,5 @@
 #include "test_pch.h"
-#include "Spades.h"
+#include "spades/Spades.h"
 using namespace spd;
 
 TEST(UndoRedo, CanUndo){

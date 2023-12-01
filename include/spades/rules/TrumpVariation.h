@@ -3,9 +3,9 @@
 #include <vector>
 #include <array>
 #include <optional>
-#include "data/card/Card.h"
-#include "data/Seat.h"
-#include "data/State.h"
+#include "spades/data/card/Card.h"
+#include "spades/data/Seat.h"
+#include "spades/data/State.h"
 
 namespace spd
 {

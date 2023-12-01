@@ -27,6 +27,8 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/history/SpadesCommand.cpp"
 "src/history/SpadesCommandOrder.cpp"
 )
+
+target_precompile_headers(${PROJECT_NAME} PRIVATE "include/spades/pch.h")
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<INSTALL_INTERFACE:include>

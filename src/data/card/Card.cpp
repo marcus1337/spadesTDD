@@ -1,6 +1,6 @@
-#include "data/card/Card.h"
-#include "data/card/CardValueComparison.h"
-#include "data/card/CardValueSerialization.h"
+#include "spades/data/card/Card.h"
+#include "spades/data/card/CardValueComparison.h"
+#include "spades/data/card/CardValueSerialization.h"
 
 using namespace spd;
 

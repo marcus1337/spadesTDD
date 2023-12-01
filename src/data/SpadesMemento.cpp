@@ -1,10 +1,6 @@
-#include "data/memento/SpadesMemento.h"
-#include <cassert>
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <limits>
-#include "data/memento/json.h"
+#include "spades/data/memento/SpadesMemento.h"
+#include "spades/data/memento/json.h"
+#include "spades/pch.h"
 
 using namespace spd;
 

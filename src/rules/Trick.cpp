@@ -1,4 +1,4 @@
-#include "rules/Trick.h"
+#include "spades/rules/Trick.h"
 
 using namespace spd;
 

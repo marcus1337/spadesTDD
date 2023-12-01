@@ -1,12 +1,5 @@
-#include "data/Score.h"
-#include <vector>
-#include <cassert>
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <optional>
-#include <numeric>
-#include <iterator>
+#include "spades/data/Score.h"
+#include "spades/pch.h"
 
 using namespace spd;
 

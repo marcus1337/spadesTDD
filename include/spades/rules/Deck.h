@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
 #include <array>
-#include "data/PortableRandom.h"
-#include "data/card/Card.h"
-#include "data/Seat.h"
+#include "spades/data/PortableRandom.h"
+#include "spades/data/card/Card.h"
+#include "spades/data/Seat.h"
 
 namespace spd
 {

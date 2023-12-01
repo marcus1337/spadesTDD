@@ -1,4 +1,4 @@
-#include "history/SpadesCommandOrder.h"
+#include "spades/history/SpadesCommandOrder.h"
 
 using namespace spd;
 
