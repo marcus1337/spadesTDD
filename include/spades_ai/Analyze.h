@@ -13,10 +13,16 @@ namespace spd
         {
         }
 
-        std::vector<Card> getPlayedRoundCards(const Seat &seat) const
+        std::vector<Card> getPlayedRoundCards(const Seat &targetSeat) const
         {
             std::vector<Card> cards;
-
+            for (const auto &[seat, card] : spades.getCurrentRoundCardSeatPairs())
+            {
+                if (targetSeat == seat)
+                {
+                    cards.push_back(card);
+                }
+            }
             return cards;
         }
 
