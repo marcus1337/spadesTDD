@@ -4,18 +4,54 @@
 
 using namespace spd;
 
+struct SeatOrder
+{
+    const Seat seat1;
+    const Seat seat2;
+    const Seat seat3;
+    const Seat seat4;
+    SeatOrder(const Seat &seat1) : seat1(seat1), seat2(SeatUtils::getNextSeat(seat1)), seat3(SeatUtils::getNextSeat(seat2)), seat4(SeatUtils::getNextSeat(seat3))
+    {
+    }
+
+    std::array<Seat, NUM_SEATS> getSeats() const
+    {
+        return {seat1, seat2, seat3, seat4};
+    }
+
+    std::array<Seat, NUM_SEATS - 1> getOtherSeats() const
+    {
+        return {seat2, seat3, seat4};
+    }
+
+    static std::array<SeatOrder, NUM_SEATS> getSeatOrders()
+    {
+        return {SeatOrder(Seat::SOUTH), SeatOrder(Seat::WEST), SeatOrder(Seat::NORTH), SeatOrder(Seat::SOUTH)};
+    }
+
+    static std::array<std::vector<Card>, NUM_SEATS> getHands(const Spades &spades, const SeatOrder &seatOrder)
+    {
+        return {spades.getHand(seatOrder.seat1), spades.getHand(seatOrder.seat2), spades.getHand(seatOrder.seat3), spades.getHand(seatOrder.seat4)};
+    }
+};
+
 class AnalyzeTest : public ::testing::Test
 {
 protected:
     Spades spades;
     Analyze analyze;
+    std::map<Seat, std::set<Card>> playedCards;
 
-    AnalyzeTest() : analyze(spades) {
-
+    AnalyzeTest() : analyze(spades)
+    {
     }
 
     void SetUp() override
     {
+        for (const auto &seat : SeatUtils::getSeats())
+        {
+            playedCards[seat] = {};
+        }
         spades.reset(BidVariationType::DOUBLE_NILL, TrumpVariationType::ACE_HIGH);
         spades.addBid(3);
         spades.addBid(3);
@@ -58,26 +94,49 @@ public:
     }
 };
 
+TEST_F(AnalyzeTest, GetPlayedSeatRoundCards)
+{
+
+    for (int i = 0; i < HAND_SIZE; i++)
+    {
+        for (int j = 0; j < NUM_SEATS; j++)
+        {
+            const auto seat = spades.getTurnSeat();
+            for (const auto card : spades.getHand(seat))
+            {
+                if (spades.canPlace(card))
+                {
+                    spades.place(card);
+                    playedCards[seat].insert(card);
+                    break;
+                }
+            }
+            ASSERT_EQ(analyze.getPlayedRoundCards(seat).size(), playedCards[seat].size());
+
+            const SeatOrder seatOrder(seat);
+            for (const auto &card : analyze.getPlayedRoundCards(seat))
+            {
+                ASSERT_TRUE(playedCards[seat].contains(card));
+                for (const auto &otherSeat : seatOrder.getOtherSeats())
+                {
+                    ASSERT_FALSE(playedCards[otherSeat].contains(card));
+                }
+            }
+        }
+    }
+}
+
 TEST_F(AnalyzeTest, GetRemainingNonSeatCards)
 {
-    for (const auto &seat1 : SeatUtils::getSeats())
+    for (const auto &seatOrder : SeatOrder::getSeatOrders())
     {
-        const auto seat2 = SeatUtils::getNextSeat(seat1);
-        const auto seat3 = SeatUtils::getNextSeat(seat2);
-        const auto seat4 = SeatUtils::getNextSeat(seat3);
-
-        const auto hand1 = spades.getHand(seat1);
-        const auto hand2 = spades.getHand(seat2);
-        const auto hand3 = spades.getHand(seat3);
-        const auto hand4 = spades.getHand(seat4);
-
-        const auto remainingNonSeatCards = analyze.getRemainingNonSeatCards(seat1);
+        const auto hands = SeatOrder::getHands(spades, seatOrder);
+        const auto remainingNonSeatCards = analyze.getRemainingNonSeatRoundCards(seatOrder.seat1);
         ASSERT_EQ(remainingNonSeatCards.size(), DECK_SIZE - HAND_SIZE);
-
         for (const auto &card : remainingNonSeatCards)
         {
-            ASSERT_FALSE(containsCard(hand1, card));
-            ASSERT_TRUE(containsCard({hand2, hand3, hand4}, card));
+            ASSERT_FALSE(containsCard(hands[0], card));
+            ASSERT_TRUE(containsCard({hands[1], hands[2], hands[3]}, card));
         }
     }
 }
