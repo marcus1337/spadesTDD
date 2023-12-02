@@ -6,12 +6,13 @@
 #include <set>
 #include "spades/data/card/Card.h"
 #include "spades/data/Seat.h"
+#include "spades/data/SeatUtils.h"
 
 namespace spd
 {
     class State
     {
-        std::array<Seat, SeatUtils::numSeats> getRoundBidOrder() const;
+        std::array<Seat, NUM_SEATS> getRoundBidOrder() const;
         std::vector<int> getRoundBidValues() const;
 
         std::vector<int> bids;
@@ -19,10 +20,10 @@ namespace spd
         std::map<int, std::set<std::pair<Seat, BidOption>>> roundBidOptions;
     public:
         std::vector<std::pair<Seat,int>> getBids() const;
-        std::vector<std::array<std::pair<Seat,int>, SeatUtils::numSeats>> getCompletedRoundBids() const;
+        std::vector<std::array<std::pair<Seat,int>, NUM_SEATS>> getCompletedRoundBids() const;
         std::vector<std::set<std::pair<Seat, BidOption>>> getCompletedRoundBidOptions() const;
         std::vector<std::pair<Seat, int>> getRoundBids() const;
-        std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> getTricks() const;
+        std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> getTricks() const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
         std::vector<Card> getCurrentTrickCards() const;
         std::vector<std::pair<Seat, Card>> getAllPlayedSeatCardPairs() const;

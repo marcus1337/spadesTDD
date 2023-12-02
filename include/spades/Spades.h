@@ -56,8 +56,9 @@ namespace spd
         std::vector<Card> getHand(const Seat &seat) const;
         std::optional<int> getBidResult(const Seat &seat) const;
         std::vector<Card> getTrumpCardsDescending() const;
-        std::array<Card, Deck::NUM_EXCLUDED_CARDS> getExcludedCards() const;
+        std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
+        std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
 
         void place(const Card &card);
         void addBid(unsigned int bid);

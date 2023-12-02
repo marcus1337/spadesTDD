@@ -53,7 +53,7 @@ std::vector<Seat> TrumpVariationController::getTrickTakers(const State &state) c
 
 Seat TrumpVariationController::getTrickStartSeat(const State &state) const
 {
-    Seat startSeat = (Seat)(state.getRound() % SeatUtils::numSeats);
+    Seat startSeat = (Seat)(state.getRound() % NUM_SEATS);
     const auto trickTakers = getTrickTakers(state);
     const int tricksPerRound = 13;
     if (trickTakers.size() % tricksPerRound != 0)

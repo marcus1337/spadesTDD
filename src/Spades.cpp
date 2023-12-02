@@ -237,6 +237,11 @@ std::vector<std::pair<Seat, Card>> Spades::getCurrentTrickCardSeatPairs() const
     return state.getCurrentTrickCardSeatPairs();
 }
 
+std::vector<std::pair<Seat, Card>> Spades::getCurrentRoundCardSeatPairs() const
+{
+    state.getPlayedCardSeatPairs(state.getRound());
+}
+
 bool Spades::isCorrupt() const
 {
     return hasCorruptCards() || hasCorruptBids();

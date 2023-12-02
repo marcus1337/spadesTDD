@@ -4,17 +4,12 @@
 #include "spades/data/PortableRandom.h"
 #include "spades/data/card/Card.h"
 #include "spades/data/Seat.h"
+#include "spades/rules/Constants.h"
 
 namespace spd
 {
     class Deck
     {
-    public:
-        static constexpr unsigned int NUM_UNIQUE_CARDS = 54;
-        static constexpr unsigned int DECK_SIZE = 52;
-        static constexpr unsigned int HAND_SIZE = DECK_SIZE / SeatUtils::numSeats;
-        static constexpr unsigned int NUM_EXCLUDED_CARDS = NUM_UNIQUE_CARDS - DECK_SIZE;
-
     private:
         mutable PortableRandom portableRandom;
         std::array<Card, NUM_EXCLUDED_CARDS> excludeCards;

@@ -49,7 +49,7 @@ unsigned int Deck::getSeed() const
     return portableRandom.getSeed();
 }
 
-std::array<Card, Deck::HAND_SIZE> Deck::getHand(const Seat &seat, int round) const
+std::array<Card, HAND_SIZE> Deck::getHand(const Seat &seat, int round) const
 {
     const auto cards = getShuffledCards(round);
     const int deckOffset = static_cast<int>(seat) * HAND_SIZE;

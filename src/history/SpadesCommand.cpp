@@ -4,7 +4,7 @@ using namespace spd;
 
 unsigned int SpadesCommandValueVisitor::serialize(const BidOptionCommandValue &value)
 {
-    return static_cast<unsigned int>(value.bidOption) * static_cast<unsigned int>(SeatUtils::numSeats) + static_cast<unsigned int>(value.seat);
+    return static_cast<unsigned int>(value.bidOption) * NUM_SEATS + static_cast<unsigned int>(value.seat);
 }
 
 unsigned int SpadesCommandValueVisitor::serialize(const std::variant<PlaceCommandValue, BidCommandValueVariant> &value)
@@ -38,8 +38,8 @@ BidCommandValueVariant SpadesCommandValueVisitor::deserializeBidCommandValueVari
     if (data >= BID_OPTION_ENCODING_OFFSET)
     {
         data -= BID_OPTION_ENCODING_OFFSET;
-        unsigned int seatValue = data % SeatUtils::numSeats;
-        unsigned int bidOptValue = (data - seatValue) / SeatUtils::numSeats;
+        unsigned int seatValue = data % NUM_SEATS;
+        unsigned int bidOptValue = (data - seatValue) / NUM_SEATS;
         if (bidOptValue >= (unsigned int)BidOption::LAST)
         {
             bidOptValue = 0;

@@ -41,7 +41,7 @@ bool Trick::sameSuit(const Card &card1, const Card &card2) const
     }
 }
 
-Trick::Trick(const TrumpVariation &trumpVariation, const State &state, const std::array<std::pair<Seat, Card>, SeatUtils::numSeats> &trick) : trumpVariation(trumpVariation), state(state), trick(trick) {}
+Trick::Trick(const TrumpVariation &trumpVariation, const State &state, const std::array<std::pair<Seat, Card>, NUM_SEATS> &trick) : trumpVariation(trumpVariation), state(state), trick(trick) {}
 
 bool Trick::hasSameSuit(const Card &card, const std::vector<Card> &hand) const
 {

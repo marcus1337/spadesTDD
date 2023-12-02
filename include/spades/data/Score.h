@@ -3,6 +3,7 @@
 #include "spades/data/Seat.h"
 #include <set>
 #include "spades/data/Bid.h"
+#include "spades/rules/Constants.h"
 
 namespace spd
 {
@@ -14,7 +15,7 @@ namespace spd
         int getTotalBags() const;
         int getNumBagSets() const;
     public:
-        Score(const std::pair<Seat,Seat>& team, const std::vector<std::vector<Seat>>& completedRoundTrickTakers, const std::vector<std::array<std::pair<Seat,int>, SeatUtils::numSeats>>& completedRoundBids, const std::vector<std::set<std::pair<Seat, BidOption>>>& completedRoundBidOptions);
+        Score(const std::pair<Seat,Seat>& team, const std::vector<std::vector<Seat>>& completedRoundTrickTakers, const std::vector<std::array<std::pair<Seat,int>, NUM_SEATS>>& completedRoundBids, const std::vector<std::set<std::pair<Seat, BidOption>>>& completedRoundBidOptions);
         std::vector<int> getRoundBags() const;
         std::vector<int> getRoundPoints() const;
         int getBags() const;

@@ -22,7 +22,7 @@ namespace spd
     {
         const TrumpVariation &trumpVariation;
         const State &state;
-        std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
+        std::array<std::pair<Seat, Card>, NUM_SEATS> trick;
 
         TrickCardComparator getTrickCardComparator(const Card &card) const;
         std::optional<Suit> getLeadSuit() const;
@@ -35,7 +35,7 @@ namespace spd
         bool hasSameSuit(const Card& card, const std::vector<Card>& hand) const;
         Card getLeadCard() const;
     public:
-        Trick(const TrumpVariation &trumpVariation, const State &state, const std::array<std::pair<Seat, Card>, SeatUtils::numSeats>& trick);
+        Trick(const TrumpVariation &trumpVariation, const State &state, const std::array<std::pair<Seat, Card>, NUM_SEATS>& trick);
         Seat getTrickTaker() const;
 
     };

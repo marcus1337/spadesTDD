@@ -15,7 +15,7 @@ struct SeatScore
     int nilMultiplier;
     int nilScore = 0;
 
-    SeatScore(const Seat &seat, const std::vector<Seat> &trickTakers, const std::array<std::pair<Seat, int>, SeatUtils::numSeats> &roundBids, const std::set<std::pair<Seat, BidOption>> &roundBidOptions)
+    SeatScore(const Seat &seat, const std::vector<Seat> &trickTakers, const std::array<std::pair<Seat, int>, NUM_SEATS> &roundBids, const std::set<std::pair<Seat, BidOption>> &roundBidOptions)
     {
         numTricks = std::count(trickTakers.begin(), trickTakers.end(), seat);
         bid = getBid(seat, roundBids);
@@ -33,7 +33,7 @@ struct SeatScore
         }
     }
 
-    int getBid(const Seat &seat, const std::array<std::pair<Seat, int>, SeatUtils::numSeats> &bids) const
+    int getBid(const Seat &seat, const std::array<std::pair<Seat, int>, NUM_SEATS> &bids) const
     {
         auto it = std::find_if(bids.begin(), bids.end(), [&seat](const auto &bid)
                                { return bid.first == seat; });
@@ -77,7 +77,7 @@ struct SeatScore
     }
 };
 
-Score::Score(const std::pair<Seat, Seat> &team, const std::vector<std::vector<Seat>> &completedRoundTrickTakers, const std::vector<std::array<std::pair<Seat, int>, SeatUtils::numSeats>> &completedRoundBids, const std::vector<std::set<std::pair<Seat, BidOption>>> &completedRoundBidOptions)
+Score::Score(const std::pair<Seat, Seat> &team, const std::vector<std::vector<Seat>> &completedRoundTrickTakers, const std::vector<std::array<std::pair<Seat, int>, NUM_SEATS>> &completedRoundBids, const std::vector<std::set<std::pair<Seat, BidOption>>> &completedRoundBidOptions)
 {
     assert(completedRoundTrickTakers.size() == completedRoundBids.size());
     assert(completedRoundTrickTakers.size() == completedRoundBidOptions.size());

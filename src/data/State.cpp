@@ -1,4 +1,5 @@
 #include "spades/data/State.h"
+#include "spades/rules/Constants.h"
 #include <cassert>
 #include <algorithm>
 #include <iterator>
@@ -8,8 +9,8 @@ using namespace spd;
 std::vector<int> State::getRoundBidValues() const
 {
     std::vector<int> madeRoundBids;
-    const int fromIndex = getRound() * SeatUtils::numSeats;
-    const int toIndex = fromIndex + SeatUtils::numSeats;
+    const int fromIndex = getRound() * NUM_SEATS;
+    const int toIndex = fromIndex + NUM_SEATS;
     for (int i = fromIndex; i < toIndex && i < bids.size(); i++)
     {
         madeRoundBids.push_back(bids[i]);
@@ -17,11 +18,11 @@ std::vector<int> State::getRoundBidValues() const
     return madeRoundBids;
 }
 
-std::array<Seat, SeatUtils::numSeats> State::getRoundBidOrder() const
+std::array<Seat, NUM_SEATS> State::getRoundBidOrder() const
 {
-    std::array<Seat, SeatUtils::numSeats> bidOrder{};
+    std::array<Seat, NUM_SEATS> bidOrder{};
     const Seat startSeat = SeatUtils::getStartBidSeat(getRound());
-    const auto seatOrder = SeatUtils::getSeatOrder(startSeat, SeatUtils::numSeats);
+    const auto seatOrder = SeatUtils::getSeatOrder(startSeat, NUM_SEATS);
     std::copy(seatOrder.begin(), seatOrder.end(), bidOrder.begin());
     return bidOrder;
 }
@@ -43,25 +44,25 @@ std::vector<std::pair<Seat, int>> State::getBids() const
     std::vector<std::pair<Seat, int>> allBids;
     for (const int bid : bids)
     {
-        const int round = allBids.size() / SeatUtils::numSeats;
+        const int round = allBids.size() / NUM_SEATS;
         const auto startSeat = SeatUtils::getStartBidSeat(round);
-        const auto seatIndex = (((int)startSeat) + allBids.size()) % SeatUtils::numSeats;
+        const auto seatIndex = (((int)startSeat) + allBids.size()) % NUM_SEATS;
         const auto seat = (Seat)seatIndex;
         allBids.push_back(std::make_pair(seat, bid));
     }
     return allBids;
 }
 
-std::vector<std::array<std::pair<Seat, int>, SeatUtils::numSeats>> State::getCompletedRoundBids() const
+std::vector<std::array<std::pair<Seat, int>, NUM_SEATS>> State::getCompletedRoundBids() const
 {
-    std::vector<std::array<std::pair<Seat, int>, SeatUtils::numSeats>> completedRoundBids;
+    std::vector<std::array<std::pair<Seat, int>, NUM_SEATS>> completedRoundBids;
     const auto allBids = getBids();
     for (int i = 0; i < getRound(); i++)
     {
-        std::array<std::pair<Seat, int>, SeatUtils::numSeats> roundBids;
-        for (int j = 0; j < SeatUtils::numSeats; j++)
+        std::array<std::pair<Seat, int>, NUM_SEATS> roundBids;
+        for (int j = 0; j < NUM_SEATS; j++)
         {
-            roundBids[j] = allBids[j + i * SeatUtils::numSeats];
+            roundBids[j] = allBids[j + i * NUM_SEATS];
         }
         completedRoundBids.push_back(roundBids);
     }
@@ -83,16 +84,16 @@ std::vector<std::set<std::pair<Seat, BidOption>>> State::getCompletedRoundBidOpt
     return comepletedRoundBidOptions;
 }
 
-std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> State::getTricks() const
+std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> State::getTricks() const
 {
-    std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> tricks;
-    const int numTricks = playedSeatCardPairs.size() / SeatUtils::numSeats;
+    std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> tricks;
+    const int numTricks = playedSeatCardPairs.size() / NUM_SEATS;
     for (int i = 0; i < numTricks; i++)
     {
-        std::array<std::pair<Seat, Card>, SeatUtils::numSeats> trick;
-        for (int j = 0; j < SeatUtils::numSeats; j++)
+        std::array<std::pair<Seat, Card>, NUM_SEATS> trick;
+        for (int j = 0; j < NUM_SEATS; j++)
         {
-            trick[j] = playedSeatCardPairs[j + (i * SeatUtils::numSeats)];
+            trick[j] = playedSeatCardPairs[j + (i * NUM_SEATS)];
         }
         tricks.push_back(trick);
     }
@@ -102,8 +103,8 @@ std::vector<std::array<std::pair<Seat, Card>, SeatUtils::numSeats>> State::getTr
 std::vector<std::pair<Seat, Card>> State::getCurrentTrickCardSeatPairs() const
 {
     std::vector<std::pair<Seat, Card>> trickCards;
-    const int startIndex = (playedSeatCardPairs.size() / SeatUtils::numSeats) * SeatUtils::numSeats;
-    for (int i = startIndex; i < startIndex + SeatUtils::numSeats && i < playedSeatCardPairs.size(); i++)
+    const int startIndex = (playedSeatCardPairs.size() / NUM_SEATS) * NUM_SEATS;
+    for (int i = startIndex; i < startIndex + NUM_SEATS && i < playedSeatCardPairs.size(); i++)
     {
         trickCards.push_back(playedSeatCardPairs[i]);
     }
@@ -123,9 +124,8 @@ std::vector<Card> State::getCurrentTrickCards() const
 std::vector<std::pair<Seat, Card>> State::getPlayedCardSeatPairs(int round) const
 {
     std::vector<std::pair<Seat, Card>> roundCards;
-    const int numCardsPerRound = 52;
-    const int fromIndex = round * numCardsPerRound;
-    for (int i = fromIndex; i < fromIndex + numCardsPerRound && i < playedSeatCardPairs.size(); i++)
+    const int fromIndex = round * DECK_SIZE;
+    for (int i = fromIndex; i < fromIndex + DECK_SIZE && i < playedSeatCardPairs.size(); i++)
     {
         roundCards.push_back(playedSeatCardPairs[i]);
     }
@@ -161,13 +161,12 @@ void State::clear()
 
 int State::getRound() const
 {
-    const int cardsPerRound = 52;
-    return playedSeatCardPairs.size() / cardsPerRound;
+    return playedSeatCardPairs.size() / DECK_SIZE;
 }
 
 bool State::isBidPhase() const
 {
-    return bids.size() < (getRound() + 1) * SeatUtils::numSeats;
+    return bids.size() < (getRound() + 1) * NUM_SEATS;
 }
 
 bool State::hasBidOption(const Seat &seat, const BidOption &bidOption) const
@@ -240,9 +239,9 @@ void State::removeBidOption(const Seat &seat, const BidOption &bidOption)
 Seat State::getTrickTurn(const Seat &startSeat) const
 {
     const int numTrickSteps = getCurrentTrickCardSeatPairs().size();
-    const auto seat = (Seat)(((int)startSeat + numTrickSteps) % SeatUtils::numSeats);
+    const auto seat = (Seat)(((int)startSeat + numTrickSteps) % NUM_SEATS);
 
-    assert(numTrickSteps < SeatUtils::numSeats);
+    assert(numTrickSteps < NUM_SEATS);
     for (const auto &cardSeatPair : getCurrentTrickCardSeatPairs())
     {
         assert(cardSeatPair.first != seat);
@@ -253,5 +252,5 @@ Seat State::getTrickTurn(const Seat &startSeat) const
 
 Seat State::getBidTurn() const
 {
-    return (Seat)((bids.size() + getRound()) % SeatUtils::numSeats);
+    return (Seat)((bids.size() + getRound()) % NUM_SEATS);
 }
