@@ -131,10 +131,6 @@ Seat Spades::getTurnSeat() const
     }
     else
     {
-        /*std::cout << (int)trumpVariationController.getTrickStartSeat(state) << " {" << (state.getAllPlayedSeatCardPairs().size() % 4) << "}\n";
-        if((state.getAllPlayedSeatCardPairs().size() % 4) == 3){
-            std::cout << "-------------------\n";
-        }*/
         return state.getTrickTurn(trumpVariationController.getTrickStartSeat(state));
     }
 }
