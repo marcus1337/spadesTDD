@@ -38,5 +38,11 @@ namespace spd
             }
             return remainingOtherCards;
         }
+
+        std::set<Suit> getUnfollowedEffectiveLeadSuits(const Seat &seat) const
+        {
+            return {};
+        }
+
     };
 }

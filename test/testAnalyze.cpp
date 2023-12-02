@@ -92,7 +92,53 @@ public:
         }
         return false;
     }
+
+    Card getAnyPlaceableCard()
+    {
+        for (const auto card : spades.getHand(spades.getTurnSeat()))
+        {
+            if (spades.canPlace(card))
+            {
+                return card;
+            }
+        }
+        return Card();
+    }
+
+    Card placeAnyCard()
+    {
+        Card card = getAnyPlaceableCard();
+        spades.place(card);
+        return card;
+    }
 };
+
+TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits) // specific suit and for current round
+{
+    std::set<Suit> unfollowedSuits;
+
+    const auto targetSeat = Seat::SOUTH;
+    for (int i = 0; i < HAND_SIZE; i++)
+    {
+        const auto leadCard = placeAnyCard();
+        const auto followSeat = spades.getTurnSeat();
+        if (followSeat == targetSeat)
+        {
+            const auto followCard = placeAnyCard();
+            const auto leadSuit = spades.getEffectiveSuit(leadCard);
+            const auto followSuit = spades.getEffectiveSuit(followCard);
+            if (leadSuit != followSuit)
+            {
+                unfollowedSuits.insert(leadSuit);
+            }
+            const auto unfollowedAnalyzeSuits = analyze.getUnfollowedEffectiveLeadSuits(targetSeat);
+            ASSERT_EQ(unfollowedSuits.size(), unfollowedAnalyzeSuits.size());
+        }
+
+        placeAnyCard();
+        placeAnyCard();
+    }
+}
 
 TEST_F(AnalyzeTest, GetPlayedSeatRoundCards)
 {
@@ -102,20 +148,14 @@ TEST_F(AnalyzeTest, GetPlayedSeatRoundCards)
         for (int j = 0; j < NUM_SEATS; j++)
         {
             const auto seat = spades.getTurnSeat();
-            for (const auto card : spades.getHand(seat))
-            {
-                if (spades.canPlace(card))
-                {
-                    spades.place(card);
-                    playedCards[seat].insert(card);
-                    break;
-                }
-            }
+            playedCards[seat].insert(placeAnyCard());
 
             if (spades.getCurrentRoundCardSeatPairs().size() % DECK_SIZE != 0)
             {
                 ASSERT_EQ(analyze.getPlayedRoundCards(seat).size(), playedCards[seat].size());
-            }else{
+            }
+            else
+            {
                 ASSERT_EQ(analyze.getPlayedRoundCards(seat).size(), 0);
             }
 

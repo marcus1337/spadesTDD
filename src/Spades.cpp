@@ -202,12 +202,25 @@ bool Spades::canPlace(const Card &card) const
     return trumpVariationController.canPlaceCard(state, card, getHand(getTurnSeat()));
 }
 
+Suit Spades::getEffectiveSuit(const Card &card) const
+{
+    const auto trumpCards = getTrumpCardsDescending();
+    if (std::find(trumpCards.begin(), trumpCards.end(), card) != trumpCards.end())
+    {
+        return Suit::SPADE;
+    }
+    else
+    {
+        return card.getSuit().value_or(Suit::SPADE);
+    }
+}
+
 std::vector<Card> Spades::getTrumpCardsDescending() const
 {
     return trumpVariationController.getTrumpCardsOrderedByValueDescending();
 }
 
-std::array<Card, 2> Spades::getExcludedCards() const
+std::array<Card, NUM_EXCLUDED_CARDS> Spades::getExcludedCards() const
 {
     return trumpVariationController.getExcludedCards();
 }
@@ -249,9 +262,8 @@ bool Spades::isCorrupt() const
 
 bool Spades::hasCorruptCards() const
 {
-    const int cardsPerRound = 52;
     const int numBidSets = state.getCompletedRoundBids().size();
-    const int maxPlayedCards = numBidSets * cardsPerRound;
+    const int maxPlayedCards = numBidSets * DECK_SIZE;
     bool corrupt = false;
     if (state.getAllPlayedSeatCardPairs().size() > maxPlayedCards)
     {
@@ -274,7 +286,7 @@ bool Spades::hasCorruptCards() const
 
 bool Spades::hasCorruptBids() const
 {
-    const int maxBid = 13;
+    const int maxBid = HAND_SIZE;
     bool corrupt = false;
     const auto bids = state.getBids();
     for (const auto &bid : bids)
@@ -298,7 +310,7 @@ std::vector<std::vector<Seat>> Spades::getCompletedRoundTrickTakers() const
 {
     std::vector<std::vector<Seat>> roundTrickTakers;
     const auto trickTakers = trumpVariationController.getTrickTakers(state);
-    const int tricksPerRound = 13;
+    const int tricksPerRound = HAND_SIZE;
     for (int round = 0; round < state.getRound(); round++)
     {
         std::vector<Seat> roundTricks;
