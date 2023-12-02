@@ -53,6 +53,7 @@ protected:
             playedCards[seat] = {};
         }
         spades.reset(BidVariationType::DOUBLE_NILL, TrumpVariationType::ACE_HIGH);
+        spades.reset(3);
         spades.addBid(3);
         spades.addBid(3);
         spades.addBid(3);
@@ -102,6 +103,7 @@ public:
                 return card;
             }
         }
+        assert(false);
         return Card();
     }
 
@@ -113,30 +115,23 @@ public:
     }
 };
 
-TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits) // specific suit and for current round
+TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
 {
-    std::set<Suit> unfollowedSuits;
-
+    std::set<Suit> voidSuits;
     const auto targetSeat = Seat::SOUTH;
     for (int i = 0; i < HAND_SIZE; i++)
     {
-        const auto leadCard = placeAnyCard();
-        const auto followSeat = spades.getTurnSeat();
-        if (followSeat == targetSeat)
+        const auto leadSuit = spades.getEffectiveSuit(placeAnyCard());
+        for (int j = 1; j < NUM_SEATS; j++)
         {
-            const auto followCard = placeAnyCard();
-            const auto leadSuit = spades.getEffectiveSuit(leadCard);
-            const auto followSuit = spades.getEffectiveSuit(followCard);
-            if (leadSuit != followSuit)
+            const auto followSeat = spades.getTurnSeat();
+            const auto followSuit = spades.getEffectiveSuit(placeAnyCard());
+            if (followSeat == targetSeat && followSuit != leadSuit)
             {
-                unfollowedSuits.insert(leadSuit);
+                voidSuits.insert(leadSuit);
+                ASSERT_EQ(voidSuits.size(), analyze.getUnfollowedEffectiveLeadSuits(targetSeat).size()) << "i " << i << " j " << j;
             }
-            const auto unfollowedAnalyzeSuits = analyze.getUnfollowedEffectiveLeadSuits(targetSeat);
-            ASSERT_EQ(unfollowedSuits.size(), unfollowedAnalyzeSuits.size());
         }
-
-        placeAnyCard();
-        placeAnyCard();
     }
 }
 

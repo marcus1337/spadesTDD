@@ -39,21 +39,26 @@ namespace spd
             return remainingOtherCards;
         }
 
-        std::set<Suit> getUnfollowedEffectiveLeadSuits(const Seat &seat) const
+        std::set<Suit> getUnfollowedEffectiveLeadSuits(const Seat &targetSeat) const
         {
             std::set<Suit> voidSuits;
             const auto cardSeatPairs = spades.getCurrentRoundCardSeatPairs();
-            for (int i = 0; i < cardSeatPairs.size(); i++)
+            for (int i = 0; i < cardSeatPairs.size(); i += NUM_SEATS)
             {
-                int trickIndex = i / NUM_SEATS;
-                const auto leadCard = cardSeatPairs[trickIndex].second;
-                const auto leadSeat = cardSeatPairs[trickIndex].first;
-                const auto currentSeat = cardSeatPairs[i].first;
-                const auto currentCard = cardSeatPairs[i].second;
-                const bool unfollowedLead = spades.getEffectiveSuit(leadCard) != spades.getEffectiveSuit(currentCard);
-                if (unfollowedLead && currentSeat == seat)
+                for (int j = i + 1; j < i + NUM_SEATS && j < cardSeatPairs.size(); j++)
                 {
-                    voidSuits.insert(spades.getEffectiveSuit(leadCard));
+                    const auto leadPair = cardSeatPairs[i / NUM_SEATS];
+                    const auto leadSuit = spades.getEffectiveSuit(leadPair.second);
+                    const auto leadSeat = leadPair.first;
+
+                    const auto followPair = cardSeatPairs[j];
+                    const auto followSuit = spades.getEffectiveSuit(followPair.second);
+                    const auto followSeat = followPair.first;
+
+                    if (leadSuit != followSuit && followSeat == targetSeat)
+                    {
+                        voidSuits.insert(leadSuit);
+                    }
                 }
             }
             return voidSuits;
