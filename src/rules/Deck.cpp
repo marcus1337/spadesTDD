@@ -33,7 +33,7 @@ Deck::Deck() : excludeCards({Card(Joker::LITTLE), Card(Joker::BIG)})
 {
 }
 
-void Deck::setExcludeCards(std::array<Card, 2> excludeCards)
+void Deck::setExcludeCards(std::array<Card, NUM_EXCLUDED_CARDS> excludeCards)
 {
     assert(excludeCards[0] != excludeCards[1]);
     this->excludeCards = excludeCards;
@@ -49,12 +49,11 @@ unsigned int Deck::getSeed() const
     return portableRandom.getSeed();
 }
 
-std::array<Card, 13> Deck::getHand(const Seat &seat, int round) const
+std::array<Card, Deck::HAND_SIZE> Deck::getHand(const Seat &seat, int round) const
 {
     const auto cards = getShuffledCards(round);
-    const int handSize = 13;
-    const int deckOffset = static_cast<int>(seat) * handSize;
-    std::array<Card, 13> hand{};
+    const int deckOffset = static_cast<int>(seat) * HAND_SIZE;
+    std::array<Card, HAND_SIZE> hand{};
     for (int i = 0; i < hand.size(); i++)
     {
         hand[i] = cards.at(i + deckOffset);

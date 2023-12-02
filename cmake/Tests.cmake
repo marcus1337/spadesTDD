@@ -23,6 +23,8 @@ add_executable(unit_tests
 "test/testBidVariation.cpp"
 "test/testUndoRedo.cpp"
 "test/testStateValidity.cpp"
+
+"test/testAnalyze.cpp"
 )
 
 target_precompile_headers(unit_tests PRIVATE "test/test_pch.h")
