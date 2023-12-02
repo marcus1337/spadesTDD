@@ -121,17 +121,15 @@ TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
     const auto targetSeat = Seat::SOUTH;
     for (int i = 0; i < HAND_SIZE; i++)
     {
-        const auto leadCard = placeAnyCard();
-        const auto leadSuit = spades.getEffectiveSuit(leadCard);
+        const auto leadSuit = spades.getEffectiveSuit(placeAnyCard());
         for (int j = 1; j < NUM_SEATS; j++)
         {
             const auto followSeat = spades.getTurnSeat();
-            const auto followCard = placeAnyCard();
-            const auto followSuit = spades.getEffectiveSuit(followCard);
+            const auto followSuit = spades.getEffectiveSuit(placeAnyCard());
             if (followSeat == targetSeat && followSuit != leadSuit)
             {
                 voidSuits.insert(leadSuit);
-                ASSERT_EQ(voidSuits.size(), analyze.getUnfollowedEffectiveLeadSuits(targetSeat).size()) << "i " << i << " j " << j;
+                ASSERT_EQ(voidSuits.size(), analyze.getUnfollowedEffectiveLeadSuits(targetSeat).size());
             }
         }
     }
