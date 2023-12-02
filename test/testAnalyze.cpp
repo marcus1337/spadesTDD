@@ -111,7 +111,13 @@ TEST_F(AnalyzeTest, GetPlayedSeatRoundCards)
                     break;
                 }
             }
-            ASSERT_EQ(analyze.getPlayedRoundCards(seat).size(), playedCards[seat].size());
+
+            if (spades.getCurrentRoundCardSeatPairs().size() % DECK_SIZE != 0)
+            {
+                ASSERT_EQ(analyze.getPlayedRoundCards(seat).size(), playedCards[seat].size());
+            }else{
+                ASSERT_EQ(analyze.getPlayedRoundCards(seat).size(), 0);
+            }
 
             const SeatOrder seatOrder(seat);
             for (const auto &card : analyze.getPlayedRoundCards(seat))
