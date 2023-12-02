@@ -41,8 +41,22 @@ namespace spd
 
         std::set<Suit> getUnfollowedEffectiveLeadSuits(const Seat &seat) const
         {
-            return {};
+            std::set<Suit> voidSuits;
+            const auto cardSeatPairs = spades.getCurrentRoundCardSeatPairs();
+            for (int i = 0; i < cardSeatPairs.size(); i++)
+            {
+                int trickIndex = i / NUM_SEATS;
+                const auto leadCard = cardSeatPairs[trickIndex].second;
+                const auto leadSeat = cardSeatPairs[trickIndex].first;
+                const auto currentSeat = cardSeatPairs[i].first;
+                const auto currentCard = cardSeatPairs[i].second;
+                const bool unfollowedLead = spades.getEffectiveSuit(leadCard) != spades.getEffectiveSuit(currentCard);
+                if (unfollowedLead && currentSeat == seat)
+                {
+                    voidSuits.insert(spades.getEffectiveSuit(leadCard));
+                }
+            }
+            return voidSuits;
         }
-
     };
 }
