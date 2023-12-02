@@ -47,7 +47,7 @@ namespace spd
             {
                 for (int j = i + 1; j < i + NUM_SEATS && j < cardSeatPairs.size(); j++)
                 {
-                    const auto leadPair = cardSeatPairs[i / NUM_SEATS];
+                    const auto leadPair = cardSeatPairs[i];
                     const auto leadSuit = spades.getEffectiveSuit(leadPair.second);
                     const auto leadSeat = leadPair.first;
 

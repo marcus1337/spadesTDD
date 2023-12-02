@@ -53,7 +53,7 @@ protected:
             playedCards[seat] = {};
         }
         spades.reset(BidVariationType::DOUBLE_NILL, TrumpVariationType::ACE_HIGH);
-        spades.reset(3);
+        spades.reset(0);
         spades.addBid(3);
         spades.addBid(3);
         spades.addBid(3);
@@ -121,11 +121,13 @@ TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
     const auto targetSeat = Seat::SOUTH;
     for (int i = 0; i < HAND_SIZE; i++)
     {
-        const auto leadSuit = spades.getEffectiveSuit(placeAnyCard());
+        const auto leadCard = placeAnyCard();
+        const auto leadSuit = spades.getEffectiveSuit(leadCard);
         for (int j = 1; j < NUM_SEATS; j++)
         {
             const auto followSeat = spades.getTurnSeat();
-            const auto followSuit = spades.getEffectiveSuit(placeAnyCard());
+            const auto followCard = placeAnyCard();
+            const auto followSuit = spades.getEffectiveSuit(followCard);
             if (followSeat == targetSeat && followSuit != leadSuit)
             {
                 voidSuits.insert(leadSuit);
