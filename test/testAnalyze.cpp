@@ -72,7 +72,7 @@ TEST_F(AnalyzeTest, GetRemainingNonSeatCardsStart)
         const auto hand4 = spades.getHand(seat4);
 
         const auto remainingNonSeatCards = analyze.getRemainingNonSeatCards(seat1);
-        ASSERT_EQ(remainingNonSeatCards.size(), Deck::DECK_SIZE);
+        ASSERT_EQ(remainingNonSeatCards.size(), Deck::DECK_SIZE - Deck::HAND_SIZE);
 
         for (const auto &card : remainingNonSeatCards)
         {

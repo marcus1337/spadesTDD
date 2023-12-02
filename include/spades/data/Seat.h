@@ -63,6 +63,15 @@ namespace spd
             }
             return seatOrder;
         }
+
+        inline std::vector<Seat> getOtherSeats(const Seat &seat)
+        {
+            std::vector<Seat> otherSeats;
+            otherSeats.push_back(getNextSeat(seat));
+            otherSeats.push_back(getNextSeat(otherSeats.back()));
+            otherSeats.push_back(getNextSeat(otherSeats.back()));
+            return otherSeats;
+        }
     }
 
 }
