@@ -164,29 +164,6 @@ TEST_F(AnalyzeTest, GetEffectiveSuitsFromElimination)
     }
 }
 
-/*TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
-{
-    for (const auto &targetSeat : SeatUtils::getSeats())
-    {
-        resetSpades();
-        std::set<Suit> voidSuits;
-        for (int i = 0; i < HAND_SIZE - 1; i++)
-        {
-            const auto leadSuit = spades.getEffectiveSuit(placeAnyCard());
-            for (int j = 1; j < NUM_SEATS; j++)
-            {
-                const auto followSeat = spades.getTurnSeat();
-                const auto followSuit = spades.getEffectiveSuit(placeAnyCard());
-                if (followSeat == targetSeat && followSuit != leadSuit)
-                {
-                    voidSuits.insert(leadSuit);
-                    ASSERT_EQ(voidSuits.size(), analyze.getUnfollowedEffectiveLeadSuits(targetSeat).size()) << (int)targetSeat << " " << i << " " << j;
-                }
-            }
-        }
-    }
-}*/
-
 TEST_F(AnalyzeTest, GetPlayedSeatRoundCards)
 {
 
