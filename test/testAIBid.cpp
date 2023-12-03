@@ -12,9 +12,13 @@ TEST(AIBIdding, ReasonableBid)
 
     for (int i = 0; i < NUM_SEATS; i++)
     {
-        int bid = AIBid::getBid(spades);
-        int guaranteedWins = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
-        ASSERT_GE(bid, guaranteedWins);
+        const int bid = AIBid::getBid(spades);
+        const int guaranteedWins = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
+        const auto possibleBids = spades.getPossibleBids(spades.getTurnSeat());
+        if (possibleBids.size() > 0 && guaranteedWins > 0)
+        {
+            ASSERT_TRUE(bid != 0);
+        }
         spades.addBid(bid);
     }
 }

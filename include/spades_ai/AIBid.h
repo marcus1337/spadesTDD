@@ -6,6 +6,7 @@ namespace spd
 {
     class AIBid
     {
+        static int getClosestNonZeroBid(const std::vector<int> possibleBids, int target);
 
     public:
 
