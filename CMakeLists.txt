@@ -28,6 +28,7 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/history/SpadesCommandOrder.cpp"
 
 "src/spades_ai/Analyze.cpp"
+"src/spades_ai/AIBid.cpp"
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "include/spades/pch.h")
