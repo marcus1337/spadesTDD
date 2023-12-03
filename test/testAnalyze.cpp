@@ -56,10 +56,10 @@ protected:
     }
 
 public:
-    void resetSpades()
+    void resetSpades(int seed = 0)
     {
         spades.reset(BidVariationType::DOUBLE_NILL, TrumpVariationType::ACE_HIGH);
-        spades.reset(0);
+        spades.reset(seed);
         spades.addBid(3);
         spades.addBid(3);
         spades.addBid(3);
@@ -147,14 +147,20 @@ void AnalyzeTest::assertEffectiveSuitFromElimination(const Seat &perspectiveSeat
 
 TEST_F(AnalyzeTest, GetEffectiveSuitsFromElimination)
 {
-    const Seat selfSeat = Seat::SOUTH;
-    const auto otherSeats = SeatUtils::getOtherSeats(selfSeat);
-    for (int i = 0; i < DECK_SIZE - 1; i++)
+    for (const auto &selfSeat : SeatUtils::getSeats())
     {
-        placeAnyCard();
-        assertEffectiveSuitFromElimination(selfSeat, otherSeats[0], otherSeats[1], otherSeats[2]);
-        assertEffectiveSuitFromElimination(selfSeat, otherSeats[0], otherSeats[2], otherSeats[1]);
-        assertEffectiveSuitFromElimination(selfSeat, otherSeats[1], otherSeats[2], otherSeats[0]);
+        resetSpades();
+        const auto otherSeats = SeatUtils::getOtherSeats(selfSeat);
+        for (int i = 0; i < HAND_SIZE; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                placeAnyCard();
+            }
+            assertEffectiveSuitFromElimination(selfSeat, otherSeats[0], otherSeats[1], otherSeats[2]);
+            assertEffectiveSuitFromElimination(selfSeat, otherSeats[0], otherSeats[2], otherSeats[1]);
+            assertEffectiveSuitFromElimination(selfSeat, otherSeats[1], otherSeats[2], otherSeats[0]);
+        }
     }
 }
 
@@ -164,7 +170,7 @@ TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
     {
         resetSpades();
         std::set<Suit> voidSuits;
-        for (int i = 0; i < HAND_SIZE-1; i++)
+        for (int i = 0; i < HAND_SIZE - 1; i++)
         {
             const auto leadSuit = spades.getEffectiveSuit(placeAnyCard());
             for (int j = 1; j < NUM_SEATS; j++)
