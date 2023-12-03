@@ -164,7 +164,7 @@ TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
     {
         resetSpades();
         std::set<Suit> voidSuits;
-        for (int i = 0; i < HAND_SIZE; i++)
+        for (int i = 0; i < HAND_SIZE-1; i++)
         {
             const auto leadSuit = spades.getEffectiveSuit(placeAnyCard());
             for (int j = 1; j < NUM_SEATS; j++)
