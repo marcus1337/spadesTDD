@@ -53,12 +53,25 @@ namespace spd
             return seatOrder;
         }
 
-        inline std::vector<Seat> getOtherSeats(const Seat &seat)
+        inline std::vector<Seat> getOtherSeats(const Seat &excludedSeat)
         {
             std::vector<Seat> otherSeats;
-            otherSeats.push_back(getNextSeat(seat));
+            otherSeats.push_back(getNextSeat(excludedSeat));
             otherSeats.push_back(getNextSeat(otherSeats.back()));
             otherSeats.push_back(getNextSeat(otherSeats.back()));
+            return otherSeats;
+        }
+
+        inline std::vector<Seat> getOtherSeats(const std::set<Seat> &excludedSeats)
+        {
+            std::vector<Seat> otherSeats;
+            for (const auto &seat : getSeats())
+            {
+                if (!excludedSeats.contains(seat))
+                {
+                    otherSeats.push_back(seat);
+                }
+            }
             return otherSeats;
         }
     }

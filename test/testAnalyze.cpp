@@ -130,9 +130,9 @@ void AnalyzeTest::assertEffectiveSuitFromElimination(const Seat &perspectiveSeat
     const auto voidSuits2 = analyze.getUnfollowedEffectiveLeadSuits(seat3);
     const auto voidSuits3 = analyze.getUnfollowedEffectiveLeadSuits(seat4);
 
-    const auto knownSuits1 = analyze.getEffectiveSuitsFromElimination(seat2);
-    const auto knownSuits2 = analyze.getEffectiveSuitsFromElimination(seat3);
-    const auto knownSuits3 = analyze.getEffectiveSuitsFromElimination(seat4);
+    const auto knownSuits1 = analyze.getEffectiveSuitsFromElimination(perspectiveSeat, seat2);
+    const auto knownSuits2 = analyze.getEffectiveSuitsFromElimination(perspectiveSeat, seat3);
+    const auto knownSuits3 = analyze.getEffectiveSuitsFromElimination(perspectiveSeat, seat4);
 
     for (const auto &suit : {Suit::SPADE, Suit::HEART, Suit::DIAMOND, Suit::CLOVER})
     {

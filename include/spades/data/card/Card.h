@@ -34,6 +34,8 @@ namespace spd
         bool is(const Rank& rank) const;
         bool is(const Suit &suit) const;
         bool is(const Joker &joker) const;
+
+        static std::array<Suit, 4> getSuits();
     };
 
 }

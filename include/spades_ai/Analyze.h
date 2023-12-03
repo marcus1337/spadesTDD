@@ -69,20 +69,20 @@ namespace spd
             return false;
         }
 
-        std::set<Suit> getEffectiveSuits(const Seat &seat) const
+        std::set<Suit> getSelfEffectiveSuits(const Seat &self) const
         {
             std::set<Suit> suits;
-            for (const auto &card : spades.getHand(seat))
+            for (const auto &card : spades.getHand(self))
             {
                 suits.insert(spades.getEffectiveSuit(card));
             }
             return suits;
         }
 
-        std::set<Suit> getEffectiveVoidSuits(const Seat &seat) const
+        std::set<Suit> getSelfEffectiveVoidSuits(const Seat &self) const
         {
             std::set<Suit> voidSuits{Suit::SPADE, Suit::CLOVER, Suit::DIAMOND, Suit::HEART};
-            for (const auto &suit : getEffectiveSuits(seat))
+            for (const auto &suit : getSelfEffectiveSuits(self))
             {
                 voidSuits.erase(suit);
             }
@@ -114,9 +114,36 @@ namespace spd
             return voidSuits;
         }
 
-        std::set<Suit> getEffectiveSuitsFromElimination(const Seat &targetSeat) const
+        std::set<Suit> getVoidEffectiveSuits(const Seat &perspectiveSeat, const Seat &targetSeat) const
         {
-            return {};
+            assert(perspectiveSeat != targetSeat);
+            std::set<Suit> voidSuits = getUnfollowedEffectiveLeadSuits(targetSeat);
+            for (const auto &suit : Card::getSuits())
+            {
+                if (!isEffectiveSuitInOtherHand(perspectiveSeat, suit))
+                {
+                    voidSuits.insert(suit);
+                }
+            }
+            return voidSuits;
+        }
+
+        std::set<Suit> getEffectiveSuitsFromElimination(const Seat &perspectiveSeat, const Seat &targetSeat) const
+        {
+            const auto otherSeats = SeatUtils::getOtherSeats({perspectiveSeat, targetSeat});
+            const auto voidTargetSuits = getVoidEffectiveSuits(perspectiveSeat, targetSeat);
+            const auto voidSuits1 = getVoidEffectiveSuits(perspectiveSeat, otherSeats[0]);
+            const auto voidSuits2 = getVoidEffectiveSuits(perspectiveSeat, otherSeats[1]);
+
+            std::set<Suit> knownSuits;
+            for (const auto &suit : Card::getSuits())
+            {
+                if (!voidTargetSuits.contains(suit) && voidSuits1.contains(suit) && voidSuits2.contains(suit))
+                {
+                    knownSuits.insert(suit);
+                }
+            }
+            return knownSuits;
         }
     };
 }

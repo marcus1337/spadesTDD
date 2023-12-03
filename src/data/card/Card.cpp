@@ -77,8 +77,10 @@ bool Card::is(const Joker &joker) const
     return false;
 }
 
-bool Card::sameSuit(const Card& other) const{
-    if(getSuit().has_value() && other.getSuit().has_value()){
+bool Card::sameSuit(const Card &other) const
+{
+    if (getSuit().has_value() && other.getSuit().has_value())
+    {
         return getSuit() == other.getSuit();
     }
     return false;
@@ -92,4 +94,9 @@ std::optional<Suit> Card::getSuit() const
         return std::make_optional(normalValue->getSuit());
     }
     return suitOpt;
+}
+
+std::array<Suit, 4> Card::getSuits()
+{
+    return {Suit::SPADE, Suit::CLOVER, Suit::DIAMOND, Suit::HEART};
 }
