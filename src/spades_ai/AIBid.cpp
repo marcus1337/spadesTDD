@@ -54,10 +54,12 @@ int AIBid::getBid() const
     }
     else
     {
-        const int guaranteedTakes = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
-        int targetBid = guaranteedTakes + getNumStrongCards() / 3;
+        int targetBid = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
+        targetBid += getNumStrongCards() / 3;
+
         const auto teamBid = spades.getBidResult(SeatUtils::getTeamSeat(spades.getTurnSeat()));
         targetBid -= teamBid.value_or(0);
+        
         return getClosestNonZeroBid(targetBid);
     }
 }
