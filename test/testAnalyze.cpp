@@ -113,23 +113,64 @@ public:
         spades.place(card);
         return card;
     }
+
+    void assertEffectiveSuitFromElimination(const Seat &seat1, const Seat &seat2,
+                                            const Seat &seat3, const Seat &seat4) const;
 };
+
+void AnalyzeTest::assertEffectiveSuitFromElimination(const Seat &perspectiveSeat, const Seat &seat2,
+                                                     const Seat &seat3, const Seat &seat4) const
+{
+    const auto voidSuits1 = analyze.getUnfollowedEffectiveLeadSuits(seat2);
+    const auto voidSuits2 = analyze.getUnfollowedEffectiveLeadSuits(seat3);
+    const auto voidSuits3 = analyze.getUnfollowedEffectiveLeadSuits(seat4);
+
+    const auto knownSuits1 = analyze.getEffectiveSuitsFromElimination(seat2);
+    const auto knownSuits2 = analyze.getEffectiveSuitsFromElimination(seat3);
+    const auto knownSuits3 = analyze.getEffectiveSuitsFromElimination(seat4);
+
+    for (const auto &suit : {Suit::SPADE, Suit::HEART, Suit::DIAMOND, Suit::CLOVER})
+    {
+        if (analyze.isEffectiveSuitInOtherHand(perspectiveSeat, suit))
+        {
+            ASSERT_EQ((voidSuits1.contains(suit) && voidSuits2.contains(suit)), knownSuits3.contains(suit));
+            ASSERT_EQ((voidSuits2.contains(suit) && voidSuits3.contains(suit)), knownSuits1.contains(suit));
+            ASSERT_EQ((voidSuits1.contains(suit) && voidSuits3.contains(suit)), knownSuits2.contains(suit));
+        }
+    }
+}
+
+TEST_F(AnalyzeTest, GetEffectiveSuitsFromElimination)
+{
+    const Seat selfSeat = Seat::SOUTH;
+    const auto otherSeats = SeatUtils::getOtherSeats(selfSeat);
+    for (int i = 0; i < DECK_SIZE - 1; i++)
+    {
+        placeAnyCard();
+        assertEffectiveSuitFromElimination(selfSeat, otherSeats[0], otherSeats[1], otherSeats[2]);
+        assertEffectiveSuitFromElimination(selfSeat, otherSeats[0], otherSeats[2], otherSeats[1]);
+        assertEffectiveSuitFromElimination(selfSeat, otherSeats[1], otherSeats[2], otherSeats[0]);
+    }
+}
 
 TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
 {
-    std::set<Suit> voidSuits;
-    const auto targetSeat = Seat::SOUTH;
-    for (int i = 0; i < HAND_SIZE; i++)
+    for (const auto &targetSeat : SeatUtils::getSeats())
     {
-        const auto leadSuit = spades.getEffectiveSuit(placeAnyCard());
-        for (int j = 1; j < NUM_SEATS; j++)
+        spades.reset();
+        std::set<Suit> voidSuits;
+        for (int i = 0; i < HAND_SIZE; i++)
         {
-            const auto followSeat = spades.getTurnSeat();
-            const auto followSuit = spades.getEffectiveSuit(placeAnyCard());
-            if (followSeat == targetSeat && followSuit != leadSuit)
+            const auto leadSuit = spades.getEffectiveSuit(placeAnyCard());
+            for (int j = 1; j < NUM_SEATS; j++)
             {
-                voidSuits.insert(leadSuit);
-                ASSERT_EQ(voidSuits.size(), analyze.getUnfollowedEffectiveLeadSuits(targetSeat).size());
+                const auto followSeat = spades.getTurnSeat();
+                const auto followSuit = spades.getEffectiveSuit(placeAnyCard());
+                if (followSeat == targetSeat && followSuit != leadSuit)
+                {
+                    voidSuits.insert(leadSuit);
+                    ASSERT_EQ(voidSuits.size(), analyze.getUnfollowedEffectiveLeadSuits(targetSeat).size()) << (int)targetSeat << " " << i << " " << j;
+                }
             }
         }
     }

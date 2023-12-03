@@ -39,6 +39,56 @@ namespace spd
             return remainingOtherCards;
         }
 
+        bool isEffectiveSuitInOtherHand(const Seat &perspectiveSeat, const Suit &suit) const
+        {
+            for (const auto &seat : SeatUtils::getOtherSeats(perspectiveSeat))
+            {
+                for (const auto &card : spades.getHand(seat))
+                {
+                    if (spades.getEffectiveSuit(card) == suit)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        bool isEffectiveSuitInAnyHand(const Suit &suit) const
+        {
+            for (const auto &seat : SeatUtils::getSeats())
+            {
+                for (const auto &card : spades.getHand(seat))
+                {
+                    if (spades.getEffectiveSuit(card) == suit)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        std::set<Suit> getEffectiveSuits(const Seat &seat) const
+        {
+            std::set<Suit> suits;
+            for (const auto &card : spades.getHand(seat))
+            {
+                suits.insert(spades.getEffectiveSuit(card));
+            }
+            return suits;
+        }
+
+        std::set<Suit> getEffectiveVoidSuits(const Seat &seat) const
+        {
+            std::set<Suit> voidSuits{Suit::SPADE, Suit::CLOVER, Suit::DIAMOND, Suit::HEART};
+            for (const auto &suit : getEffectiveSuits(seat))
+            {
+                voidSuits.erase(suit);
+            }
+            return voidSuits;
+        }
+
         std::set<Suit> getUnfollowedEffectiveLeadSuits(const Seat &targetSeat) const
         {
             std::set<Suit> voidSuits;
@@ -62,6 +112,11 @@ namespace spd
                 }
             }
             return voidSuits;
+        }
+
+        std::set<Suit> getEffectiveSuitsFromElimination(const Seat &targetSeat) const
+        {
+            return {};
         }
     };
 }
