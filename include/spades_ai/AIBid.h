@@ -8,6 +8,8 @@ namespace spd
     {
 
     public:
+
+        static int getBid(const Spades& spades);
     };
 
 }

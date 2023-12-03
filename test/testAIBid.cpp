@@ -2,4 +2,6 @@
 #include "spades/Spades.h"
 #include "spades_ai/AIBid.h"
 
-
+TEST(AIBIdding, ReasonableBid)
+{
+}
