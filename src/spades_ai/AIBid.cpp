@@ -26,7 +26,14 @@ int AIBid::getClosestNonZeroBid(int targetBid) const
 
 bool AIBid::hasWeakHand() const
 {
-    return false;
+    for (const auto &card : spades.getHand(spades.getTurnSeat()))
+    {
+        if (analyze.isStrongStartCard(card))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 int AIBid::getBid() const

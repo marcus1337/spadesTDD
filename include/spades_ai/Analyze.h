@@ -24,5 +24,6 @@ namespace spd
         std::set<Suit> getEffectiveSuitsFromElimination(const Seat &perspectiveSeat, const Seat &targetSeat) const;
     
         int getGuaranteedTrickTakes(const Seat& seat) const;
+        bool isStrongStartCard(const Card& card) const;
     };
 }

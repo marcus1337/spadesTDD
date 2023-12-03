@@ -192,3 +192,20 @@ int Analyze::getGuaranteedTrickTakes(const Seat &seat) const
 
     return numTricks;
 }
+
+bool Analyze::isStrongStartCard(const Card &card) const
+{
+    const auto suit = spades.getEffectiveSuit(card);
+    if (suit == Suit::SPADE)
+    {
+        return true;
+    }
+    for (const auto &rank : {Rank::ACE, Rank::KING, Rank::QUEEN, Rank::KNIGHT})
+    {
+        if (card.is(rank))
+        {
+            return true;
+        }
+    }
+    return false;
+}
