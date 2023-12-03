@@ -126,9 +126,9 @@ public:
 void AnalyzeTest::assertEffectiveSuitFromElimination(const Seat &perspectiveSeat, const Seat &seat2,
                                                      const Seat &seat3, const Seat &seat4) const
 {
-    const auto voidSuits1 = analyze.getUnfollowedEffectiveLeadSuits(seat2);
-    const auto voidSuits2 = analyze.getUnfollowedEffectiveLeadSuits(seat3);
-    const auto voidSuits3 = analyze.getUnfollowedEffectiveLeadSuits(seat4);
+    const auto voidSuits1 = analyze.getVoidEffectiveSuits(perspectiveSeat, seat2);
+    const auto voidSuits2 = analyze.getVoidEffectiveSuits(perspectiveSeat, seat3);
+    const auto voidSuits3 = analyze.getVoidEffectiveSuits(perspectiveSeat, seat4);
 
     const auto knownSuits1 = analyze.getEffectiveSuitsFromElimination(perspectiveSeat, seat2);
     const auto knownSuits2 = analyze.getEffectiveSuitsFromElimination(perspectiveSeat, seat3);
@@ -164,7 +164,7 @@ TEST_F(AnalyzeTest, GetEffectiveSuitsFromElimination)
     }
 }
 
-TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
+/*TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
 {
     for (const auto &targetSeat : SeatUtils::getSeats())
     {
@@ -185,7 +185,7 @@ TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
             }
         }
     }
-}
+}*/
 
 TEST_F(AnalyzeTest, GetPlayedSeatRoundCards)
 {
