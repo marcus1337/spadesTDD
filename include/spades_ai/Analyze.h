@@ -8,6 +8,7 @@ namespace spd
     {
         const Spades &spades;
         std::set<Suit> getUnfollowedEffectiveLeadSuits(const Seat &targetSeat) const;
+        int getTrumpIndexDescending(const Card& card) const;
 
     public:
         Analyze(const Spades &spades);
@@ -21,5 +22,7 @@ namespace spd
         std::set<Suit> getSelfEffectiveVoidSuits(const Seat &self) const;
         std::set<Suit> getVoidEffectiveSuits(const Seat &perspectiveSeat, const Seat &targetSeat) const;
         std::set<Suit> getEffectiveSuitsFromElimination(const Seat &perspectiveSeat, const Seat &targetSeat) const;
+    
+        int getGuaranteedTrickTakes(const Seat& seat) const;
     };
 }

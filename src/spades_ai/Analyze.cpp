@@ -82,6 +82,20 @@ std::set<Suit> Analyze::getSelfEffectiveVoidSuits(const Seat &self) const
     return voidSuits;
 }
 
+int Analyze::getTrumpIndexDescending(const Card &card) const
+{
+    int counter = 0;
+    for (const auto &trump : spades.getTrumpCardsDescending())
+    {
+        if (card == trump)
+        {
+            return counter;
+        }
+        counter++;
+    }
+    return -1;
+}
+
 std::set<Suit> Analyze::getUnfollowedEffectiveLeadSuits(const Seat &targetSeat) const
 {
     std::set<Suit> voidSuits;
@@ -137,4 +151,44 @@ std::set<Suit> Analyze::getEffectiveSuitsFromElimination(const Seat &perspective
         }
     }
     return knownSuits;
+}
+
+int Analyze::getGuaranteedTrickTakes(const Seat &seat) const
+{
+    const auto trumps = spades.getTrumpCardsDescending();
+    std::vector<bool> trumpChecks(trumps.size(), false);
+    std::vector<bool> trumpRejects(trumps.size(), true);
+    for (const auto &card : spades.getHand(seat))
+    {
+        const int trumpIndex = getTrumpIndexDescending(card);
+        if (trumpIndex >= 0)
+        {
+            trumpChecks[trumpIndex] = true;
+            trumpRejects[trumpIndex] = false;
+        }
+    }
+
+    for (int i = 0; i < trumps.size(); i++)
+    {
+        for (int j = i + 1; j < trumps.size(); j++)
+        {
+            if (trumpChecks[i] && trumpRejects[j])
+            {
+                trumpChecks[i] = false;
+                trumpRejects[j] = false;
+                break;
+            }
+        }
+    }
+
+    int numTricks = 0;
+    for (const bool winTrick : trumpChecks)
+    {
+        if (winTrick)
+        {
+            numTricks++;
+        }
+    }
+
+    return numTricks;
 }
