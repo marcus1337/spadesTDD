@@ -48,11 +48,7 @@ int AIBid::getBid() const
     const auto possibleBids = spades.getPossibleBids();
     assert(!possibleBids.empty());
 
-    if (possibleBids.size() == 1)
-    {
-        return possibleBids.front();
-    }
-    else if (hasWeakHand())
+    if (possibleBids.size() == 1 || hasWeakHand())
     {
         return possibleBids.front();
     }
