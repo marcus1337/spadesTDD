@@ -36,6 +36,13 @@ bool AIBid::hasWeakHand() const
     return true;
 }
 
+int AIBid::getNumStrongCards() const
+{
+    const auto &hand = spades.getHand(spades.getTurnSeat());
+    return std::count_if(hand.begin(), hand.end(), [this](const auto &card)
+                         { return analyze.isStrongStartCard(card); });
+}
+
 int AIBid::getBid() const
 {
     const auto possibleBids = spades.getPossibleBids();
@@ -52,7 +59,9 @@ int AIBid::getBid() const
     else
     {
         const int guaranteedTakes = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
-        int targetBid = guaranteedTakes;
+        int targetBid = guaranteedTakes + getNumStrongCards() / 3;
+        const auto teamBid = spades.getBidResult(SeatUtils::getTeamSeat(spades.getTurnSeat()));
+        targetBid -= teamBid.value_or(0);
         return getClosestNonZeroBid(targetBid);
     }
 }

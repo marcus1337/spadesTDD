@@ -11,6 +11,7 @@ namespace spd
         Analyze analyze;
         int getClosestNonZeroBid(int targetBid) const;
         bool hasWeakHand() const;
+        int getNumStrongCards() const;
 
     public:
         AIBid(const Spades& spades);
