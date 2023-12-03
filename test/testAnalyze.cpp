@@ -52,6 +52,12 @@ protected:
         {
             playedCards[seat] = {};
         }
+        resetSpades();
+    }
+
+public:
+    void resetSpades()
+    {
         spades.reset(BidVariationType::DOUBLE_NILL, TrumpVariationType::ACE_HIGH);
         spades.reset(0);
         spades.addBid(3);
@@ -60,7 +66,6 @@ protected:
         spades.addBid(0);
     }
 
-public:
     std::optional<Card> getPlayableCard()
     {
         for (const auto &card : spades.getHand(spades.getTurnSeat()))
@@ -157,7 +162,7 @@ TEST_F(AnalyzeTest, GetUnfollowedEffectiveLeadSuits)
 {
     for (const auto &targetSeat : SeatUtils::getSeats())
     {
-        spades.reset();
+        resetSpades();
         std::set<Suit> voidSuits;
         for (int i = 0; i < HAND_SIZE; i++)
         {
