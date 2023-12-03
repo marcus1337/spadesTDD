@@ -1,10 +1,14 @@
 #include "spades_ai/AIBid.h"
-#include "spades_ai/Analyze.h"
 
 using namespace spd;
 
-int AIBid::getClosestNonZeroBid(const std::vector<int> possibleBids, int target)
+AIBid::AIBid(const Spades &spades) : spades(spades), analyze(spades)
 {
+}
+
+int AIBid::getClosestNonZeroBid(int targetBid) const
+{
+    const auto possibleBids = spades.getPossibleBids();
     int bid = possibleBids.front();
     for (const auto possibleBid : possibleBids)
     {
@@ -12,7 +16,7 @@ int AIBid::getClosestNonZeroBid(const std::vector<int> possibleBids, int target)
         {
             bid = possibleBid;
         }
-        else if (abs(possibleBid - target) < abs(bid - target))
+        else if (abs(possibleBid - targetBid) < abs(bid - targetBid))
         {
             bid = possibleBid;
         }
@@ -20,16 +24,28 @@ int AIBid::getClosestNonZeroBid(const std::vector<int> possibleBids, int target)
     return bid;
 }
 
-int AIBid::getBid(const Spades &spades)
+bool AIBid::hasWeakHand() const
 {
-    Analyze analyze(spades);
+    return false;
+}
+
+int AIBid::getBid() const
+{
     const auto possibleBids = spades.getPossibleBids();
-    const int guaranteedTakes = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
+    assert(!possibleBids.empty());
 
-    if (guaranteedTakes > 0)
+    if (possibleBids.size() == 1)
     {
-        return getClosestNonZeroBid(possibleBids, guaranteedTakes);
+        return possibleBids.front();
     }
-
-    return possibleBids.front();
+    else if (hasWeakHand())
+    {
+        return possibleBids.front();
+    }
+    else
+    {
+        const int guaranteedTakes = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
+        int targetBid = guaranteedTakes;
+        return getClosestNonZeroBid(targetBid);
+    }
 }

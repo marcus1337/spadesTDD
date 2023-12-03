@@ -1,16 +1,20 @@
 #pragma once
 #include "spades/Spades.h"
 #include "spades/pch.h"
+#include "spades_ai/Analyze.h"
 
 namespace spd
 {
     class AIBid
     {
-        static int getClosestNonZeroBid(const std::vector<int> possibleBids, int target);
+        const Spades& spades;
+        Analyze analyze;
+        int getClosestNonZeroBid(int targetBid) const;
+        bool hasWeakHand() const;
 
     public:
-
-        static int getBid(const Spades& spades);
+        AIBid(const Spades& spades);
+        int getBid() const;
     };
 
 }

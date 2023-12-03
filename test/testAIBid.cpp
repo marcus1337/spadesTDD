@@ -9,10 +9,11 @@ TEST(AIBIdding, ReasonableBid)
 {
     Spades spades;
     Analyze analyze(spades);
+    AIBid aiBid(spades);
 
     for (int i = 0; i < NUM_SEATS; i++)
     {
-        const int bid = AIBid::getBid(spades);
+        const int bid = aiBid.getBid();
         const int guaranteedWins = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
         const auto possibleBids = spades.getPossibleBids(spades.getTurnSeat());
         if (possibleBids.size() > 0 && guaranteedWins > 0)
