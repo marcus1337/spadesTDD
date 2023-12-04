@@ -225,6 +225,11 @@ std::vector<Card> Spades::getTrumpCardsDescending() const
     return trumpVariationController.getTrumpCardsOrderedByValueDescending();
 }
 
+std::vector<Rank> Spades::getRanksDescending() const
+{
+    return Card::getRanks();
+}
+
 std::array<Card, NUM_EXCLUDED_CARDS> Spades::getExcludedCards() const
 {
     return trumpVariationController.getExcludedCards();

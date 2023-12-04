@@ -195,5 +195,8 @@ int Analyze::getGuaranteedTrickTakes(const Seat &seat) const
 
 bool Analyze::isTrickTakingCard(const Card &card) const
 {
+    const auto trick = spades.getCurrentTrickCardSeatPairs();
+    //TODO: spades.getTopCard();
     return true;
 }
+

@@ -36,6 +36,7 @@ namespace spd
         bool is(const Joker &joker) const;
 
         static std::array<Suit, 4> getSuits();
+        static std::array<Rank, 13> getRanks();
     };
 
 }

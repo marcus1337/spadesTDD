@@ -100,3 +100,8 @@ std::array<Suit, 4> Card::getSuits()
 {
     return {Suit::SPADE, Suit::CLOVER, Suit::DIAMOND, Suit::HEART};
 }
+
+std::array<Rank, 13> Card::getRanks()
+{
+    return {Rank::ACE, Rank::KING, Rank::QUEEN, Rank::KNIGHT, Rank::TEN, Rank::NINE, Rank::EIGHT, Rank::SEVEN, Rank::SIX, Rank::FIVE, Rank::FOUR, Rank::THREE, Rank::TWO};
+}
