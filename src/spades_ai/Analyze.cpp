@@ -193,4 +193,7 @@ int Analyze::getGuaranteedTrickTakes(const Seat &seat) const
     return numTricks;
 }
 
-
+bool Analyze::isTrickTakingCard(const Card &card) const
+{
+    return true;
+}

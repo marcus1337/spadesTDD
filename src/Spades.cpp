@@ -331,3 +331,16 @@ std::vector<Seat> Spades::getTrickTakers(int round) const
     }
     return roundTrickTakers;
 }
+
+int Spades::getNumberOfTakenTricksCurrentRound(const Seat &seat) const
+{
+    int numTricks = 0;
+    for (const auto &trickTaker : getTrickTakers(state.getRound()))
+    {
+        if (seat == trickTaker)
+        {
+            numTricks++;
+        }
+    }
+    return numTricks;
+}

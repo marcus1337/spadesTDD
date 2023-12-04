@@ -217,10 +217,12 @@ TEST_F(AnalyzeTest, DetectCardTrickEffect)
     placeAnyCard();
     placeAnyCard();
     const Seat seat = spades.getTurnSeat();
-    const int numTakenTricks = spades.getScore().first.getPoints();
     auto card = getPlayableCard().value();
-    //bool trickTakingCard = analyze.isTrickTakingCard(card);
+    const bool trickTakingCard = analyze.isTrickTakingCard(card);
+    const int numTakenTricks = spades.getNumberOfTakenTricksCurrentRound(seat);
     spades.place(card);
-
+    if (trickTakingCard)
+    {
+        ASSERT_TRUE(spades.getNumberOfTakenTricksCurrentRound(seat) > numTakenTricks);
+    }
 }
-

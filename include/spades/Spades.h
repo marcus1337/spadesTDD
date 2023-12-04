@@ -60,6 +60,7 @@ namespace spd
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
         std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
+        int getNumberOfTakenTricksCurrentRound(const Seat& seat) const;
 
         Suit getEffectiveSuit(const Card& card) const;
         bool isTrumpCard(const Card& card) const;
