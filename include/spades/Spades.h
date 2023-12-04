@@ -77,6 +77,7 @@ namespace spd
         void redo();
         bool canRedo() const;
 
+        bool isTopCardIfPlaced(const Card& card) const;
         int getCardStrengthRelativeToCurrentTrick(const Card& card) const;
         int getCardStrength(const Card& card) const;
         int getCardStrengthRelativeToLeadSuit(const Suit& leadSuit, const Card& card) const;

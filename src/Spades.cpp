@@ -402,3 +402,16 @@ int Spades::getCardStrengthRelativeToLeadSuit(const Suit &leadSuit, const Card &
     }
     return getCardStrength(card);
 }
+
+bool Spades::isTopCardIfPlaced(const Card &card) const
+{
+    const auto trickCardSeatPairs = getCurrentTrickCardSeatPairs();
+    for (const auto &[seat, trickCard] : trickCardSeatPairs)
+    {
+        if (getCardStrengthRelativeToCurrentTrick(trickCard) > getCardStrengthRelativeToCurrentTrick(card))
+        {
+            return false;
+        }
+    }
+    return true;
+}
