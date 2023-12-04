@@ -76,5 +76,9 @@ namespace spd
         bool canUndo() const;
         void redo();
         bool canRedo() const;
+
+        int getCardStrengthRelativeToCurrentTrick(const Card& card) const;
+        int getCardStrength(const Card& card) const;
+        int getCardStrengthRelativeToLeadSuit(const Suit& leadSuit, const Card& card) const;
     };
 }

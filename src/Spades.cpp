@@ -227,7 +227,12 @@ std::vector<Card> Spades::getTrumpCardsDescending() const
 
 std::vector<Rank> Spades::getRanksDescending() const
 {
-    return Card::getRanks();
+    std::vector<Rank> ranks;
+    for (const auto &rank : Card::getRanks())
+    {
+        ranks.push_back(rank);
+    }
+    return ranks;
 }
 
 std::array<Card, NUM_EXCLUDED_CARDS> Spades::getExcludedCards() const
@@ -348,4 +353,52 @@ int Spades::getNumberOfTakenTricksCurrentRound(const Seat &seat) const
         }
     }
     return numTricks;
+}
+
+int Spades::getCardStrengthRelativeToCurrentTrick(const Card &card) const
+{
+    const auto trickCards = getCurrentTrickCardSeatPairs();
+    if (!trickCards.empty())
+    {
+        const Suit leadSuit = getEffectiveSuit(trickCards.front().second);
+        return getCardStrengthRelativeToLeadSuit(leadSuit, card);
+    }
+    else
+    {
+        return getCardStrength(card);
+    }
+}
+
+int Spades::getCardStrength(const Card &card) const
+{
+    const auto trumpsDescending = getTrumpCardsDescending();
+    const auto ranksDescending = getRanksDescending();
+    int trumpValue = trumpsDescending.size() + ranksDescending.size();
+    for (const auto &trumpCard : trumpsDescending)
+    {
+        if (card == trumpCard)
+        {
+            return trumpValue;
+        }
+        trumpValue--;
+    }
+    int rankValue = ranksDescending.size();
+    for (const auto &rank : ranksDescending)
+    {
+        if (card.is(rank))
+        {
+            return rankValue;
+        }
+        rankValue--;
+    }
+    return 0;
+}
+int Spades::getCardStrengthRelativeToLeadSuit(const Suit &leadSuit, const Card &card) const
+{
+    const auto suit = getEffectiveSuit(card);
+    if (suit != leadSuit && suit != Suit::SPADE)
+    {
+        return 0;
+    }
+    return getCardStrength(card);
 }
