@@ -314,16 +314,20 @@ bool Spades::hasCorruptBids() const
 std::vector<std::vector<Seat>> Spades::getCompletedRoundTrickTakers() const
 {
     std::vector<std::vector<Seat>> roundTrickTakers;
-    const auto trickTakers = trumpVariationController.getTrickTakers(state);
-    const int tricksPerRound = HAND_SIZE;
     for (int round = 0; round < state.getRound(); round++)
     {
-        std::vector<Seat> roundTricks;
-        for (int i = 0; i < tricksPerRound; i++)
-        {
-            roundTricks.push_back(trickTakers[i + round * tricksPerRound]);
-        }
-        roundTrickTakers.push_back(roundTricks);
+        roundTrickTakers.push_back(getTrickTakers(round));
+    }
+    return roundTrickTakers;
+}
+
+std::vector<Seat> Spades::getTrickTakers(int round) const
+{
+    const auto trickTakers = trumpVariationController.getTrickTakers(state);
+    std::vector<Seat> roundTrickTakers;
+    for (int i = HAND_SIZE * round; i < HAND_SIZE * round + HAND_SIZE && i < trickTakers.size(); i++)
+    {
+        roundTrickTakers.push_back(trickTakers[i]);
     }
     return roundTrickTakers;
 }

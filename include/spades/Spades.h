@@ -30,6 +30,7 @@ namespace spd
         bool hasCorruptBids() const;
 
         std::vector<std::vector<Seat>> getCompletedRoundTrickTakers() const;
+        std::vector<Seat> getTrickTakers(int round) const;
     public:
         Spades() = default;
         void reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);

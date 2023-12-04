@@ -153,7 +153,7 @@ TEST_F(AnalyzeTest, GetEffectiveSuitsFromElimination)
         const auto otherSeats = SeatUtils::getOtherSeats(selfSeat);
         for (int i = 0; i < HAND_SIZE; i++)
         {
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < NUM_SEATS; j++)
             {
                 placeAnyCard();
             }
@@ -210,3 +210,17 @@ TEST_F(AnalyzeTest, GetRemainingNonSeatCards)
         }
     }
 }
+
+TEST_F(AnalyzeTest, DetectCardTrickEffect)
+{
+    placeAnyCard();
+    placeAnyCard();
+    placeAnyCard();
+    const Seat seat = spades.getTurnSeat();
+    const int numTakenTricks = spades.getScore().first.getPoints();
+    auto card = getPlayableCard().value();
+    //bool trickTakingCard = analyze.isTrickTakingCard(card);
+    spades.place(card);
+
+}
+
