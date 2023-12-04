@@ -215,6 +215,11 @@ Suit Spades::getEffectiveSuit(const Card &card) const
     }
 }
 
+bool Spades::isTrumpCard(const Card &card) const
+{
+    return getEffectiveSuit(card) == Suit::SPADE;
+}
+
 std::vector<Card> Spades::getTrumpCardsDescending() const
 {
     return trumpVariationController.getTrumpCardsOrderedByValueDescending();

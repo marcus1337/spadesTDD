@@ -12,7 +12,11 @@ namespace spd
         int getClosestNonZeroBid(int targetBid) const;
         bool hasWeakHand() const;
         int getNumStrongCards() const;
-
+        int getNumStrongNonTrumpCards() const;
+        bool isStrongStartCard(const Card& card) const;
+        bool cardIsOfRank(const Card& card, const std::set<Rank>& possibleRanks) const;
+        std::set<Rank> getStrongRanks() const;
+        bool cardHasStrongRank(const Card& card) const;
     public:
         AIBid(const Spades& spades);
         int getBid() const;

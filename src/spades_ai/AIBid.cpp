@@ -28,7 +28,7 @@ bool AIBid::hasWeakHand() const
 {
     for (const auto &card : spades.getHand(spades.getTurnSeat()))
     {
-        if (analyze.isStrongStartCard(card))
+        if (isStrongStartCard(card))
         {
             return false;
         }
@@ -40,7 +40,58 @@ int AIBid::getNumStrongCards() const
 {
     const auto &hand = spades.getHand(spades.getTurnSeat());
     return std::count_if(hand.begin(), hand.end(), [this](const auto &card)
-                         { return analyze.isStrongStartCard(card); });
+                         { return isStrongStartCard(card); });
+}
+
+int AIBid::getNumStrongNonTrumpCards() const
+{
+    int numStrongCards = 0;
+    for (const auto &card : spades.getHand(spades.getTurnSeat()))
+    {
+        if (!spades.isTrumpCard(card) && cardHasStrongRank(card))
+        {
+            numStrongCards++;
+        }
+    }
+    return numStrongCards;
+}
+
+std::set<Rank> AIBid::getStrongRanks() const
+{
+    return {Rank::ACE, Rank::KING, Rank::QUEEN, Rank::KNIGHT};
+}
+
+bool AIBid::cardHasStrongRank(const Card &card) const
+{
+    const auto strongRanks = getStrongRanks();
+    return std::any_of(strongRanks.begin(), strongRanks.end(), [card](const Rank &rank)
+                       { return card.is(rank); });
+}
+
+bool AIBid::cardIsOfRank(const Card &card, const std::set<Rank> &possibleRanks) const
+{
+    for (const auto &rank : possibleRanks)
+    {
+        if (card.is(rank))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool AIBid::isStrongStartCard(const Card &card) const
+{
+    const auto suit = spades.getEffectiveSuit(card);
+    if (suit == Suit::SPADE)
+    {
+        return true;
+    }
+    if (cardIsOfRank(card, {Rank::ACE, Rank::KING, Rank::QUEEN, Rank::KNIGHT}))
+    {
+        return true;
+    }
+    return false;
 }
 
 int AIBid::getBid() const
@@ -55,11 +106,13 @@ int AIBid::getBid() const
     else
     {
         int targetBid = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
-        targetBid += getNumStrongCards() / 3;
-
+        targetBid += getNumStrongNonTrumpCards() / 2; //Arbitrary divisor value
         const auto teamBid = spades.getBidResult(SeatUtils::getTeamSeat(spades.getTurnSeat()));
         targetBid -= teamBid.value_or(0);
-        
+
+        const int lowCommonPartnerBid = 1;
+        const int highCommonPartnerBid = 5;
+        targetBid = std::clamp(targetBid, lowCommonPartnerBid, highCommonPartnerBid);
         return getClosestNonZeroBid(targetBid);
     }
 }

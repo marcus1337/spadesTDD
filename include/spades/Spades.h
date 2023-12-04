@@ -61,6 +61,7 @@ namespace spd
         std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
 
         Suit getEffectiveSuit(const Card& card) const;
+        bool isTrumpCard(const Card& card) const;
         void place(const Card &card);
         void addBid(unsigned int bid);
         void setBidOption(const Seat &seat, const BidOption &bidOption);
