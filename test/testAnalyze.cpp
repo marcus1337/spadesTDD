@@ -1,6 +1,7 @@
 #include "test_pch.h"
 #include "spades/Spades.h"
 #include "spades_ai/Analyze.h"
+#include "spades_ai/AIPlacer.h"
 
 using namespace spd;
 
