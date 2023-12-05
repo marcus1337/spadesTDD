@@ -1,4 +1,5 @@
 #include "spades_ai/RandomAIPlacer.h"
+#include "spades_ai/AIAction.h"
 
 using namespace spd;
 
@@ -8,10 +9,7 @@ AIDifficulty RandomAIPlacer::getDifficulty() const
 }
 Card RandomAIPlacer::getPlacement(const Spades &spades)
 {
-    const auto placeableCards = spades.getPlaceableCards();
-    assert(!placeableCards.empty());
-    const auto index = portableRandom.randInt(0, placeableCards.size() - 1);
-    return placeableCards[index];
+    return AIAction(spades).getRandomCard();
 }
 std::string RandomAIPlacer::getName() const
 {
