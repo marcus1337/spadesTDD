@@ -10,6 +10,16 @@ namespace spd
         const Spades &spades;
         const Analyze analyze;
 
+        bool canLoseTrick() const
+        {
+            return false;
+        }
+
+        bool canWinTrick() const
+        {
+            return false;
+        }
+
     public:
         AIObservation(const Spades &spades) : spades(spades), analyze(spades)
         {
@@ -21,10 +31,15 @@ namespace spd
             const auto rightOpponent = SeatUtils::getRightOpponentSeat(seat);
             const auto leftOpponent = SeatUtils::getLeftOpponentSeat(seat);
             const auto trickSeatCards = spades.getCurrentRoundCardSeatPairs();
-            
             if (trickSeatCards.size() == NUM_SEATS - 1)
             {
-
+                for (const auto &opponent : {rightOpponent, leftOpponent})
+                {
+                    if (spades.getBidResult(opponent).value() == 0 && spades.getCurrentTrickTopSeat().value() == opponent)
+                    {
+                        return canLoseTrick();
+                    }
+                }
             }
             return false;
         }
