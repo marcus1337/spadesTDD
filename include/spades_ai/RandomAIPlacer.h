@@ -1,6 +1,6 @@
 #pragma once
 #include "spades_ai/AIPlacer.h"
-#include "spades/table/PortableRandom.h"
+#include "spades/data/PortableRandom.h"
 
 namespace spd
 {
@@ -8,23 +8,9 @@ namespace spd
     {
         PortableRandom portableRandom;
     public:
-        RandomAIPlacer(){
-
-        }
-
-        virtual AIDifficulty getDifficulty() const
-        {
-            return AIDifficulty::EASY;
-        }
-        virtual Card getPlacement(const Spades &spades)
-        {
-            
-            //const auto placeableCards = spades
-            return Card();
-        }
-        virtual std::string getName() const
-        {
-            return "Random";
-        }
+        RandomAIPlacer() = default;
+        virtual AIDifficulty getDifficulty() const override;
+        virtual Card getPlacement(const Spades &spades) override;
+        virtual std::string getName() const override;
     };
 }
