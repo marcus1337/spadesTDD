@@ -20,6 +20,13 @@ namespace spd
             return false;
         }
 
+        bool isDefendingNil(const Seat &seat) const
+        {
+            const int numTakenTricks = spades.getNumberOfTakenTricksCurrentRound(seat);
+            const bool nilBid = spades.getBidResult(seat).value();
+            return nilBid && numTakenTricks == 0;
+        }
+
     public:
         AIObservation(const Spades &spades) : spades(spades), analyze(spades)
         {
@@ -43,17 +50,19 @@ namespace spd
             }
             return false;
         }
+
         bool isDefendingNil() const
         {
-            return false;
+            return isDefendingNil(spades.getTurnSeat());
         }
         bool isDefendingTeamNil() const
         {
-            return false;
+            return isDefendingNil(SeatUtils::getTeamSeat(spades.getTurnSeat()));
         }
         bool isOpponentDefendingNil() const
         {
-            return false;
+            const auto seat = spades.getTurnSeat();
+            return isDefendingNil(SeatUtils::getLeftOpponentSeat(seat)) || isDefendingNil(SeatUtils::getRightOpponentSeat(seat));
         }
         bool needMoreTricks() const
         {
