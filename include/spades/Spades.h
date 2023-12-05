@@ -55,11 +55,12 @@ namespace spd
         std::vector<int> getPossibleBids() const;
         std::vector<BidOption> getBidOptions(const Seat &seat) const;
         std::vector<Card> getHand(const Seat &seat) const;
-        std::vector<Card> getPlaceableCards() const; // TODO
+        std::vector<Card> getPlaceableCards() const;
         std::optional<int> getBidResult(const Seat &seat) const;
         std::vector<Card> getTrumpCardsDescending() const;
         std::vector<Rank> getRanksDescending() const;
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
+        std::optional<Seat> getCurrentTrickTopSeat() const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
         std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
         int getNumberOfTakenTricksCurrentRound(const Seat& seat) const;

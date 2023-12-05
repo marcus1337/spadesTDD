@@ -4,6 +4,7 @@
 #include "spades_ai/AIPlacer.h"
 #include "spades_ai/RandomAIPlacer.h"
 #include "spades_ai/AIAction.h"
+#include "spades_ai/AIObservation.h"
 
 using namespace spd;
 

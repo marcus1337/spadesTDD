@@ -17,6 +17,15 @@ namespace spd
 
         bool canSabotageOpponentNil() const
         {
+            const auto seat = spades.getTurnSeat();
+            const auto rightOpponent = SeatUtils::getRightOpponentSeat(seat);
+            const auto leftOpponent = SeatUtils::getLeftOpponentSeat(seat);
+            const auto trickSeatCards = spades.getCurrentRoundCardSeatPairs();
+            
+            if (trickSeatCards.size() == NUM_SEATS - 1)
+            {
+
+            }
             return false;
         }
         bool isDefendingNil() const

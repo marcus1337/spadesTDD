@@ -74,5 +74,16 @@ namespace spd
             }
             return otherSeats;
         }
+
+        inline Seat getLeftOpponentSeat(const Seat &from)
+        {
+            return getNextSeat(from);
+        }
+
+        inline Seat getRightOpponentSeat(const Seat &from)
+        {
+            int playerIndex = ((int)from + 3) % 4;
+            return (Seat)playerIndex;
+        }
     }
 }

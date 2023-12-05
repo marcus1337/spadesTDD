@@ -278,6 +278,22 @@ std::vector<std::pair<Seat, Card>> Spades::getCurrentTrickCardSeatPairs() const
     return state.getCurrentTrickCardSeatPairs();
 }
 
+std::optional<Seat> Spades::getCurrentTrickTopSeat() const
+{
+    std::optional<Seat> topSeat = std::nullopt;
+    int topValue = std::numeric_limits<int>::min();
+    for (const auto &[seat, card] : getCurrentTrickCardSeatPairs())
+    {
+        int value = getCardStrengthRelativeToCurrentTrick(card);
+        if (value > topValue)
+        {
+            value = topValue;
+            topSeat = std::make_optional(seat);
+        }
+    }
+    return topSeat;
+}
+
 std::vector<std::pair<Seat, Card>> Spades::getCurrentRoundCardSeatPairs() const
 {
     return state.getPlayedCardSeatPairs(state.getRound());
