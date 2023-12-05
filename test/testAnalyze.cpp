@@ -3,6 +3,7 @@
 #include "spades_ai/Analyze.h"
 #include "spades_ai/AIPlacer.h"
 #include "spades_ai/RandomAIPlacer.h"
+#include "spades_ai/AIAction.h"
 
 using namespace spd;
 
@@ -228,3 +229,4 @@ TEST_F(AnalyzeTest, DetectCardTrickEffect)
         ASSERT_TRUE(spades.getNumberOfTakenTricksCurrentRound(seat) > numTakenTricks);
     }
 }
+
