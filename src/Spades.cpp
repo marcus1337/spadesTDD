@@ -182,6 +182,19 @@ std::vector<Card> Spades::getHand(const Seat &seat) const
     return hand;
 }
 
+std::vector<Card> Spades::getPlaceableCards() const
+{
+    std::vector<Card> cards;
+    for (const auto &card : getHand(getTurnSeat()))
+    {
+        if (canPlace(card))
+        {
+            cards.push_back(card);
+        }
+    }
+    return cards;
+}
+
 void Spades::setBidOption(const Seat &seat, const BidOption &bidOption)
 {
     history.addAndExecuteCommand(BidOptionCommandValue{bidOption, seat}, state, trumpVariationController);
