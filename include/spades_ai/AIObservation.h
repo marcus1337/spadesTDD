@@ -111,7 +111,8 @@ namespace spd
         }
         bool opponentNeedMoreTricks() const
         {
-            return false;
+            const auto seat = SeatUtils::getLeftOpponentSeat(spades.getTurnSeat());
+            return getTeamBid(seat) > getCountedRoundTeamTricks(seat);
         }
     };
 }
