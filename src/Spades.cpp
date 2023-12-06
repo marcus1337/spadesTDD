@@ -182,10 +182,10 @@ std::vector<Card> Spades::getHand(const Seat &seat) const
     return hand;
 }
 
-std::vector<Card> Spades::getPlaceableCards() const
+std::vector<Card> Spades::getPlaceableCards(const Seat &seat) const
 {
     std::vector<Card> cards;
-    for (const auto &card : getHand(getTurnSeat()))
+    for (const auto &card : getHand(seat))
     {
         if (canPlace(card))
         {
@@ -193,6 +193,11 @@ std::vector<Card> Spades::getPlaceableCards() const
         }
     }
     return cards;
+}
+
+std::vector<Card> Spades::getPlaceableCards() const
+{
+    return getPlaceableCards(getTurnSeat());
 }
 
 void Spades::setBidOption(const Seat &seat, const BidOption &bidOption)

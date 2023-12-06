@@ -10,12 +10,66 @@ namespace spd
         const Spades &spades;
         const Analyze analyze;
 
-        bool canLoseTrick() const
+        bool canPlaceNonTopCard(const Seat &seat) const
         {
+            for (const auto &card : spades.getHand(seat))
+            {
+                if (!spades.isTopCardIfPlaced(card))
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
-        bool canWinTrick() const
+        bool hasPlacedCard(const Seat &seat) const
+        {
+            for (const auto &[trickSeat, card] : spades.getCurrentTrickCardSeatPairs())
+            {
+                if (trickSeat == seat)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        std::optional<Card> getBestPlaceableCard(const Seat &seat) const
+        {
+            std::optional<Card> bestCard;
+            int bestValue = std::numeric_limits<int>::min();
+            for (const auto &card : spades.getPlaceableCards(seat))
+            {
+                int value = spades.getCardStrengthRelativeToCurrentTrick(card);
+                if (value > bestValue)
+                {
+                    bestValue = value;
+                    bestCard = std::make_optional(card);
+                }
+            }
+            return bestCard;
+        }
+
+        std::optional<Card> getWorstPlaceableCard(const Seat &seat) const
+        {
+            return std::nullopt;
+        }
+
+        bool canLoseTrick(const Seat &seat) const
+        {
+            if (canPlaceNonTopCard(seat))
+            {
+                return true;
+            }
+
+            const auto trick = spades.getCurrentTrickCardSeatPairs();
+            for (const auto &otherSeat : SeatUtils::getOtherSeats(seat))
+            {
+            }
+            return false;
+        }
+
+        bool canWinTrick(const Seat &seat) const
         {
             return false;
         }
@@ -69,7 +123,7 @@ namespace spd
                 {
                     if (spades.getBidResult(opponent).value() == 0 && spades.getCurrentTrickTopSeat().value() == opponent)
                     {
-                        return canLoseTrick();
+                        return canLoseTrick(seat);
                     }
                 }
             }
