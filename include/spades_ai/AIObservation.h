@@ -27,6 +27,31 @@ namespace spd
             return nilBid && numTakenTricks == 0;
         }
 
+        int getCountedRoundTricks(const Seat &seat) const
+        {
+            int bid = spades.getBidResult(seat).value_or(0);
+            if (bid == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return spades.getNumberOfTakenTricksCurrentRound(seat);
+            }
+        }
+
+        int getCountedRoundTeamTricks(const Seat &seat) const
+        {
+            const Seat teamSeat = SeatUtils::getTeamSeat(seat);
+            return getCountedRoundTricks(seat) + getCountedRoundTricks(teamSeat);
+        }
+
+        int getTeamBid(const Seat &seat) const
+        {
+            const Seat teamSeat = SeatUtils::getTeamSeat(seat);
+            return spades.getBidResult(seat).value_or(0) + spades.getBidResult(teamSeat).value_or(0);
+        }
+
     public:
         AIObservation(const Spades &spades) : spades(spades), analyze(spades)
         {
@@ -64,13 +89,25 @@ namespace spd
             const auto seat = spades.getTurnSeat();
             return isDefendingNil(SeatUtils::getLeftOpponentSeat(seat)) || isDefendingNil(SeatUtils::getRightOpponentSeat(seat));
         }
+
         bool needMoreTricks() const
         {
-            return false;
+            const auto seat = spades.getTurnSeat();
+            const auto bid = spades.getBidResult(seat);
+            if (bid == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return bid > getCountedRoundTeamTricks(seat);
+            }
         }
+
         bool teamNeedMoreTricks() const
         {
-            return false;
+            const auto seat = spades.getTurnSeat();
+            return getTeamBid(seat) > getCountedRoundTeamTricks(seat);
         }
         bool opponentNeedMoreTricks() const
         {
