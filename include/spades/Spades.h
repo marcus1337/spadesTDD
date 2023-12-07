@@ -62,6 +62,9 @@ namespace spd
         std::vector<Rank> getRanksDescending() const;
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
         std::optional<Seat> getCurrentTrickTopSeat() const;
+
+        bool hasPlacedCardInCurrentTrick(const Seat& seat) const;
+        std::optional<Card> getPlacedCardInCurrentTrick(const Seat& seat) const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
         std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
         int getNumberOfTakenTricksCurrentRound(const Seat& seat) const;

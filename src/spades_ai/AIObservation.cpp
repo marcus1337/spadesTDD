@@ -7,11 +7,11 @@ bool AIObservation::isLastTrickCard() const
     return spades.getCurrentTrickCardSeatPairs().size() == NUM_SEATS - 1;
 }
 
-bool AIObservation::canPlaceNonTopCard(const Seat &seat) const
+bool AIObservation::canPlaceTopCard(const Seat &seat) const
 {
     for (const auto &card : spades.getHand(seat))
     {
-        if (!spades.isTopCardIfPlaced(card))
+        if (spades.isTopCardIfPlaced(card))
         {
             return true;
         }
@@ -19,11 +19,11 @@ bool AIObservation::canPlaceNonTopCard(const Seat &seat) const
     return false;
 }
 
-bool AIObservation::hasPlacedCard(const Seat &seat) const
+bool AIObservation::canPlaceNonTopCard(const Seat &seat) const
 {
-    for (const auto &[trickSeat, card] : spades.getCurrentTrickCardSeatPairs())
+    for (const auto &card : spades.getHand(seat))
     {
-        if (trickSeat == seat)
+        if (!spades.isTopCardIfPlaced(card))
         {
             return true;
         }
@@ -62,6 +62,12 @@ int AIObservation::getTeamBid(const Seat &seat) const
     return spades.getBidResult(seat).value_or(0) + spades.getBidResult(teamSeat).value_or(0);
 }
 
+bool AIObservation::isNilBidAtRisk(const Seat &seat) const
+{
+    const auto topSeat = spades.getCurrentTrickTopSeat();
+    return topSeat.has_value() && topSeat.value() == seat && isDefendingNil(seat);
+}
+
 AIObservation::AIObservation(const Spades &spades) : spades(spades), analyze(spades)
 {
 }
@@ -73,7 +79,7 @@ bool AIObservation::canSabotageOpponentNil() const
     {
         for (const auto &opponent : {SeatUtils::getRightOpponentSeat(seat), SeatUtils::getLeftOpponentSeat(seat)})
         {
-            if (isDefendingNil(opponent) && spades.getCurrentTrickTopSeat().value() == opponent)
+            if (isNilBidAtRisk(opponent))
             {
                 return canPlaceNonTopCard(seat);
             }
@@ -82,18 +88,17 @@ bool AIObservation::canSabotageOpponentNil() const
     return false;
 }
 
-bool AIObservation::isDefendingNil() const
-{
-    return isDefendingNil(spades.getTurnSeat());
-}
-bool AIObservation::isDefendingTeamNil() const
-{
-    return isDefendingNil(SeatUtils::getTeamSeat(spades.getTurnSeat()));
-}
-bool AIObservation::isOpponentDefendingNil() const
+bool AIObservation::canDefendTeamNil() const
 {
     const auto seat = spades.getTurnSeat();
-    return isDefendingNil(SeatUtils::getLeftOpponentSeat(seat)) || isDefendingNil(SeatUtils::getRightOpponentSeat(seat));
+    if (isNilBidAtRisk(SeatUtils::getTeamSeat(seat)))
+    {
+        return canPlaceTopCard(seat);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool AIObservation::needMoreTricks() const

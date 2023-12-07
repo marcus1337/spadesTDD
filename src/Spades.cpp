@@ -299,6 +299,30 @@ std::optional<Seat> Spades::getCurrentTrickTopSeat() const
     return topSeat;
 }
 
+bool Spades::hasPlacedCardInCurrentTrick(const Seat &seat) const
+{
+    for (const auto &pair : getCurrentTrickCardSeatPairs())
+    {
+        if (pair.first == seat)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::optional<Card> Spades::getPlacedCardInCurrentTrick(const Seat &seat) const
+{
+    for (const auto &pair : getCurrentTrickCardSeatPairs())
+    {
+        if (pair.first == seat)
+        {
+            return std::make_optional(pair.second);
+        }
+    }
+    return std::nullopt;
+}
+
 std::vector<std::pair<Seat, Card>> Spades::getCurrentRoundCardSeatPairs() const
 {
     return state.getPlayedCardSeatPairs(state.getRound());
