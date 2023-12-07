@@ -13,3 +13,20 @@ Card AIAction::getRandomCard()
     const auto index = portableRandom.randInt(0, placeableCards.size() - 1);
     return placeableCards[index];
 }
+
+std::optional<Card> AIAction::getHighestWinCard() const
+{
+    return std::nullopt;
+}
+std::optional<Card> AIAction::getLowestWinCard() const
+{
+    return std::nullopt;
+}
+std::optional<Card> AIAction::getHighestLoseCard() const
+{
+    return std::nullopt;
+}
+std::optional<Card> AIAction::getLowestLoseCard() const
+{
+    return std::nullopt;
+}

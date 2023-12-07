@@ -14,5 +14,10 @@ namespace spd
     public:
         AIAction(const Spades &spades);
         Card getRandomCard();
+
+        std::optional<Card> getHighestWinCard() const;  //TODO: impl
+        std::optional<Card> getLowestWinCard() const;   //TODO: impl
+        std::optional<Card> getHighestLoseCard() const; //TODO: impl
+        std::optional<Card> getLowestLoseCard() const;  //TODO: impl
     };
 }
