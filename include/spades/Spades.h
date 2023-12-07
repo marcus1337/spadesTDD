@@ -66,6 +66,7 @@ namespace spd
         int getCountedRoundTricks(const Seat& seat) const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
         std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
+        bool isSpadesBroken() const;
         int getNumberOfTakenTricksCurrentRound(const Seat& seat) const;
         
         Suit getEffectiveSuit(const Card& card) const;

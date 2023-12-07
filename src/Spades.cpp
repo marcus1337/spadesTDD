@@ -401,6 +401,18 @@ int Spades::getNumberOfTakenTricksCurrentRound(const Seat &seat) const
     return numTricks;
 }
 
+bool Spades::isSpadesBroken() const
+{
+    for (const auto &pair : getCurrentRoundCardSeatPairs())
+    {
+        if (getEffectiveSuit(pair.second) == Suit::SPADE)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 int Spades::getCardStrengthRelativeToCurrentTrick(const Card &card) const
 {
     const auto trickCards = getCurrentTrickCardSeatPairs();
