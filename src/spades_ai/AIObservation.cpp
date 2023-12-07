@@ -68,7 +68,7 @@ bool AIObservation::isNilBidAtRisk(const Seat &seat) const
     return topSeat.has_value() && topSeat.value() == seat && isDefendingNil(seat);
 }
 
-AIObservation::AIObservation(const Spades &spades) : spades(spades), analyze(spades)
+AIObservation::AIObservation(const Spades &spades) : spades(spades)
 {
 }
 
