@@ -69,13 +69,11 @@ AIObservation::AIObservation(const Spades &spades) : spades(spades), analyze(spa
 bool AIObservation::canSabotageOpponentNil() const
 {
     const auto seat = spades.getTurnSeat();
-    const auto rightOpponent = SeatUtils::getRightOpponentSeat(seat);
-    const auto leftOpponent = SeatUtils::getLeftOpponentSeat(seat);
     if (isLastTrickCard())
     {
-        for (const auto &opponent : {rightOpponent, leftOpponent})
+        for (const auto &opponent : {SeatUtils::getRightOpponentSeat(seat), SeatUtils::getLeftOpponentSeat(seat)})
         {
-            if (spades.getBidResult(opponent).value() == 0 && spades.getCurrentTrickTopSeat().value() == opponent)
+            if (isDefendingNil(opponent) && spades.getCurrentTrickTopSeat().value() == opponent)
             {
                 return canPlaceNonTopCard(seat);
             }
