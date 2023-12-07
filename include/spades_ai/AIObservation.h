@@ -11,9 +11,6 @@ namespace spd
         bool isLastTrickCard() const;
         bool canPlaceTopCard(const Seat& seat) const;
         bool canPlaceNonTopCard(const Seat &seat) const;
-        int getCountedRoundTricks(const Seat &seat) const;
-        int getCountedRoundTeamTricks(const Seat &seat) const;
-        int getTeamBid(const Seat &seat) const;
         bool isNilBidAtRisk(const Seat& seat) const;
 
     public:
@@ -21,8 +18,7 @@ namespace spd
         bool isDefendingNil(const Seat &seat) const;
         bool canSabotageOpponentNil() const;
         bool canDefendTeamNil() const;
-        bool needMoreTricks() const;
-        bool teamNeedMoreTricks() const;
-        bool opponentNeedMoreTricks() const;
+        bool teamNeedTricks() const;
+        bool opponentTeamNeedTricks() const;
     };
 }

@@ -283,6 +283,18 @@ std::vector<std::pair<Seat, Card>> Spades::getCurrentTrickCardSeatPairs() const
     return state.getCurrentTrickCardSeatPairs();
 }
 
+int Spades::getCountedRoundTricks(const Seat &seat) const
+{
+    if (getBidResult(seat).value_or(0) == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return getNumberOfTakenTricksCurrentRound(seat);
+    }
+}
+
 std::optional<Seat> Spades::getCurrentTrickTopSeat() const
 {
     std::optional<Seat> topSeat = std::nullopt;

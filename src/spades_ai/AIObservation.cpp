@@ -38,30 +38,6 @@ bool AIObservation::isDefendingNil(const Seat &seat) const
     return nilBid && numTakenTricks == 0;
 }
 
-int AIObservation::getCountedRoundTricks(const Seat &seat) const
-{
-    if (spades.getBidResult(seat).value_or(0) == 0)
-    {
-        return 0;
-    }
-    else
-    {
-        return spades.getNumberOfTakenTricksCurrentRound(seat);
-    }
-}
-
-int AIObservation::getCountedRoundTeamTricks(const Seat &seat) const
-{
-    const Seat teamSeat = SeatUtils::getTeamSeat(seat);
-    return getCountedRoundTricks(seat) + getCountedRoundTricks(teamSeat);
-}
-
-int AIObservation::getTeamBid(const Seat &seat) const
-{
-    const Seat teamSeat = SeatUtils::getTeamSeat(seat);
-    return spades.getBidResult(seat).value_or(0) + spades.getBidResult(teamSeat).value_or(0);
-}
-
 bool AIObservation::isNilBidAtRisk(const Seat &seat) const
 {
     const auto topSeat = spades.getCurrentTrickTopSeat();
@@ -101,27 +77,20 @@ bool AIObservation::canDefendTeamNil() const
     }
 }
 
-bool AIObservation::needMoreTricks() const
+bool AIObservation::teamNeedTricks() const
 {
     const auto seat = spades.getTurnSeat();
-    const auto bid = spades.getBidResult(seat);
-    if (bid == 0)
-    {
-        return false;
-    }
-    else
-    {
-        return bid > getCountedRoundTeamTricks(seat);
-    }
+    const auto teamSeat = SeatUtils::getTeamSeat(seat);
+    const int countedTricks = spades.getCountedRoundTricks(seat) + spades.getCountedRoundTricks(teamSeat);
+    const int teamBid = spades.getBidResult(seat).value() + spades.getBidResult(teamSeat).value();
+    return teamBid > countedTricks;
 }
 
-bool AIObservation::teamNeedMoreTricks() const
+bool AIObservation::opponentTeamNeedTricks() const
 {
-    const auto seat = spades.getTurnSeat();
-    return getTeamBid(seat) > getCountedRoundTeamTricks(seat);
-}
-bool AIObservation::opponentNeedMoreTricks() const
-{
-    const auto seat = SeatUtils::getLeftOpponentSeat(spades.getTurnSeat());
-    return getTeamBid(seat) > getCountedRoundTeamTricks(seat);
+    const auto leftOpponent = SeatUtils::getLeftOpponentSeat(spades.getTurnSeat());
+    const auto rightOpponent = SeatUtils::getRightOpponentSeat(spades.getTurnSeat());
+    const int countedTricks = spades.getCountedRoundTricks(leftOpponent) + spades.getCountedRoundTricks(rightOpponent);
+    const int opponentTeamBid = spades.getBidResult(leftOpponent).value() + spades.getBidResult(rightOpponent).value();
+    return opponentTeamBid > countedTricks;
 }

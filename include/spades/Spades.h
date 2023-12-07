@@ -63,6 +63,7 @@ namespace spd
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
         std::optional<Seat> getCurrentTrickTopSeat() const;
 
+        int getCountedRoundTricks(const Seat& seat) const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
         std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
         int getNumberOfTakenTricksCurrentRound(const Seat& seat) const;
