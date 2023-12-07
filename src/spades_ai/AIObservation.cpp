@@ -67,14 +67,9 @@ bool AIObservation::canSabotageOpponentNil() const
 bool AIObservation::canDefendTeamNil() const
 {
     const auto seat = spades.getTurnSeat();
-    if (isNilBidAtRisk(SeatUtils::getTeamSeat(seat)))
-    {
-        return canPlaceTopCard(seat);
-    }
-    else
-    {
-        return false;
-    }
+    return !isDefendingNil(seat) &&
+           isNilBidAtRisk(SeatUtils::getTeamSeat(seat)) &&
+           canPlaceTopCard(seat);
 }
 
 bool AIObservation::teamNeedTricks() const
