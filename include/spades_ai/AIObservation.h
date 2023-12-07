@@ -34,45 +34,50 @@ namespace spd
             return false;
         }
 
-        std::optional<Card> getBestPlaceableCard(const Seat &seat) const
+        /*std::optional<Card> getHighestPlaceableCard(const Seat &seat) const
         {
-            std::optional<Card> bestCard;
-            int bestValue = std::numeric_limits<int>::min();
+            std::optional<Card> topCard;
+            int topValue = std::numeric_limits<int>::min();
             for (const auto &card : spades.getPlaceableCards(seat))
             {
                 int value = spades.getCardStrengthRelativeToCurrentTrick(card);
-                if (value > bestValue)
+                if (value > topValue)
                 {
-                    bestValue = value;
-                    bestCard = std::make_optional(card);
+                    topValue = value;
+                    topCard = std::make_optional(card);
                 }
             }
-            return bestCard;
+            return topCard;
         }
 
-        std::optional<Card> getWorstPlaceableCard(const Seat &seat) const
+        std::optional<Card> getLowestPlaceableCard(const Seat &seat) const // TODO: take suit into consideration
         {
-            return std::nullopt;
-        }
-
-        bool canLoseTrick(const Seat &seat) const
-        {
-            if (canPlaceNonTopCard(seat))
+            std::optional<Card> lowestCard;
+            int lowestValue = std::numeric_limits<int>::max();
+            for (const auto &card : spades.getPlaceableCards(seat))
             {
-                return true;
+                int value = spades.getCardStrengthRelativeToCurrentTrick(card);
+                if (value < lowestValue)
+                {
+                    lowestValue = value;
+                    lowestCard = std::make_optional(card);
+                }
             }
-
-            const auto trick = spades.getCurrentTrickCardSeatPairs();
-            for (const auto &otherSeat : SeatUtils::getOtherSeats(seat))
-            {
-            }
-            return false;
+            return lowestCard;
         }
 
-        bool canWinTrick(const Seat &seat) const
+        std::vector<Seat> getNextTrickSeats() const
         {
-            return false;
-        }
+            std::vector<Seat> nextSeats;
+            for (const auto &otherSeat : SeatUtils::getOtherSeats(spades.getTurnSeat()))
+            {
+                if (!hasPlacedCard(otherSeat))
+                {
+                    nextSeats.push_back(otherSeat);
+                }
+            }
+            return nextSeats;
+        }*/
 
         bool isDefendingNil(const Seat &seat) const
         {
@@ -123,7 +128,7 @@ namespace spd
                 {
                     if (spades.getBidResult(opponent).value() == 0 && spades.getCurrentTrickTopSeat().value() == opponent)
                     {
-                        return canLoseTrick(seat);
+                        return canPlaceNonTopCard(seat);
                     }
                 }
             }
