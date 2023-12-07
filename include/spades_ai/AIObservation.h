@@ -34,51 +34,6 @@ namespace spd
             return false;
         }
 
-        /*std::optional<Card> getHighestPlaceableCard(const Seat &seat) const
-        {
-            std::optional<Card> topCard;
-            int topValue = std::numeric_limits<int>::min();
-            for (const auto &card : spades.getPlaceableCards(seat))
-            {
-                int value = spades.getCardStrengthRelativeToCurrentTrick(card);
-                if (value > topValue)
-                {
-                    topValue = value;
-                    topCard = std::make_optional(card);
-                }
-            }
-            return topCard;
-        }
-
-        std::optional<Card> getLowestPlaceableCard(const Seat &seat) const // TODO: take suit into consideration
-        {
-            std::optional<Card> lowestCard;
-            int lowestValue = std::numeric_limits<int>::max();
-            for (const auto &card : spades.getPlaceableCards(seat))
-            {
-                int value = spades.getCardStrengthRelativeToCurrentTrick(card);
-                if (value < lowestValue)
-                {
-                    lowestValue = value;
-                    lowestCard = std::make_optional(card);
-                }
-            }
-            return lowestCard;
-        }
-
-        std::vector<Seat> getNextTrickSeats() const
-        {
-            std::vector<Seat> nextSeats;
-            for (const auto &otherSeat : SeatUtils::getOtherSeats(spades.getTurnSeat()))
-            {
-                if (!hasPlacedCard(otherSeat))
-                {
-                    nextSeats.push_back(otherSeat);
-                }
-            }
-            return nextSeats;
-        }*/
-
         bool isDefendingNil(const Seat &seat) const
         {
             const int numTakenTricks = spades.getNumberOfTakenTricksCurrentRound(seat);
