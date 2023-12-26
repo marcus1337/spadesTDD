@@ -29,6 +29,7 @@ namespace spd
         static std::vector<Card> getCards();
 
         std::optional<Suit> getSuit() const;
+        std::optional<Rank> getRank() const;
 
         bool sameSuit(const Card& other) const;
         bool is(const Rank& rank) const;

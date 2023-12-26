@@ -96,6 +96,16 @@ std::optional<Suit> Card::getSuit() const
     return suitOpt;
 }
 
+std::optional<Rank> Card::getRank() const
+{
+    std::optional<Rank> rankOpt;
+    if (const auto normalValue = std::get_if<NormalCardValue>(&value))
+    {
+        return std::make_optional(normalValue->getRank());
+    }
+    return rankOpt;
+}
+
 std::array<Suit, 4> Card::getSuits()
 {
     return {Suit::SPADE, Suit::CLOVER, Suit::DIAMOND, Suit::HEART};
