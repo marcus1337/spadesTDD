@@ -52,7 +52,7 @@ void Spades::setSeed(unsigned int seed)
     deck.setSeed(seed);
 }
 
-void Spades::reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
+void Spades::reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
 {
     history.clear();
     state.clear();

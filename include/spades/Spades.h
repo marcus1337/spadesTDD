@@ -33,7 +33,7 @@ namespace spd
         std::vector<Seat> getTrickTakers(int round) const;
     public:
         Spades() = default;
-        void reset(int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
+        void reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType);
         void reset(TrumpVariationType trumpVariationType);
