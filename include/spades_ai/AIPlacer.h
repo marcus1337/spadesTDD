@@ -5,17 +5,17 @@
 
 namespace spd
 {
-    enum class AIDifficulty
+    enum class AIStrategy
     {
-        EASY,
-        MEDIUM,
-        HARD
+        ATTACK,
+        DEFEND,
+        ATTACK_AND_DEFEND,
+        RANDOM
     };
     class AIPlacer
     {
     public:
         virtual ~AIPlacer() = default;
-        virtual AIDifficulty getDifficulty() const = 0;
         virtual Card getPlacement(const Spades &spades) = 0;
         virtual std::string getName() const = 0;
     };

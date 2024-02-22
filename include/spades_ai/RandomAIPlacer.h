@@ -7,7 +7,6 @@ namespace spd
     {
     public:
         RandomAIPlacer() = default;
-        virtual AIDifficulty getDifficulty() const override;
         virtual Card getPlacement(const Spades &spades) override;
         virtual std::string getName() const override;
     };
