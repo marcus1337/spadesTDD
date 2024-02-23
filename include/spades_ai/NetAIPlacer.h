@@ -10,7 +10,9 @@ namespace spd
     class NetAIPlacer : public AIPlacer, public Serializable
     {
     public:
-        NetAIPlacer() = default;
+        NetAIPlacer() : network(5, 10, 8)
+        {
+        }
         virtual Card getPlacement(const Spades &spades) override
         {
             if (shouldAttack(spades))
@@ -28,6 +30,12 @@ namespace spd
         }
 
     private:
+        // bool in (4): spadesBroken, any opponent need tricks, need tricks, team player need tricks, 
+        // bool in (3): any opponent protects nil, team player protects nil, protecting nil
+        // in: startHand, currentHand, playedCards, other player might have suit (suits*num_other_players)
+        // out (8): should place suit{TRUMP,D,H,C}? Card strength?(0..1) - {TRUMP,D,H,C}
+        neuralnet::NeuralNet network;
+
         bool shouldAttack(const Spades &spades)
         {
             return true;
