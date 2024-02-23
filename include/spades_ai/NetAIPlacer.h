@@ -10,7 +10,7 @@ namespace spd
     class NetAIPlacer : public AIPlacer, public Serializable
     {
     public:
-        NetAIPlacer() : network(5, 10, 8)
+        NetAIPlacer() : network(39, 47, 8)
         {
         }
         virtual Card getPlacement(const Spades &spades) override
