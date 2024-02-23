@@ -7,7 +7,3 @@ Card RandomAIPlacer::getPlacement(const Spades &spades)
 {
     return AIAction(spades).getRandomCard();
 }
-std::string RandomAIPlacer::getName() const
-{
-    return "Random";
-}

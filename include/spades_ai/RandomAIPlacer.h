@@ -8,6 +8,5 @@ namespace spd
     public:
         RandomAIPlacer() = default;
         virtual Card getPlacement(const Spades &spades) override;
-        virtual std::string getName() const override;
     };
 }
