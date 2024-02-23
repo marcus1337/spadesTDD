@@ -32,7 +32,12 @@ namespace spd
     private:
         // bool in (4): spadesBroken, any opponent need tricks, need tricks, team player need tricks, 
         // bool in (3): any opponent protects nil, team player protects nil, protecting nil
-        // in: startHand, currentHand, playedCards, other player might have suit (suits*num_other_players)
+        // bool in (12): player might have suit (suits*num_other_players)
+        // bool in (4): has_topcard_in_hand(#suits)
+        // bool in (4): has_lowcard_in_hand(#suits)
+        // bool in (4): lead_suit(#suits)
+        // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
+        // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
         // out (8): should place suit{TRUMP,D,H,C}? Card strength?(0..1) - {TRUMP,D,H,C}
         neuralnet::NeuralNet network;
 
