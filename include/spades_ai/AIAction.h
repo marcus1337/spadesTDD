@@ -10,7 +10,7 @@ namespace spd
     {
         static PortableRandom portableRandom;
         const Spades &spades;
-        std::vector<Card> getPlaceableCardsOrderedByStrengthDescending(const Suit& suit) const;
+        std::vector<Card> getPlaceableCardsOrderedByStrengthAscending(const Suit& suit) const;
 
     public:
         AIAction(const Spades &spades);

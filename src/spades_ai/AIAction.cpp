@@ -33,7 +33,7 @@ Card AIAction::getCard(std::vector<float> netOutput) const
 
     for (const auto &suitIndex : suitIndices)
     {
-        const auto placeableCards = getPlaceableCardsOrderedByStrengthDescending((Suit)suitIndex.first);
+        const auto placeableCards = getPlaceableCardsOrderedByStrengthAscending((Suit)suitIndex.first);
         const auto cardStrength = netOutput.at(suitIndex.first + 4);
         if (!placeableCards.empty())
         {
@@ -46,7 +46,7 @@ Card AIAction::getCard(std::vector<float> netOutput) const
     return Card();
 }
 
-std::vector<Card> AIAction::getPlaceableCardsOrderedByStrengthDescending(const Suit &suit) const
+std::vector<Card> AIAction::getPlaceableCardsOrderedByStrengthAscending(const Suit &suit) const
 {
     return {};
 }
