@@ -10,19 +10,11 @@ namespace spd
     {
         static PortableRandom portableRandom;
         const Spades &spades;
-
-        //TODO: remove?
-        std::vector<Card> getPlaceableWinCards() const;
-        std::vector<Card> getPlaceableLoseCards() const;
-        std::vector<Card> copyCardsOrderedByStrengthDescending(const std::vector<Card> &cards) const;
-        std::optional<Card> getHighestWinCard() const;
-        std::optional<Card> getLowestWinCard() const;
-        std::optional<Card> getHighestLoseCard() const;
-        std::optional<Card> getLowestLoseCard() const;
-        //-TODO: remove?
+        std::vector<Card> getPlaceableCardsOrderedByStrengthDescending(const Suit& suit) const;
 
     public:
         AIAction(const Spades &spades);
         Card getRandomCard();
+        Card getCard(std::vector<float> netOutput) const;
     };
 }

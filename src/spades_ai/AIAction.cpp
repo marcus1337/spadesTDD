@@ -1,43 +1,11 @@
 #include "spades_ai/AIAction.h"
+#include <array>
+#include <algorithm>
 
 using namespace spd;
 
 AIAction::AIAction(const Spades &spades) : spades(spades)
 {
-}
-
-std::vector<Card> AIAction::getPlaceableWinCards() const
-{
-    std::vector<Card> winCards;
-    for (const auto &card : spades.getPlaceableCards())
-    {
-        if (spades.isTopCardIfPlaced(card))
-        {
-            winCards.push_back(card);
-        }
-    }
-    return winCards;
-}
-
-std::vector<Card> AIAction::getPlaceableLoseCards() const
-{
-    std::vector<Card> loseCards;
-    for (const auto &card : spades.getPlaceableCards())
-    {
-        if (!spades.isTopCardIfPlaced(card))
-        {
-            loseCards.push_back(card);
-        }
-    }
-    return loseCards;
-}
-
-std::vector<Card> AIAction::copyCardsOrderedByStrengthDescending(const std::vector<Card> &cards) const
-{
-    std::vector<Card> copiedCards = cards;
-    std::sort(copiedCards.begin(), copiedCards.end(), [&](const Card &c1, const Card &c2)
-              { return spades.getCardStrengthRelativeToCurrentTrick(c1) > spades.getCardStrengthRelativeToCurrentTrick(c2); });
-    return copiedCards;
 }
 
 Card AIAction::getRandomCard()
@@ -48,39 +16,36 @@ Card AIAction::getRandomCard()
     return placeableCards[index];
 }
 
-std::optional<Card> AIAction::getHighestWinCard() const
+Card AIAction::getCard(std::vector<float> netOutput) const
 {
-    const auto winCards = copyCardsOrderedByStrengthDescending(getPlaceableWinCards());
-    if (!winCards.empty())
+    assert(netOutput.size() == 8);
+    std::array<std::pair<int, float>, 4> suitIndices;
+    for (int i = 0; i < 4; i++)
     {
-        return std::make_optional(winCards.front());
+        suitIndices[i] = std::make_pair(i, netOutput[i]);
     }
-    return std::nullopt;
+    auto comparator = [](const std::pair<int, float> &a, const std::pair<int, float> &b)
+    {
+        return a.second > b.second;
+    };
+    std::sort(suitIndices.begin(), suitIndices.end(), comparator);
+
+    for (const auto &suitIndex : suitIndices)
+    {
+        const auto placeableCards = getPlaceableCardsOrderedByStrengthDescending((Suit)suitIndex.first);
+        const auto cardStrength = netOutput.at(suitIndex.first + 4);
+        if (!placeableCards.empty())
+        {
+            std::size_t cardIndex = (std::size_t)std::roundf(cardStrength * (float)placeableCards.size());
+            cardIndex = std::clamp<std::size_t>(cardIndex, 0, placeableCards.size() - 1);
+            return placeableCards[cardIndex];
+        }
+    }
+
+    return Card();
 }
-std::optional<Card> AIAction::getLowestWinCard() const
+
+std::vector<Card> AIAction::getPlaceableCardsOrderedByStrengthDescending(const Suit &suit) const
 {
-    const auto winCards = copyCardsOrderedByStrengthDescending(getPlaceableWinCards());
-    if (!winCards.empty())
-    {
-        return std::make_optional(winCards.back());
-    }
-    return std::nullopt;
-}
-std::optional<Card> AIAction::getHighestLoseCard() const
-{
-    const auto loseCards = copyCardsOrderedByStrengthDescending(getPlaceableLoseCards());
-    if (!loseCards.empty())
-    {
-        return std::make_optional(loseCards.front());
-    }
-    return std::nullopt;
-}
-std::optional<Card> AIAction::getLowestLoseCard() const
-{
-    const auto loseCards = copyCardsOrderedByStrengthDescending(getPlaceableLoseCards());
-    if (!loseCards.empty())
-    {
-        return std::make_optional(loseCards.back());
-    }
-    return std::nullopt;
+    return {};
 }
