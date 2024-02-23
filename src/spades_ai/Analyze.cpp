@@ -193,4 +193,71 @@ int Analyze::getGuaranteedTrickTakes(const Seat &seat) const
     return numTricks;
 }
 
+std::vector<Card> Analyze::getPlaceableCards(const Suit &suit) const
+{
+    std::vector<Card> cards;
+    if (suit == Suit::SPADE)
+    {
+        for (const auto &card : spades.getHand(spades.getTurnSeat()))
+        {
+            for (const auto &trumpCard : spades.getTrumpCardsDescending())
+            {
+                if (trumpCard == card)
+                {
+                    cards.push_back(trumpCard);
+                }
+            }
+        }
+    }
+    else
+    {
+        for (const auto &card : spades.getHand(spades.getTurnSeat()))
+        {
+            if (card.is(suit))
+            {
+                cards.push_back(card);
+            }
+        }
+    }
+    return cards;
+}
 
+std::vector<Card> Analyze::getPlaceableCardsAscending(const Suit &suit) const
+{
+    auto cards = getPlaceableCards(suit);
+    auto compare = [&](const Card &a, const Card &b)
+    {
+        int trumpValueA = getTrumpValue(a);
+        int trumpValueB = getTrumpValue(b);
+        if (trumpValueA == 0 && trumpValueB == 0)
+            return getRankValue(a) < getRankValue(b);
+        return trumpValueA < trumpValueB;
+    };
+    std::sort(cards.begin(), cards.end(), compare);
+    return cards;
+}
+
+int Analyze::getTrumpValue(const Card &card) const
+{
+    const auto trumps = spades.getTrumpCardsDescending();
+    for (int i = 0; i < trumps.size(); i++)
+    {
+        if (card == trumps[i])
+        {
+            return trumps.size() - i;
+        }
+    }
+    return 0;
+}
+int Analyze::getRankValue(const Card &card) const
+{
+    int value = spades.getRanksDescending().size();
+    for (const auto &rank : spades.getRanksDescending())
+    {
+        if (card.is(rank))
+            return value;
+        else
+            value--;
+    }
+    return 0;
+}

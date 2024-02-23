@@ -11,11 +11,6 @@ namespace spd
         static PortableRandom portableRandom;
         const Spades &spades;
 
-        int getTrumpValue(const Card& card) const;
-        int getRankValue(const Card& card) const;
-        std::vector<Card> getPlaceableCards(const Suit& suit) const;
-        std::vector<Card> getPlaceableCardsAscending(const Suit& suit) const;
-
     public:
         AIAction(const Spades &spades);
         Card getRandomCard();
