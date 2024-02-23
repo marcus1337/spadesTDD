@@ -19,6 +19,7 @@ Card AIAction::getRandomCard()
 Card AIAction::getCard(std::vector<float> netOutput) const
 {
     assert(netOutput.size() == 8);
+    assert(!spades.getPlaceableCards().empty());
     std::array<std::pair<int, float>, 4> suitIndices;
     for (int i = 0; i < 4; i++)
     {
