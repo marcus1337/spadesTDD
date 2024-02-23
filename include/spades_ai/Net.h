@@ -1,18 +1,12 @@
 #pragma once
-#include "spades_ai/AIPlacer.h"
 #include "spades_ai/Serializable.h"
-#include "spades_ai/neuralnet/Neuralnet.h"
 
 namespace spd
 {
-    class NetAIPlacer : public AIPlacer, public Serializable
+    class Net :  public Serializable
     {
     public:
-        NetAIPlacer() = default;
-        virtual Card getPlacement(const Spades &spades) override
-        {
-            return Card();
-        }
+        Net() = default;
         virtual std::string serialize() const override
         {
             return "";

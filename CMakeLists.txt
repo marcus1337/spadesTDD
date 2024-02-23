@@ -33,6 +33,12 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/spades_ai/RandomAIPlacer.cpp"
 "src/spades_ai/AIObservation.cpp"
 "src/spades_ai/AIAction.cpp"
+
+"src/spades_ai/neuralnet/Neuralnet.cpp" 
+"src/spades_ai/neuralnet/WeightRandomizer.cpp" 
+"src/spades_ai/neuralnet/NetworkCodec.cpp" 
+"src/spades_ai/neuralnet/Layer.cpp" 
+"src/spades_ai/neuralnet/Node.cpp"
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "include/spades/pch.h")
