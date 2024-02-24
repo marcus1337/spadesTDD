@@ -144,12 +144,11 @@ std::vector<float> AIObservation::getNetInput() const
         input.push_back(trickPairs.size() == i ? true : false);
     }
 
-    const auto unplacedCards = spades.getUnplacedRoundCards();
     for (const auto &suit : Card::getSuits())
     {
-        const auto unplacedSuitCards = filterCards(suit, unplacedCards);
+        const auto unplacedSuitCards = filterCards(suit, spades.getUnplacedRoundCards());
         const auto handSuitCards = filterCards(suit, spades.getHand(seat));
-        const float value = unplacedCards.empty() ? 0 : (float)handSuitCards.size() / (float)unplacedSuitCards.size();
+        const float value = unplacedSuitCards.empty() ? 0 : (float)handSuitCards.size() / (float)unplacedSuitCards.size();
         input.push_back(value);
     }
 
