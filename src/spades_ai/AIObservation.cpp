@@ -90,7 +90,7 @@ bool AIObservation::opponentTeamNeedTricks() const
     return opponentTeamBid > countedTricks;
 }
 
-// bool in  (1): spadesBroken, 
+// bool in  (1): spadesBroken,
 // bool in  (2): any opponent need tricks, team need tricks,
 // bool in  (3): any opponent protects nil, team player protects nil, protecting nil
 // bool in  (12): player might have suit (suits*num_other_players)
@@ -107,10 +107,13 @@ std::vector<float> AIObservation::getNetInput() const
     input.push_back(teamNeedTricks() ? 1.f : 0);
 
     const auto seat = spades.getTurnSeat();
+    const auto oppSeat1 = SeatUtils::getLeftOpponentSeat(seat);
+    const auto oppSeat2 = SeatUtils::getRightOpponentSeat(seat);
+    const auto teamSeat = SeatUtils::getTeamSeat(seat);
+    const bool oppTeamNil = isDefendingNil(oppSeat1) || isDefendingNil(oppSeat1);
     input.push_back(isDefendingNil(seat) ? 1.f : 0);
-    const bool enemyTeamDefendsNil = isDefendingNil(SeatUtils::getLeftOpponentSeat(seat)) || isDefendingNil(SeatUtils::getRightOpponentSeat(seat));
-    input.push_back(enemyTeamDefendsNil ? 1.f : 0);
-    input.push_back(isDefendingNil(SeatUtils::getTeamSeat(seat)) ? 1.f : 0);
+    input.push_back(oppTeamNil ? 1.f : 0);
+    input.push_back(isDefendingNil(teamSeat) ? 1.f : 0);
 
     return input;
 }
