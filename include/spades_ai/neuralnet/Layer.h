@@ -15,9 +15,9 @@ namespace neuralnet {
     public:
         Layer(int layerSize, int previousLayerSize);
         std::vector<float> getOutput(const std::vector<float>& inputValues);
-        int getNumNodes();
+        int getNumNodes() const;
         void randomizeWeightSubset();
-        std::vector<float> getInWeights();
+        std::vector<float> getInWeights() const;
         void setInWeight(int index, float value);
     };
 }

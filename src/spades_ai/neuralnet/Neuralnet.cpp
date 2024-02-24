@@ -19,7 +19,7 @@ namespace neuralnet {
         layers = NetworkCodec::decode(serializedLayers);
     }
 
-    std::string NeuralNet::encode() {
+    std::string NeuralNet::encode() const {
         return NetworkCodec::encode(layers);
     }
 

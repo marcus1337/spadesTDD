@@ -4,9 +4,9 @@
 
 namespace neuralnet {
 
-    std::string NetworkCodec::encode(std::vector<Layer>& layers) {
+    std::string NetworkCodec::encode(const std::vector<Layer>& layers) {
         std::stringstream ss;
-        for (Layer& layer : layers) {
+        for (const Layer& layer : layers) {
             ss << layer.getNumNodes() << " ";
             for (float weight : layer.getInWeights()) {
                 ss << weight << " ";

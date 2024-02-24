@@ -24,11 +24,12 @@ namespace spd
         }
         virtual std::string serialize() const override
         {
-            return "";
+            return network.encode();
         }
         virtual bool deserialize(const std::string &encoding) override
         {
-            return true;
+            network = neuralnet::NeuralNet(encoding);
+            return network.getNumLayers() == 3;
         }
 
         void mutate()

@@ -35,7 +35,7 @@ namespace neuralnet {
         return output;
     }
 
-    int Layer::getNumNodes() {
+    int Layer::getNumNodes() const{
         return nodes.size();
     }
 
@@ -44,7 +44,7 @@ namespace neuralnet {
             WeightRandomizer(inWeights).randomizeSubset();
     }
 
-    std::vector<float> Layer::getInWeights() {
+    std::vector<float> Layer::getInWeights() const {
         return inWeights;
     }
 

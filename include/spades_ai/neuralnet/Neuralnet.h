@@ -16,7 +16,7 @@ namespace neuralnet {
     public:
         NeuralNet(int numInputNodes, int numHiddenNodes, int numOutputNodes);
         NeuralNet(const std::string& serializedLayers);
-        std::string encode();
+        std::string encode() const;
         static int selectMaxOutputIndex(std::vector<float> outputValues);
         std::vector<float> getOutput(std::vector<float> inputValues);
         bool isValidInput(const std::vector<float>& inputValues);

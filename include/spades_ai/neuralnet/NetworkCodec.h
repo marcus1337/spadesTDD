@@ -8,7 +8,7 @@
 namespace neuralnet {
     class NetworkCodec {
     public:
-        static std::string encode(std::vector<Layer>& layers);
+        static std::string encode(const std::vector<Layer>& layers);
         static std::vector<Layer> decode(const std::string& serializedLayers);
     };
 }
