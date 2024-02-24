@@ -140,8 +140,10 @@ std::vector<float> AIObservation::getNetInput() const
     {
         input.push_back(value);
     }
-
-    // bool in  (3): #num_placed_trick_cards
+    for (int i = 1; i <= 3; i++)
+    {
+        input.push_back(trickPairs.size() == i ? true : false);
+    }
     // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
     // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
 
