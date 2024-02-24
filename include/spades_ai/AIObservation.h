@@ -23,6 +23,7 @@ namespace spd
         bool hasSkippedLeadSuit(const Suit& leadSuit, const Seat& seat) const;
         bool sameSuit(const Card& card1, const Card& card2) const;
         bool hasSuit(const Suit& suit, const Card& card) const;
+        std::vector<Card> filterCards(const Suit& suit, const std::vector<Card>& cards) const;
 
     public:
         AIObservation(const Spades &spades);

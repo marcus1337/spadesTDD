@@ -97,7 +97,6 @@ bool AIObservation::opponentTeamNeedTricks() const
 // bool in  (4): current_lead_suit(#suits)
 // bool in  (3): #num_placed_trick_cards
 // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
-// float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
 std::vector<float> AIObservation::getNetInput() const
 {
     std::vector<float> input;
@@ -144,8 +143,15 @@ std::vector<float> AIObservation::getNetInput() const
     {
         input.push_back(trickPairs.size() == i ? true : false);
     }
-    // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
-    // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
+
+    const auto unplacedCards = spades.getUnplacedRoundCards();
+    for (const auto &suit : Card::getSuits())
+    {
+        const auto unplacedSuitCards = filterCards(suit, unplacedCards);
+        const auto handSuitCards = filterCards(suit, spades.getHand(seat));
+        const float value = unplacedCards.empty() ? 0 : (float)handSuitCards.size() / (float)unplacedSuitCards.size();
+        input.push_back(value);
+    }
 
     return input;
 }
@@ -169,6 +175,19 @@ bool AIObservation::hasSuit(const Suit &suit, const Card &card) const
     {
         return card.getSuit().has_value() && card.getSuit().value() == suit;
     }
+}
+
+std::vector<Card> AIObservation::filterCards(const Suit &suit, const std::vector<Card> &cards) const
+{
+    std::vector<Card> filtered;
+    for (const auto &card : cards)
+    {
+        if (hasSuit(suit, card))
+        {
+            filtered.push_back(card);
+        }
+    }
+    return filtered;
 }
 
 bool AIObservation::hasSkippedLeadSuit(const Suit &leadSuit, const Seat &seat) const
