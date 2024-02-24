@@ -101,10 +101,10 @@ namespace spd
 
         std::pair<Suit, std::vector<Card>> getPreferredSuitCards(const Spades &spades, const std::vector<float> &output, const std::vector<Card> &cards) const
         {
-            for (const auto &suitIndex : getSuitIndices({output[0], output[1], output[2], output[3]}))
+            for (const auto &suitIndex : getSuitIndicesDescending({output[0], output[1], output[2], output[3]}))
             {
                 const auto suit = (Suit)suitIndex;
-                const auto suitCards = (spades, suit, cards);
+                const auto suitCards = getSuitCards(spades, suit, cards);
                 if (!suitCards.empty())
                 {
                     return {suit, suitCards};
@@ -157,7 +157,7 @@ namespace spd
             return pickCard(spades, output, getLoseCards(spades));
         }
 
-        std::array<int, 4> getSuitIndices(const std::array<float, 4> &netOutput) const
+        std::array<int, 4> getSuitIndicesDescending(const std::array<float, 4> &netOutput) const
         {
             std::array<std::pair<int, float>, 4> indices;
             for (int i = 0; i < 4; i++)
