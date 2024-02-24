@@ -4,6 +4,7 @@
 #include "spades_ai/Serializable.h"
 #include "spades_ai/neuralnet/Neuralnet.h"
 #include "spades_ai/Analyze.h"
+#include "spades_ai/AIObservation.h"
 #include <variant>
 
 namespace spd
@@ -11,7 +12,7 @@ namespace spd
     class NetAIPlacer : public AIPlacer, public Serializable
     {
     public:
-        NetAIPlacer() : network(33, 20, 9)
+        NetAIPlacer() : network(29, 20, 9)
         {
         }
         virtual Card getPlacement(const Spades &spades) override
@@ -38,14 +39,13 @@ namespace spd
         }
 
     private:
-        // bool in  (4): spadesBroken, any opponent need tricks, need tricks, team player need tricks,
+        // bool in  (1): spadesBroken,
+        // bool in  (2): any opponent need tricks, team need tricks,
         // bool in  (3): any opponent protects nil, team player protects nil, protecting nil
         // bool in  (12): player might have suit (suits*num_other_players)
-        // bool in  (4): has_topcard_in_hand(#suits)
-        // bool in  (4): placed_lead_suit(#suits)
+        // bool in  (4): current_lead_suit(#suits)
         // bool in  (3): #num_placed_trick_cards
         // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
-        // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
 
         // bool  out (4): place suit if possible {TRUMP,D,H,C}
         // float out (4): Suit card strength?(0..1), strength of the subset of cards that are either losing or winning current trick
@@ -54,7 +54,7 @@ namespace spd
 
         std::vector<float> getObservation(const Spades &spades) const
         {
-            return {};
+            return AIObservation(spades).getNetInput();
         }
 
         bool tryWinTrick(const Spades &spades, const std::vector<float> &netOutput) const
