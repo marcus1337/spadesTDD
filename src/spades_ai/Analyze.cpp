@@ -225,6 +225,12 @@ std::vector<Card> Analyze::getPlaceableCards(const Suit &suit) const
 std::vector<Card> Analyze::getPlaceableCardsAscending(const Suit &suit) const
 {
     auto cards = getPlaceableCards(suit);
+    sortByStrengthAscending(cards);
+    return cards;
+}
+
+void Analyze::sortByStrengthAscending(std::vector<Card> &cards) const
+{
     auto compare = [&](const Card &a, const Card &b)
     {
         int trumpValueA = getTrumpValue(a);
@@ -234,7 +240,6 @@ std::vector<Card> Analyze::getPlaceableCardsAscending(const Suit &suit) const
         return trumpValueA < trumpValueB;
     };
     std::sort(cards.begin(), cards.end(), compare);
-    return cards;
 }
 
 int Analyze::getTrumpValue(const Card &card) const

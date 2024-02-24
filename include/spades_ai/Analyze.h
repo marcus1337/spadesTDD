@@ -29,5 +29,6 @@ namespace spd
         int getRankValue(const Card &card) const;
         std::vector<Card> getPlaceableCards(const Suit &suit) const;
         std::vector<Card> getPlaceableCardsAscending(const Suit &suit) const;
+        void sortByStrengthAscending(std::vector<Card> & cards) const;
     };
 }
