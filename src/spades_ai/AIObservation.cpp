@@ -122,7 +122,25 @@ std::vector<float> AIObservation::getNetInput() const
         }
     }
 
-    // bool in  (4): current_lead_suit(#suits)
+    std::array<bool, 4> leadSuitCheck = {false, false, false, false};
+    const auto trickPairs = spades.getCurrentTrickCardSeatPairs();
+    if (!trickPairs.empty())
+    {
+        const auto leadCard = trickPairs.front().second;
+        if (spades.isTrumpCard(leadCard))
+        {
+            leadSuitCheck[(int)Suit::SPADE] = true;
+        }
+        else
+        {
+            leadSuitCheck[(int)leadCard.getSuit().value_or(Suit::SPADE)] = true;
+        }
+    }
+    for (const auto &value : leadSuitCheck)
+    {
+        input.push_back(value);
+    }
+
     // bool in  (3): #num_placed_trick_cards
     // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
     // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
