@@ -31,6 +31,8 @@ namespace spd
 
         std::vector<std::vector<Seat>> getCompletedRoundTrickTakers() const;
         std::vector<Seat> getTrickTakers(int round) const;
+
+        std::vector<Card> getStartCards() const;
     public:
         Spades() = default;
         void reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
@@ -54,6 +56,7 @@ namespace spd
         std::vector<int> getPossibleBids(const Seat &seat) const;
         std::vector<int> getPossibleBids() const;
         std::vector<BidOption> getBidOptions(const Seat &seat) const;
+        std::vector<Card> getUnplacedRoundCards() const;
         std::vector<Card> getHand(const Seat &seat) const;
         std::vector<Card> getPlaceableCards(const Seat& card) const;
         std::vector<Card> getPlaceableCards() const;

@@ -473,3 +473,35 @@ bool Spades::isTopCardIfPlaced(const Card &card) const
     }
     return true;
 }
+
+std::vector<Card> Spades::getStartCards() const
+{
+    std::vector<Card> cards;
+    for (const auto &seat : SeatUtils::getSeats())
+    {
+        for (const auto &card : deck.getHand(seat, state.getRound()))
+        {
+            cards.push_back(card);
+        }
+    }
+    return cards;
+}
+
+std::vector<Card> Spades::getUnplacedRoundCards() const
+{
+    std::set<Card> placedCards;
+    for (const auto &pair : state.getPlayedCardSeatPairs(state.getRound()))
+    {
+        placedCards.insert(pair.second);
+    }
+    
+    std::vector<Card> cards;
+    for (const auto &card : getStartCards())
+    {
+        if (!placedCards.contains(card))
+        {
+            cards.push_back(card);
+        }
+    }
+    return cards;
+}
