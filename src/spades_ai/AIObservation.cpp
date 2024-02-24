@@ -90,15 +90,18 @@ bool AIObservation::opponentTeamNeedTricks() const
     return opponentTeamBid > countedTricks;
 }
 
-// bool in (4): spadesBroken, any opponent need tricks, need tricks, team player need tricks,
-// bool in (3): any opponent protects nil, team player protects nil, protecting nil
-// bool in (12): player might have suit (suits*num_other_players)
-// bool in (4): has_topcard_in_hand(#suits)
-// bool in (4): has_lowcard_in_hand(#suits)
-// bool in (4): lead_suit(#suits)
+// bool in  (4): spadesBroken, any opponent need tricks, need tricks, team player need tricks,
+// bool in  (3): any opponent protects nil, team player protects nil, protecting nil
+// bool in  (12): player might have suit (suits*num_other_players)
+// bool in  (4): has_topcard_in_hand(#suits)
+// bool in  (4): placed_lead_suit(#suits)
+// bool in  (4): #num_placed_trick_cards
 // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
 // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
-// out (8): should place suit{TRUMP,D,H,C}? Card strength?(0..1) - {TRUMP,D,H,C}
+
+// bool  out (4): place suit if possible {TRUMP,D,H,C}
+// float out (4): Suit card strength?(0..1), strength of the subset of cards that are either losing or winning current trick
+// bool  out (1): try win current trick?
 std::vector<float> AIObservation::getNetInput() const
 {
     std::vector<float> input;
