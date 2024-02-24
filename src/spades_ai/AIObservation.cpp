@@ -115,8 +115,12 @@ std::vector<float> AIObservation::getNetInput() const
     input.push_back(oppTeamNil ? 1.f : 0);
     input.push_back(isDefendingNil(teamSeat) ? 1.f : 0);
 
-    for (const auto &suit : Card::getSuits())
+    for (const auto &s : {oppSeat1, oppSeat2, teamSeat})
     {
+        for (const auto &suit : Card::getSuits())
+        {
+            input.push_back(hasSkippedLeadSuit(suit, s) ? 1.f : 0);
+        }
     }
 
     return input;
