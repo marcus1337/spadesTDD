@@ -16,21 +16,8 @@ Card AIAction::getRandomCard()
     return placeableCards[index];
 }
 
-Card AIAction::getCard(std::vector<float> netOutput) const
+Card AIAction::getCard(const std::vector<float> &netOutput, const std::array<std::pair<int, float>, 4> &suitIndices) const
 {
-    assert(netOutput.size() == 8);
-    assert(!spades.getPlaceableCards().empty());
-    std::array<std::pair<int, float>, 4> suitIndices;
-    for (int i = 0; i < 4; i++)
-    {
-        suitIndices[i] = std::make_pair(i, netOutput[i]);
-    }
-    auto comparator = [](const std::pair<int, float> &a, const std::pair<int, float> &b)
-    {
-        return a.second > b.second;
-    };
-    std::sort(suitIndices.begin(), suitIndices.end(), comparator);
-
     for (const auto &suitIndex : suitIndices)
     {
         const auto placeableCards = Analyze(spades).getPlaceableCardsAscending((Suit)suitIndex.first);
@@ -42,6 +29,27 @@ Card AIAction::getCard(std::vector<float> netOutput) const
             return placeableCards[cardIndex];
         }
     }
-
     return Card();
+}
+
+Card AIAction::getCard(const std::vector<float> &netOutput) const
+{
+    assert(netOutput.size() == 8);
+    assert(!spades.getPlaceableCards().empty());
+    return getCard(netOutput, getSuitIndices(netOutput));
+}
+
+std::array<std::pair<int, float>, 4> AIAction::getSuitIndices(const std::vector<float>& netOutput) const
+{
+    std::array<std::pair<int, float>, 4> suitIndices;
+    for (int i = 0; i < 4; i++)
+    {
+        suitIndices[i] = std::make_pair(i, netOutput[i]);
+    }
+    auto comparator = [](const std::pair<int, float> &a, const std::pair<int, float> &b)
+    {
+        return a.second > b.second;
+    };
+    std::sort(suitIndices.begin(), suitIndices.end(), comparator);
+    return suitIndices;
 }

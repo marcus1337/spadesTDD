@@ -8,7 +8,7 @@ namespace spd
     {
         const Spades &spades;
 
-        //TODO: remove?
+        // TODO: remove?
         bool isLastTrickCard() const;
         bool canPlaceTopCard(const Seat &seat) const;
         bool canPlaceNonTopCard(const Seat &seat) const;
@@ -21,5 +21,7 @@ namespace spd
         //-TODO: remove?
     public:
         AIObservation(const Spades &spades);
+
+        std::vector<float> getNetInput() const;
     };
 }

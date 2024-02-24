@@ -35,7 +35,7 @@ namespace neuralnet {
     }
 
     float WeightRandomizer::getRandomWeight() {
-        std::uniform_real_distribution<float> distribution(-1.f, 1.f);
+        std::uniform_real_distribution<float> distribution(-2.f, 2.f);
         return distribution(rng);
     }
 
