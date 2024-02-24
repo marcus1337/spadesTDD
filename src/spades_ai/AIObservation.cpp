@@ -115,5 +115,53 @@ std::vector<float> AIObservation::getNetInput() const
     input.push_back(oppTeamNil ? 1.f : 0);
     input.push_back(isDefendingNil(teamSeat) ? 1.f : 0);
 
+    for (const auto &suit : Card::getSuits())
+    {
+    }
+
     return input;
+}
+
+bool AIObservation::sameSuit(const Card &c1, const Card &c2) const
+{
+    if (!spades.isTrumpCard(c1) && !spades.isTrumpCard(c2))
+    {
+        return c1.getSuit().has_value() && c2.getSuit().has_value() && c1.getSuit().value() == c2.getSuit().value();
+    }
+    return spades.isTrumpCard(c1) && spades.isTrumpCard(c2);
+}
+
+bool AIObservation::hasSuit(const Suit &suit, const Card &card) const
+{
+    if (suit == Suit::SPADE)
+    {
+        return spades.isTrumpCard(card) || (card.getSuit().has_value() && card.getSuit().value() == suit);
+    }
+    else
+    {
+        return card.getSuit().has_value() && card.getSuit().value() == suit;
+    }
+}
+
+bool AIObservation::hasSkippedLeadSuit(const Suit &leadSuit, const Seat &seat) const
+{ // TODO: Make it work for half-finished tricks
+    const auto csPairs = spades.getCurrentRoundCardSeatPairs();
+    for (int trickIndex = 0; trickIndex < csPairs.size() / 4; trickIndex++)
+    {
+        int from = trickIndex * 4;
+        Card leadCard = csPairs[from].second;
+        if (hasSuit(leadSuit, leadCard))
+        {
+            for (int i = 1; i <= 3; i++)
+            {
+                const auto &otherSeat = csPairs[from + i].first;
+                const auto &otherCard = csPairs[from + i].second;
+                if (otherSeat == seat && !hasSuit(leadSuit, otherCard))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
