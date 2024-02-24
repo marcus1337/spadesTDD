@@ -11,7 +11,7 @@ namespace spd
     class NetAIPlacer : public AIPlacer, public Serializable
     {
     public:
-        NetAIPlacer() : network(39, 20, 9)
+        NetAIPlacer() : network(38, 20, 9)
         {
         }
         virtual Card getPlacement(const Spades &spades) override
@@ -43,7 +43,7 @@ namespace spd
         // bool in  (12): player might have suit (suits*num_other_players)
         // bool in  (4): has_topcard_in_hand(#suits)
         // bool in  (4): placed_lead_suit(#suits)
-        // bool in  (4): #num_placed_trick_cards
+        // bool in  (3): #num_placed_trick_cards
         // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
         // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
 
