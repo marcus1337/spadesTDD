@@ -94,8 +94,7 @@ bool AIObservation::opponentTeamNeedTricks() const
 // bool in  (2): any opponent need tricks, team need tricks,
 // bool in  (3): any opponent protects nil, team player protects nil, protecting nil
 // bool in  (12): player might have suit (suits*num_other_players)
-// bool in  (4): has_topcard_in_hand(#suits)
-// bool in  (4): placed_lead_suit(#suits)
+// bool in  (4): current_lead_suit(#suits)
 // bool in  (3): #num_placed_trick_cards
 // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
 // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
@@ -122,6 +121,11 @@ std::vector<float> AIObservation::getNetInput() const
             input.push_back(hasSkippedLeadSuit(suit, s) ? 1.f : 0);
         }
     }
+
+    // bool in  (4): current_lead_suit(#suits)
+    // bool in  (3): #num_placed_trick_cards
+    // float in (4): percentage_of_remaining_cards_in_hand(#suits), example: out of all remaining cards of type #suit - how large perc. in my hand? (special case when no remaining cards: input is 0)
+    // float in (4): percentage_of_remaining_cards(#suits), example: out of all remaining cards how large percentage is of type #suit?
 
     return input;
 }
