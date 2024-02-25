@@ -1,5 +1,5 @@
 #pragma once
-#include "spades_ai/AIPlacer.h"
+#include "spades_ai/logic/AIPlacer.h"
 
 namespace spd
 {

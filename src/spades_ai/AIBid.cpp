@@ -1,4 +1,4 @@
-#include "spades_ai/AIBid.h"
+#include "spades_ai/logic/AIBid.h"
 
 using namespace spd;
 

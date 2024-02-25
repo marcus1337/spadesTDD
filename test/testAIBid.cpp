@@ -1,7 +1,7 @@
 #include "test_pch.h"
 #include "spades/Spades.h"
-#include "spades_ai/Analyze.h"
-#include "spades_ai/AIBid.h"
+#include "spades_ai/logic/Analyze.h"
+#include "spades_ai/logic/AIBid.h"
 #include "spades_ai/AIController.h"
 
 using namespace spd;

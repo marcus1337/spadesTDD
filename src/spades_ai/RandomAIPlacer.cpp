@@ -1,4 +1,4 @@
-#include "spades_ai/RandomAIPlacer.h"
+#include "spades_ai/logic/RandomAIPlacer.h"
 
 using namespace spd;
 

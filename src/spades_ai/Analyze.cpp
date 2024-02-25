@@ -1,4 +1,4 @@
-#include "spades_ai/Analyze.h"
+#include "spades_ai/logic/Analyze.h"
 
 using namespace spd;
 

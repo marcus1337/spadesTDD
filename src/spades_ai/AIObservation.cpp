@@ -1,4 +1,4 @@
-#include "spades_ai/AIObservation.h"
+#include "spades_ai/logic/AIObservation.h"
 
 using namespace spd;
 

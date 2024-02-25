@@ -1,10 +1,10 @@
 #pragma once
-#include "spades_ai/AIStrategy.h"
-#include "spades_ai/AIPlacer.h"
+#include "spades_ai/logic/AIStrategy.h"
+#include "spades_ai/logic/AIPlacer.h"
 #include "spades_ai/Serializable.h"
 #include "spades_ai/neuralnet/Neuralnet.h"
-#include "spades_ai/Analyze.h"
-#include "spades_ai/AIObservation.h"
+#include "spades_ai/logic/Analyze.h"
+#include "spades_ai/logic/AIObservation.h"
 #include <variant>
 
 namespace spd

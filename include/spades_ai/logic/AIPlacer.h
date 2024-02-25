@@ -1,7 +1,7 @@
 #pragma once
 #include "spades/Spades.h"
 #include "spades/pch.h"
-#include "spades_ai/Analyze.h"
+#include "spades_ai/logic/Analyze.h"
 
 namespace spd
 {

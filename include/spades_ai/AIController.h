@@ -1,11 +1,11 @@
 #pragma once
 #include "spades/Spades.h"
 #include "spades/pch.h"
-#include "spades_ai/Analyze.h"
+#include "spades_ai/logic/Analyze.h"
 #include "spades/data/PortableRandom.h"
-#include "spades_ai/NetAIPlacer.h"
-#include "spades_ai/RandomAIPlacer.h"
-#include "spades_ai/AIBid.h"
+#include "spades_ai/logic/NetAIPlacer.h"
+#include "spades_ai/logic/RandomAIPlacer.h"
+#include "spades_ai/logic/AIBid.h"
 
 #include <iostream>
 #include <fstream>
