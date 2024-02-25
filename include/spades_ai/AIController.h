@@ -17,6 +17,7 @@ namespace spd
         std::shared_ptr<Spades> spades;
         NetAIPlacer atkAI, defAI;
         RandomAIPlacer randAI;
+        AIStrategy strategy = AIStrategy::ATTACK;
 
         std::string loadText(const std::string &filepath) const
         {
@@ -39,6 +40,16 @@ namespace spd
         void setSpades(std::shared_ptr<Spades> spades)
         {
             this->spades = spades;
+        }
+
+        AIStrategy getStrategy() const
+        {
+            return strategy;
+        }
+
+        void setStrategy(const AIStrategy &strategy)
+        {
+            this->strategy = strategy;
         }
 
         bool load(const std::string &filepath, const AIStrategy &strategy)
