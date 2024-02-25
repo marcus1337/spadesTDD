@@ -32,11 +32,6 @@ namespace spd
             }
         }
 
-        NetAIPlacer &getAIPlacer()
-        {
-            return atkAI;
-        }
-
     public:
         AIController(std::shared_ptr<Spades> spades) : spades(spades)
         {
@@ -87,7 +82,18 @@ namespace spd
             assert(spades != nullptr);
             if (spades)
             {
-                return getAIPlacer().getPlacement(*spades.get());
+                if (strategy == AIStrategy::RANDOM)
+                {
+                    return randAI.getPlacement(*spades.get());
+                }
+                else if (strategy == AIStrategy::ATTACK)
+                {
+                    return atkAI.getPlacement(*spades.get());
+                }
+                else
+                {
+                    return defAI.getPlacement(*spades.get());
+                }
             }
             else
             {

@@ -5,7 +5,6 @@ namespace spd
     {
         ATTACK,
         DEFEND,
-        ATTACK_AND_DEFEND,
         RANDOM
     };
 }
