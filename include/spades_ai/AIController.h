@@ -4,6 +4,8 @@
 #include "spades_ai/Analyze.h"
 #include "spades/data/PortableRandom.h"
 #include "spades_ai/NetAIPlacer.h"
+#include "spades_ai/RandomAIPlacer.h"
+#include "spades_ai/AIBid.h"
 
 #include <iostream>
 #include <fstream>
@@ -14,6 +16,7 @@ namespace spd
     {
         std::shared_ptr<Spades> spades;
         NetAIPlacer atkAI, defAI;
+        RandomAIPlacer randAI;
 
         std::string loadText(const std::string &filepath) const
         {
@@ -33,6 +36,11 @@ namespace spd
         {
         }
 
+        void setSpades(std::shared_ptr<Spades> spades)
+        {
+            this->spades = spades;
+        }
+
         bool load(const std::string &filepath, const AIStrategy &strategy)
         {
             switch (strategy)
@@ -43,6 +51,19 @@ namespace spd
                 return defAI.deserialize(loadText(filepath));
             }
             return false;
+        }
+
+        int getBid() const
+        {
+            assert(spades != nullptr);
+            if (spades)
+            {
+                return AIBid(*spades.get()).getBid();
+            }
+            else
+            {
+                return -1;
+            }
         }
     };
 }
