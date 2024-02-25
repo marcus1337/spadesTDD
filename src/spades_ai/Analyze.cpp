@@ -62,26 +62,6 @@ bool Analyze::isEffectiveSuitInAnyHand(const Suit &suit) const
     return false;
 }
 
-std::set<Suit> Analyze::getSelfEffectiveSuits(const Seat &self) const
-{
-    std::set<Suit> suits;
-    for (const auto &card : spades.getHand(self))
-    {
-        suits.insert(spades.getEffectiveSuit(card));
-    }
-    return suits;
-}
-
-std::set<Suit> Analyze::getSelfEffectiveVoidSuits(const Seat &self) const
-{
-    std::set<Suit> voidSuits{Suit::SPADE, Suit::CLOVER, Suit::DIAMOND, Suit::HEART};
-    for (const auto &suit : getSelfEffectiveSuits(self))
-    {
-        voidSuits.erase(suit);
-    }
-    return voidSuits;
-}
-
 int Analyze::getTrumpIndexDescending(const Card &card) const
 {
     int counter = 0;
@@ -119,38 +99,6 @@ std::set<Suit> Analyze::getUnfollowedEffectiveLeadSuits(const Seat &targetSeat) 
         }
     }
     return voidSuits;
-}
-
-std::set<Suit> Analyze::getVoidEffectiveSuits(const Seat &perspectiveSeat, const Seat &targetSeat) const
-{
-    assert(perspectiveSeat != targetSeat);
-    std::set<Suit> voidSuits = getUnfollowedEffectiveLeadSuits(targetSeat);
-    for (const auto &suit : Card::getSuits())
-    {
-        if (!isEffectiveSuitInOtherHand(perspectiveSeat, suit))
-        {
-            voidSuits.insert(suit);
-        }
-    }
-    return voidSuits;
-}
-
-std::set<Suit> Analyze::getEffectiveSuitsFromElimination(const Seat &perspectiveSeat, const Seat &targetSeat) const
-{
-    const auto otherSeats = SeatUtils::getOtherSeats({perspectiveSeat, targetSeat});
-    const auto voidTargetSuits = getVoidEffectiveSuits(perspectiveSeat, targetSeat);
-    const auto voidSuits1 = getVoidEffectiveSuits(perspectiveSeat, otherSeats[0]);
-    const auto voidSuits2 = getVoidEffectiveSuits(perspectiveSeat, otherSeats[1]);
-
-    std::set<Suit> knownSuits;
-    for (const auto &suit : Card::getSuits())
-    {
-        if (!voidTargetSuits.contains(suit) && voidSuits1.contains(suit) && voidSuits2.contains(suit))
-        {
-            knownSuits.insert(suit);
-        }
-    }
-    return knownSuits;
 }
 
 int Analyze::getGuaranteedTrickTakes(const Seat &seat) const

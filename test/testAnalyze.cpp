@@ -126,47 +126,6 @@ public:
                                             const Seat &seat3, const Seat &seat4) const;
 };
 
-void AnalyzeTest::assertEffectiveSuitFromElimination(const Seat &perspectiveSeat, const Seat &seat2,
-                                                     const Seat &seat3, const Seat &seat4) const
-{
-    const auto voidSuits1 = analyze.getVoidEffectiveSuits(perspectiveSeat, seat2);
-    const auto voidSuits2 = analyze.getVoidEffectiveSuits(perspectiveSeat, seat3);
-    const auto voidSuits3 = analyze.getVoidEffectiveSuits(perspectiveSeat, seat4);
-
-    const auto knownSuits1 = analyze.getEffectiveSuitsFromElimination(perspectiveSeat, seat2);
-    const auto knownSuits2 = analyze.getEffectiveSuitsFromElimination(perspectiveSeat, seat3);
-    const auto knownSuits3 = analyze.getEffectiveSuitsFromElimination(perspectiveSeat, seat4);
-
-    for (const auto &suit : {Suit::SPADE, Suit::HEART, Suit::DIAMOND, Suit::CLOVER})
-    {
-        if (analyze.isEffectiveSuitInOtherHand(perspectiveSeat, suit))
-        {
-            ASSERT_EQ((voidSuits1.contains(suit) && voidSuits2.contains(suit)), knownSuits3.contains(suit));
-            ASSERT_EQ((voidSuits2.contains(suit) && voidSuits3.contains(suit)), knownSuits1.contains(suit));
-            ASSERT_EQ((voidSuits1.contains(suit) && voidSuits3.contains(suit)), knownSuits2.contains(suit));
-        }
-    }
-}
-
-TEST_F(AnalyzeTest, GetEffectiveSuitsFromElimination)
-{
-    for (const auto &selfSeat : SeatUtils::getSeats())
-    {
-        resetSpades();
-        const auto otherSeats = SeatUtils::getOtherSeats(selfSeat);
-        for (int i = 0; i < HAND_SIZE; i++)
-        {
-            for (int j = 0; j < NUM_SEATS; j++)
-            {
-                placeAnyCard();
-            }
-            assertEffectiveSuitFromElimination(selfSeat, otherSeats[0], otherSeats[1], otherSeats[2]);
-            assertEffectiveSuitFromElimination(selfSeat, otherSeats[0], otherSeats[2], otherSeats[1]);
-            assertEffectiveSuitFromElimination(selfSeat, otherSeats[1], otherSeats[2], otherSeats[0]);
-        }
-    }
-}
-
 TEST_F(AnalyzeTest, GetPlayedSeatRoundCards)
 {
 

@@ -18,11 +18,6 @@ namespace spd
         bool isEffectiveSuitInOtherHand(const Seat &perspectiveSeat, const Suit &suit) const;
         bool isEffectiveSuitInAnyHand(const Suit &suit) const;
 
-        std::set<Suit> getSelfEffectiveSuits(const Seat &self) const;
-        std::set<Suit> getSelfEffectiveVoidSuits(const Seat &self) const;
-        std::set<Suit> getVoidEffectiveSuits(const Seat &perspectiveSeat, const Seat &targetSeat) const;
-        std::set<Suit> getEffectiveSuitsFromElimination(const Seat &perspectiveSeat, const Seat &targetSeat) const;
-
         int getGuaranteedTrickTakes(const Seat &seat) const;
 
         int getTrumpValue(const Card &card) const;
