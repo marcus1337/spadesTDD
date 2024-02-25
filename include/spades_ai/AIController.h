@@ -32,6 +32,11 @@ namespace spd
             }
         }
 
+        NetAIPlacer &getAIPlacer()
+        {
+            return atkAI;
+        }
+
     public:
         AIController(std::shared_ptr<Spades> spades) : spades(spades)
         {
@@ -74,6 +79,19 @@ namespace spd
             else
             {
                 return -1;
+            }
+        }
+
+        Card getPlacement()
+        {
+            assert(spades != nullptr);
+            if (spades)
+            {
+                return getAIPlacer().getPlacement(*spades.get());
+            }
+            else
+            {
+                return Card();
             }
         }
     };
