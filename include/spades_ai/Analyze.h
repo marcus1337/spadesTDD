@@ -7,7 +7,6 @@ namespace spd
     class Analyze
     {
         const Spades &spades;
-        std::set<Suit> getUnfollowedEffectiveLeadSuits(const Seat &targetSeat) const;
         int getTrumpIndexDescending(const Card &card) const;
 
     public:
@@ -15,9 +14,6 @@ namespace spd
 
         std::vector<Card> getPlayedRoundCards(const Seat &targetSeat) const;
         std::vector<Card> getRemainingNonSeatRoundCards(const Seat &seat) const;
-        bool isEffectiveSuitInOtherHand(const Seat &perspectiveSeat, const Suit &suit) const;
-        bool isEffectiveSuitInAnyHand(const Suit &suit) const;
-
         int getGuaranteedTrickTakes(const Seat &seat) const;
 
         int getTrumpValue(const Card &card) const;

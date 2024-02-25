@@ -32,36 +32,6 @@ std::vector<Card> Analyze::getRemainingNonSeatRoundCards(const Seat &seat) const
     return remainingOtherCards;
 }
 
-bool Analyze::isEffectiveSuitInOtherHand(const Seat &perspectiveSeat, const Suit &suit) const
-{
-    for (const auto &seat : SeatUtils::getOtherSeats(perspectiveSeat))
-    {
-        for (const auto &card : spades.getHand(seat))
-        {
-            if (spades.getEffectiveSuit(card) == suit)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-bool Analyze::isEffectiveSuitInAnyHand(const Suit &suit) const
-{
-    for (const auto &seat : SeatUtils::getSeats())
-    {
-        for (const auto &card : spades.getHand(seat))
-        {
-            if (spades.getEffectiveSuit(card) == suit)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 int Analyze::getTrumpIndexDescending(const Card &card) const
 {
     int counter = 0;
@@ -74,31 +44,6 @@ int Analyze::getTrumpIndexDescending(const Card &card) const
         counter++;
     }
     return -1;
-}
-
-std::set<Suit> Analyze::getUnfollowedEffectiveLeadSuits(const Seat &targetSeat) const
-{
-    std::set<Suit> voidSuits;
-    const auto cardSeatPairs = spades.getCurrentRoundCardSeatPairs();
-    for (int i = 0; i < cardSeatPairs.size(); i += NUM_SEATS)
-    {
-        for (int j = i + 1; j < i + NUM_SEATS && j < cardSeatPairs.size(); j++)
-        {
-            const auto leadPair = cardSeatPairs[i];
-            const auto leadSuit = spades.getEffectiveSuit(leadPair.second);
-            const auto leadSeat = leadPair.first;
-
-            const auto followPair = cardSeatPairs[j];
-            const auto followSuit = spades.getEffectiveSuit(followPair.second);
-            const auto followSeat = followPair.first;
-
-            if (leadSuit != followSuit && followSeat == targetSeat)
-            {
-                voidSuits.insert(leadSuit);
-            }
-        }
-    }
-    return voidSuits;
 }
 
 int Analyze::getGuaranteedTrickTakes(const Seat &seat) const
