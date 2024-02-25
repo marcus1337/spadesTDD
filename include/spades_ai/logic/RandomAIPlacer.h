@@ -1,11 +1,12 @@
 #pragma once
 #include "spades_ai/logic/AIPlacer.h"
+#include "spades/data/PortableRandom.h"
 
 namespace spd
 {
     class RandomAIPlacer : public AIPlacer
     {
-        static PortableRandom portableRandom;
+        PortableRandom portableRandom;
         Card getRandomCard(const Spades &spades);
 
     public:
