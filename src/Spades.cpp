@@ -165,6 +165,12 @@ std::vector<BidOption> Spades::getBidOptions(const Seat &seat) const
     return bidVariationController.getBidOptions(seat, state);
 }
 
+std::vector<Card> Spades::getRoundStartCards(const Seat &seat) const
+{
+    const auto &hand = deck.getHand(seat, state.getRound());
+    return std::vector<Card>(hand.begin(), hand.end());
+}
+
 std::vector<Card> Spades::getHand(const Seat &seat) const
 {
     auto startHand = deck.getHand(seat, state.getRound());
@@ -494,7 +500,7 @@ std::vector<Card> Spades::getUnplacedRoundCards() const
     {
         placedCards.insert(pair.second);
     }
-    
+
     std::vector<Card> cards;
     for (const auto &card : getStartCards())
     {

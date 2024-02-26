@@ -57,6 +57,7 @@ namespace spd
         std::vector<int> getPossibleBids() const;
         std::vector<BidOption> getBidOptions(const Seat &seat) const;
         std::vector<Card> getUnplacedRoundCards() const;
+        std::vector<Card> getRoundStartCards(const Seat &seat) const;
         std::vector<Card> getHand(const Seat &seat) const;
         std::vector<Card> getPlaceableCards(const Seat& card) const;
         std::vector<Card> getPlaceableCards() const;
