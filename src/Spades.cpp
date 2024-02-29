@@ -135,6 +135,11 @@ Seat Spades::getTurnSeat() const
     }
 }
 
+bool Spades::isTurnSeat(const Seat &seat) const
+{
+    return getTurnSeat() == seat;
+}
+
 void Spades::addBid(unsigned int bid)
 {
     history.addAndExecuteCommand(BidCommandValue{bid}, state, trumpVariationController);
