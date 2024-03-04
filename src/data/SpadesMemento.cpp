@@ -8,7 +8,7 @@ SpadesMemento::SpadesMemento(const SpadesCommandContainer &undoContainer, const 
 {
     this->seed = seed;
     this->bidVariationType = (unsigned int)bidVarType;
-    this->trumpVariationType = (unsigned int)trumpVariationType;
+    this->trumpVariationType = (unsigned int)trumpVarType;
     this->undoBidsData = undoContainer.getBidsData();
     this->undoCardsData = undoContainer.getCardsData();
     this->redoBidsData = redoContainer.getBidsData();
