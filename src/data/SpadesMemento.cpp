@@ -4,7 +4,7 @@
 
 using namespace spd;
 
-SpadesMemento::SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed)
+SpadesMemento::SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed, const ScoreSettings &scoreSettings)
 {
     this->seed = seed;
     this->bidVariationType = (unsigned int)bidVarType;
@@ -13,7 +13,18 @@ SpadesMemento::SpadesMemento(const SpadesCommandContainer &undoContainer, const 
     this->undoCardsData = undoContainer.getCardsData();
     this->redoBidsData = redoContainer.getBidsData();
     this->redoCardsData = redoContainer.getCardsData();
+    this->winScore = scoreSettings.getWinScore();
+    this->loseScore = scoreSettings.getLoseScore();
 }
+
+ScoreSettings SpadesMemento::getScoreSettings() const
+{
+    ScoreSettings scoreSettins;
+    scoreSettins.setLoseScore(loseScore);
+    scoreSettins.setWinScore(winScore);
+    return scoreSettins;
+}
+
 SpadesMemento::SpadesMemento(const std::string &data)
 {
     deserialize(data);
@@ -41,6 +52,8 @@ std::string SpadesMemento::serialize() const
     j[BID_VAR_KEY] = bidVariationType;
     j[TRUMP_VAR_KEY] = trumpVariationType;
     j[SEED_KEY] = seed;
+    j[WIN_SCORE_KEY] = winScore;
+    j[LOSE_SCORE_KEY] = loseScore;
     for (const auto &bid : undoBidsData)
     {
         j[UNDO_BIDS_KEY].push_back(bid);
@@ -63,9 +76,11 @@ std::string SpadesMemento::serialize() const
 void SpadesMemento::deserialize(const std::string &data)
 {
     nlohmann::json j = nlohmann::json::parse(data);
-    bidVariationType = j[BID_VAR_KEY];
-    trumpVariationType = j[TRUMP_VAR_KEY];
-    seed = j[SEED_KEY];
+    bidVariationType = j[BID_VAR_KEY].get<unsigned int>();
+    trumpVariationType = j[TRUMP_VAR_KEY].get<unsigned int>();
+    seed = j[SEED_KEY].get<unsigned int>();
+    winScore = j[WIN_SCORE_KEY].get<int>();
+    loseScore = j[LOSE_SCORE_KEY].get<int>();
     deserializeArray(data, undoCardsData, UNDO_CARDS_KEY);
     deserializeArray(data, undoBidsData, UNDO_BIDS_KEY);
     deserializeArray(data, redoCardsData, REDO_CARDS_KEY);

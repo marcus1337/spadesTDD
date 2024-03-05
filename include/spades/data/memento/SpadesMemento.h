@@ -10,6 +10,7 @@
 #include "spades/data/Seat.h"
 #include "spades/data/card/Card.h"
 #include "spades/history/SpadesHistory.h"
+#include "spades/rules/ScoreSettings.h"
 
 namespace spd
 {
@@ -22,10 +23,14 @@ namespace spd
         static constexpr const char *UNDO_CARDS_KEY = "undo_cards";
         static constexpr const char *REDO_BIDS_KEY = "redo_bids";
         static constexpr const char *REDO_CARDS_KEY = "redo_cards";
+        static constexpr const char *WIN_SCORE_KEY = "win_score_key";
+        static constexpr const char *LOSE_SCORE_KEY = "lose_score_key";
 
         unsigned int bidVariationType;
         unsigned int trumpVariationType;
         unsigned int seed;
+        int winScore;
+        int loseScore;
 
         std::vector<unsigned int> undoBidsData;
         std::vector<unsigned int> undoCardsData;
@@ -35,7 +40,7 @@ namespace spd
         void deserializeArray(const std::string& data, std::vector<unsigned int>& arr, const char* KEY);
 
     public:
-        SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed);
+        SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed, const ScoreSettings& scoreSettings);
         SpadesMemento(const std::string &data);
         std::string serialize() const;
         void deserialize(const std::string &data);
@@ -45,5 +50,7 @@ namespace spd
         TrumpVariationType getTrumpVariationType() const;
         SpadesCommandContainer getUndoContainer() const;
         SpadesCommandContainer getRedoContainer() const;
+        ScoreSettings getScoreSettings() const;
+        
     };
 }

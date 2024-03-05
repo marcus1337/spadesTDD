@@ -9,6 +9,7 @@
 #include "spades/data/State.h"
 #include "spades/data/Bid.h"
 #include "spades/data/Score.h"
+#include "spades/rules/ScoreSettings.h"
 
 namespace spd
 {
@@ -33,7 +34,9 @@ namespace spd
         std::vector<Seat> getTrickTakers(int round) const;
 
         std::vector<Card> getStartCards() const;
+
     public:
+        ScoreSettings scoreSettings;
         Spades() = default;
         void reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
@@ -47,13 +50,13 @@ namespace spd
         TrumpVariationType getTrumpVariationType() const;
         unsigned int getSeed() const;
         Seat getTurnSeat() const;
-        bool isTurnSeat(const Seat& seat) const;
+        bool isTurnSeat(const Seat &seat) const;
         std::pair<Score, Score> getScore() const;
 
         bool hasBid(const Seat &seat) const;
         bool isBidPhase() const;
         bool canPlace(const Card &card) const;
-        bool canSeeHand(const Seat& seat) const;
+        bool canSeeHand(const Seat &seat) const;
 
         std::vector<int> getPossibleBids(const Seat &seat) const;
         std::vector<int> getPossibleBids() const;
@@ -61,7 +64,7 @@ namespace spd
         std::vector<Card> getUnplacedRoundCards() const;
         std::vector<Card> getRoundStartCards(const Seat &seat) const;
         std::vector<Card> getHand(const Seat &seat) const;
-        std::vector<Card> getPlaceableCards(const Seat& card) const;
+        std::vector<Card> getPlaceableCards(const Seat &card) const;
         std::vector<Card> getPlaceableCards() const;
         std::optional<int> getBidResult(const Seat &seat) const;
         std::vector<Card> getTrumpCardsDescending() const;
@@ -69,14 +72,14 @@ namespace spd
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
         std::optional<Seat> getCurrentTrickTopSeat() const;
 
-        int getCountedRoundTricks(const Seat& seat) const;
+        int getCountedRoundTricks(const Seat &seat) const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
         std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
         bool isSpadesBroken() const;
-        int getNumberOfTakenTricksCurrentRound(const Seat& seat) const;
-        
-        Suit getEffectiveSuit(const Card& card) const;
-        bool isTrumpCard(const Card& card) const;
+        int getNumberOfTakenTricksCurrentRound(const Seat &seat) const;
+
+        Suit getEffectiveSuit(const Card &card) const;
+        bool isTrumpCard(const Card &card) const;
         void place(const Card &card);
         void addBid(unsigned int bid);
         void setBidOption(const Seat &seat, const BidOption &bidOption);
@@ -89,9 +92,9 @@ namespace spd
         void redo();
         bool canRedo() const;
 
-        bool isTopCardIfPlaced(const Card& card) const;
-        int getCardStrengthRelativeToCurrentTrick(const Card& card) const;
-        int getCardStrength(const Card& card) const;
-        int getCardStrengthRelativeToLeadSuit(const Suit& leadSuit, const Card& card) const;
+        bool isTopCardIfPlaced(const Card &card) const;
+        int getCardStrengthRelativeToCurrentTrick(const Card &card) const;
+        int getCardStrength(const Card &card) const;
+        int getCardStrengthRelativeToLeadSuit(const Suit &leadSuit, const Card &card) const;
     };
 }

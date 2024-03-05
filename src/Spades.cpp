@@ -7,11 +7,12 @@ using namespace spd;
 
 SpadesMemento Spades::createMemento() const
 {
-    return SpadesMemento(history.undoCommandContainer, history.redoCommandContainer, getTrumpVariationType(), getBidVariationType(), getSeed());
+    return SpadesMemento(history.undoCommandContainer, history.redoCommandContainer, getTrumpVariationType(), getBidVariationType(), getSeed(), scoreSettings);
 }
 
 void Spades::loadMemento(const SpadesMemento &memento)
 {
+    scoreSettings = memento.getScoreSettings();
     reset(memento.getSeed(), memento.getBidVariationType(), memento.getTrumpVariationType());
     history.undoCommandContainer = memento.getUndoContainer();
     history.redoCommandContainer = memento.getRedoContainer();
