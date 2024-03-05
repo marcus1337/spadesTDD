@@ -5,6 +5,11 @@
 
 using namespace spd;
 
+Spades::Spades(const Spades &other)
+{
+    deserialize(other.serialize());
+}
+
 SpadesMemento Spades::createMemento() const
 {
     return SpadesMemento(history.undoCommandContainer, history.redoCommandContainer, getTrumpVariationType(), getBidVariationType(), getSeed(), scoreSettings);

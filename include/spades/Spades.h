@@ -38,6 +38,7 @@ namespace spd
     public:
         ScoreSettings scoreSettings;
         Spades() = default;
+        Spades(const Spades& other);
         void reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType);
