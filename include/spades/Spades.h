@@ -84,6 +84,7 @@ namespace spd
         void place(const Card &card);
         void addBid(unsigned int bid);
         void setBidOption(const Seat &seat, const BidOption &bidOption);
+        bool hasBidOption(const Seat &seat, const BidOption &bidOption) const;
 
         bool isCorrupt() const;
         std::string serialize() const;

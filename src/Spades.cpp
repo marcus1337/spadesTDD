@@ -237,6 +237,11 @@ void Spades::setBidOption(const Seat &seat, const BidOption &bidOption)
     history.addAndExecuteCommand(BidOptionCommandValue{bidOption, seat}, state, trumpVariationController);
 }
 
+bool Spades::hasBidOption(const Seat &seat, const BidOption &bidOption) const
+{
+    return state.hasBidOption(seat, bidOption);
+}
+
 std::optional<int> Spades::getBidResult(const Seat &seat) const
 {
     return bidVariationController.getBidResult(seat, state);
