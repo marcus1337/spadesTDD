@@ -416,7 +416,7 @@ std::vector<std::vector<Seat>> Spades::getCompletedRoundTrickTakers() const
 
 std::vector<Seat> Spades::getTrickTakers(int round) const
 {
-    const auto trickTakers = trumpVariationController.getTrickTakers(state);
+    const auto &trickTakers = trumpVariationController.getTrickTakers(state);
     std::vector<Seat> roundTrickTakers;
     for (int i = HAND_SIZE * round; i < HAND_SIZE * round + HAND_SIZE && i < trickTakers.size(); i++)
     {
@@ -541,4 +541,21 @@ std::vector<Card> Spades::getUnplacedRoundCards() const
         }
     }
     return cards;
+}
+
+std::optional<Seat> Spades::getPrevTrickTaker() const
+{
+    const auto &trickTakers = trumpVariationController.getTrickTakers(state);
+    if (trickTakers.empty())
+        return std::nullopt;
+    return trickTakers.back();
+}
+
+std::vector<std::pair<Seat, Card>> Spades::getPrevTrickCardSeatPairs() const
+{
+    const auto &tricks = state.getTricks();
+    if (tricks.empty())
+        return {};
+    const auto &lastTrick = tricks.back();
+    return std::vector<std::pair<Seat, Card>>(lastTrick.begin(), lastTrick.end());
 }

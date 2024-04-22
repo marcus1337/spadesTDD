@@ -38,7 +38,7 @@ namespace spd
     public:
         ScoreSettings scoreSettings;
         Spades() = default;
-        Spades(const Spades& other);
+        Spades(const Spades &other);
         void reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType);
@@ -72,6 +72,9 @@ namespace spd
         std::vector<Rank> getRanksDescending() const;
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
         std::optional<Seat> getCurrentTrickTopSeat() const;
+
+        std::optional<Seat> getPrevTrickTaker() const;
+        std::vector<std::pair<Seat, Card>> getPrevTrickCardSeatPairs() const;
 
         int getCountedRoundTricks(const Seat &seat) const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
