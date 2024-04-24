@@ -8,6 +8,8 @@ namespace spd{
     class TrumpVariationController{
         TrumpVariationType variationType;
         std::map<TrumpVariationType, std::unique_ptr<TrumpVariation>> trumpVariations;
+        mutable std::vector<Seat> trickTakersCache;
+
         const TrumpVariation* getTrumpVariation() const;
         public:
         TrumpVariationController();

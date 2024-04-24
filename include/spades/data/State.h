@@ -24,6 +24,7 @@ namespace spd
         std::vector<std::set<std::pair<Seat, BidOption>>> getCompletedRoundBidOptions() const;
         std::vector<std::pair<Seat, int>> getRoundBids() const;
         std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> getTricks() const;
+        std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> getTricks(std::size_t fromIndex) const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;
         std::vector<Card> getCurrentTrickCards() const;
         std::vector<std::pair<Seat, Card>> getAllPlayedSeatCardPairs() const;

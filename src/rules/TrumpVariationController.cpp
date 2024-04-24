@@ -19,6 +19,7 @@ TrumpVariationController::TrumpVariationController() : variationType((TrumpVaria
         value->initCache();
     }
     assert(trumpVariations.size() == (int)LAST);
+    setTrumpVariationType(getTrumpVariationType());
 }
 TrumpVariationType TrumpVariationController::getTrumpVariationType() const
 {
@@ -26,6 +27,7 @@ TrumpVariationType TrumpVariationController::getTrumpVariationType() const
 }
 void TrumpVariationController::setTrumpVariationType(TrumpVariationType type)
 {
+    trickTakersCache.clear();
     this->variationType = type;
 }
 
@@ -46,13 +48,11 @@ std::array<Card, 2> TrumpVariationController::getExcludedCards() const
 
 std::vector<Seat> TrumpVariationController::getTrickTakers(const State &state) const
 {
-    std::vector<Seat> trickTakers;
-    for (const auto &trick : state.getTricks())
+    for (const auto &trick : state.getTricks(trickTakersCache.size()))
     {
-        const auto seat = Trick(*getTrumpVariation(), state, trick).getTrickTaker();
-        trickTakers.push_back(seat);
+        trickTakersCache.push_back(Trick(*getTrumpVariation(), state, trick).getTrickTaker());
     }
-    return trickTakers;
+    return trickTakersCache;
 }
 
 Seat TrumpVariationController::getTrickStartSeat(const State &state) const

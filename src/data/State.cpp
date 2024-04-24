@@ -86,17 +86,30 @@ std::vector<std::set<std::pair<Seat, BidOption>>> State::getCompletedRoundBidOpt
 
 std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> State::getTricks() const
 {
+    return getTricks(0);
+}
+
+std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> State::getTricks(std::size_t fromIndex) const
+{
     std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> tricks;
-    const int numTricks = playedSeatCardPairs.size() / NUM_SEATS;
-    for (int i = 0; i < numTricks; i++)
+    const std::size_t numTricks = playedSeatCardPairs.size() / NUM_SEATS;
+
+    if (fromIndex < numTricks)
     {
-        std::array<std::pair<Seat, Card>, NUM_SEATS> trick;
-        for (int j = 0; j < NUM_SEATS; j++)
+        tricks.reserve(numTricks - fromIndex);
+        auto it = playedSeatCardPairs.begin() + fromIndex * NUM_SEATS;
+
+        for (std::size_t i = fromIndex; i < numTricks; ++i)
         {
-            trick[j] = playedSeatCardPairs[j + (i * NUM_SEATS)];
+            std::array<std::pair<Seat, Card>, NUM_SEATS> trick;
+            for (auto &seatCardPair : trick)
+            {
+                seatCardPair = *it++;
+            }
+            tricks.push_back(trick);
         }
-        tricks.push_back(trick);
     }
+
     return tricks;
 }
 
