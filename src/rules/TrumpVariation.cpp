@@ -4,16 +4,77 @@
 
 using namespace spd;
 
-bool TrumpVariation::isTrumpCard(const Card &card) const
+void TrumpVariation::initCache()
 {
-    for (const auto &trumpCard : getTrumpCardsOrderedByValueDescending())
+    cachedTrumpCardsDescending = getTrumpCardsOrderedByValueDescending();
+    for (const auto &card : cachedTrumpCardsDescending)
     {
-        if (card == trumpCard)
+        cachedTrumpCards.insert(card);
+    }
+}
+
+const std::vector<Card> &TrumpVariation::getCachedTrumpCardsDescending() const
+{
+    return cachedTrumpCardsDescending;
+}
+
+int TrumpVariation::getTrumpValue(const Card &card) const
+{
+    auto it = std::find(cachedTrumpCardsDescending.begin(), cachedTrumpCardsDescending.end(), card);
+    if (it != cachedTrumpCardsDescending.end())
+    {
+        return std::distance(cachedTrumpCardsDescending.begin(), it);
+    }
+    return 0;
+}
+
+int TrumpVariation::getRankValue(const Card &card) const
+{
+    if (!card.getRank().has_value())
+    {
+        return 0;
+    }
+    else
+    {
+        using enum Rank;
+        Rank rank = card.getRank().value();
+        switch (rank)
         {
-            return true;
+        case Rank::TWO:
+            return 1;
+        case Rank::THREE:
+            return 2;
+        case Rank::FOUR:
+            return 3;
+        case Rank::FIVE:
+            return 4;
+        case Rank::SIX:
+            return 5;
+        case Rank::SEVEN:
+            return 6;
+        case Rank::EIGHT:
+            return 7;
+        case Rank::NINE:
+            return 8;
+        case Rank::TEN:
+            return 9;
+        case Rank::KNIGHT:
+            return 10;
+        case Rank::QUEEN:
+            return 11;
+        case Rank::KING:
+            return 12;
+        case Rank::ACE:
+            return 13;
+        default:
+            return 0;
         }
     }
-    return false;
+}
+
+bool TrumpVariation::isTrumpCard(const Card &card) const
+{
+    return cachedTrumpCards.contains(card);
 }
 
 bool TrumpVariation::hasTrumpBeenPlayed(const std::vector<Card> &playedCards) const

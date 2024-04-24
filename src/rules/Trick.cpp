@@ -59,8 +59,8 @@ Seat Trick::getTrickTaker() const
     Seat winSeat = trick.front().first;
     for (const auto &cardSeatPair : trick)
     {
-        const Seat seat = cardSeatPair.first;
-        const Card card = cardSeatPair.second;
+        const Seat& seat = cardSeatPair.first;
+        const Card& card = cardSeatPair.second;
         if (isNewTopCard(winCard, card))
         {
             winSeat = seat;
@@ -73,47 +73,12 @@ Seat Trick::getTrickTaker() const
 
 int Trick::getValue(const Card &card) const
 {
-    return trumpVariation.isTrumpCard(card) ? getTrumpValue(card) : getNormalValue(card);
-}
-
-int Trick::getNormalValue(const Card &card) const
-{
-    int value = 0;
-    using enum Rank;
-    const auto ranks = NormalCardValue::getRanks();
-    for (int i = 1; i < ranks.size(); i++)
-    {
-        if (card.is(ranks[i]))
-        {
-            value += i - 1;
-        }
-    }
-    if (card.is(Rank::ACE))
-    {
-        value += ranks.size();
-    }
-    return value;
-}
-
-int Trick::getTrumpValue(const Card &card) const
-{
-    int value = 0;
-    const auto trumpCardsDescending = trumpVariation.getTrumpCardsOrderedByValueDescending();
-    for (int i = 0; i < trumpCardsDescending.size(); i++)
-    {
-        if (card == trumpCardsDescending[i])
-        {
-            value += i;
-        }
-    }
-    return value;
+    return trumpVariation.isTrumpCard(card) ? trumpVariation.getTrumpValue(card) : trumpVariation.getRankValue(card);
 }
 
 bool Trick::isNewTopCard(const Card &topCard, const Card &newCard) const
 {
-    const auto topCardComparator = getTrickCardComparator(topCard);
-    const auto newCardComparator = getTrickCardComparator(newCard);
-    return topCardComparator < newCardComparator;
+    return getTrickCardComparator(topCard) < getTrickCardComparator(newCard);
 }
 
 std::optional<Suit> Trick::getLeadSuit() const

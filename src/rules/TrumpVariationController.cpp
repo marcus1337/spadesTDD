@@ -14,6 +14,10 @@ TrumpVariationController::TrumpVariationController() : variationType((TrumpVaria
     trumpVariations[JOKER_JOKER] = std::make_unique<JokerJoker>();
     trumpVariations[JOKER_JOKER_DEUCE] = std::make_unique<JokerJokerDeuce>();
     trumpVariations[JOKER_JOKER_DEUCE_DEUCE] = std::make_unique<JokerJokerDeuceDeuce>();
+    for (auto &[key, value] : trumpVariations)
+    {
+        value->initCache();
+    }
     assert(trumpVariations.size() == (int)LAST);
 }
 TrumpVariationType TrumpVariationController::getTrumpVariationType() const
@@ -30,9 +34,9 @@ bool TrumpVariationController::canPlaceCard(const State &state, const Card &card
     return getTrumpVariation()->canPlaceCard(state.getPlayedRoundCards(), state.getCurrentTrickCards(), hand, card);
 }
 
-std::vector<Card> TrumpVariationController::getTrumpCardsOrderedByValueDescending() const
+const std::vector<Card> &TrumpVariationController::getTrumpCardsOrderedByValueDescending() const
 {
-    return getTrumpVariation()->getTrumpCardsOrderedByValueDescending();
+    return getTrumpVariation()->getCachedTrumpCardsDescending();
 }
 
 std::array<Card, 2> TrumpVariationController::getExcludedCards() const
