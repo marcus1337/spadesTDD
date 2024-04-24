@@ -103,11 +103,9 @@ std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> State::getTricks() con
 std::vector<std::pair<Seat, Card>> State::getCurrentTrickCardSeatPairs() const
 {
     std::vector<std::pair<Seat, Card>> trickCards;
-    const int startIndex = (playedSeatCardPairs.size() / NUM_SEATS) * NUM_SEATS;
-    for (int i = startIndex; i < startIndex + NUM_SEATS && i < playedSeatCardPairs.size(); i++)
-    {
-        trickCards.push_back(playedSeatCardPairs[i]);
-    }
+    trickCards.reserve(NUM_SEATS);
+    const std::size_t startIndex = (playedSeatCardPairs.size() / NUM_SEATS) * NUM_SEATS;
+    trickCards.insert(trickCards.end(), playedSeatCardPairs.begin() + startIndex, playedSeatCardPairs.end());
     return trickCards;
 }
 
@@ -238,11 +236,11 @@ void State::removeBidOption(const Seat &seat, const BidOption &bidOption)
 
 Seat State::getTrickTurn(const Seat &startSeat) const
 {
-    const int numTrickSteps = getCurrentTrickCardSeatPairs().size();
+    const auto &currentTrickCardSeatPairs = getCurrentTrickCardSeatPairs();
+    const int numTrickSteps = currentTrickCardSeatPairs.size();
     const auto seat = (Seat)(((int)startSeat + numTrickSteps) % NUM_SEATS);
-
     assert(numTrickSteps < NUM_SEATS);
-    for (const auto &cardSeatPair : getCurrentTrickCardSeatPairs())
+    for (const auto &cardSeatPair : currentTrickCardSeatPairs)
     {
         assert(cardSeatPair.first != seat);
     }
