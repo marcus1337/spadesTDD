@@ -2,17 +2,9 @@
 #pragma once
 #include <vector>
 #include "spades/pch.h"
-#include "spades/data/Score.h"
 
 namespace spd
 {
-    enum class ScoreResult
-    {
-        TEAM_A_WIN,
-        TEAM_B_WIN,
-        ONGOING
-    };
-
     class ScoreSettings
     {
     public:
@@ -22,11 +14,46 @@ namespace spd
         int getWinScore() const;
         int getLoseScore() const;
 
-        ScoreResult getResult(const Score& AScore, const Score& BScore) const;
+        int getBags(int totalBags) const
+        {
+            return numBagsPerSet != 0 ? totalBags % numBagsPerSet : 0;
+        }
+        int getNumBagSets(int totalBags) const
+        {
+            return numBagsPerSet != 0 ? totalBags / numBagsPerSet : 0;
+        }
+        int getNilValue() const
+        {
+            return nilValue;
+        }
+        int getNilBlindValue() const
+        {
+            return nilValue * 2;
+        }
+        int getPointsPerBag() const
+        {
+            return pointsPerBag;
+        }
+
+        int getPointsPerTrick() const
+        {
+            return trickValue;
+        }
+
+        int getPointsPerBlindTrick() const
+        {
+            return blindTrickValue;
+        }
 
     private:
         int winScore = 250;
         int loseScore = -200;
+        int trickValue = 10;
+        int blindTrickValue = 10;
+        int nilValue = 100;
+        int bagSetPenalty = 100;
+        int numBagsPerSet = 10;
+        int pointsPerBag = 1;
     };
 
 }

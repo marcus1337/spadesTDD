@@ -119,8 +119,8 @@ void Spades::deserialize(const std::string &data)
 
 std::pair<Score, Score> Spades::getScore() const
 {
-    Score scoreSouthNorth({Seat::SOUTH, Seat::NORTH}, getCompletedRoundTrickTakers(), state.getCompletedRoundBids(), state.getCompletedRoundBidOptions());
-    Score scoreWestEast({Seat::WEST, Seat::EAST}, getCompletedRoundTrickTakers(), state.getCompletedRoundBids(), state.getCompletedRoundBidOptions());
+    Score scoreSouthNorth(scoreSettings, {Seat::SOUTH, Seat::NORTH}, getCompletedRoundTrickTakers(), state.getCompletedRoundBids(), state.getCompletedRoundBidOptions());
+    Score scoreWestEast(scoreSettings, {Seat::WEST, Seat::EAST}, getCompletedRoundTrickTakers(), state.getCompletedRoundBids(), state.getCompletedRoundBidOptions());
     return std::make_pair(scoreSouthNorth, scoreWestEast);
 }
 
