@@ -23,7 +23,7 @@ int TrumpVariation::getTrumpValue(const Card &card) const
     auto it = std::find(cachedTrumpCardsDescending.begin(), cachedTrumpCardsDescending.end(), card);
     if (it != cachedTrumpCardsDescending.end())
     {
-        return std::distance(cachedTrumpCardsDescending.begin(), it);
+        return cachedTrumpCardsDescending.size() - std::distance(cachedTrumpCardsDescending.begin(), it);
     }
     return 0;
 }

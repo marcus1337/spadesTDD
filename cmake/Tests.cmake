@@ -26,6 +26,7 @@ add_executable(unit_tests
 
 "test/testAnalyze.cpp"
 "test/testAIBid.cpp"
+"test/testTrickWin.cpp"
 )
 
 target_precompile_headers(unit_tests PRIVATE "test/test_pch.h")
