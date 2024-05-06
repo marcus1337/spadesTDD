@@ -12,8 +12,8 @@ namespace spd
 {
     class State
     {
-        std::array<Seat, NUM_SEATS> getRoundBidOrder() const;
-        std::vector<int> getRoundBidValues() const;
+        std::array<Seat, NUM_SEATS> getRoundBidOrder(int round) const;
+        std::vector<int> getRoundBidValues(int round) const;
 
         std::vector<int> bids;
         std::vector<std::pair<Seat, Card>> playedSeatCardPairs;
@@ -23,6 +23,7 @@ namespace spd
         std::vector<std::array<std::pair<Seat,int>, NUM_SEATS>> getCompletedRoundBids() const;
         std::vector<std::set<std::pair<Seat, BidOption>>> getCompletedRoundBidOptions() const;
         std::vector<std::pair<Seat, int>> getRoundBids() const;
+        std::vector<std::pair<Seat, int>> getRoundBids(int round) const;
         std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> getTricks() const;
         std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> getTricks(std::size_t fromIndex) const;
         std::vector<std::pair<Seat, Card>> getCurrentTrickCardSeatPairs() const;

@@ -146,6 +146,11 @@ bool Spades::isTurnSeat(const Seat &seat) const
     return getTurnSeat() == seat;
 }
 
+int Spades::getRound() const
+{
+    return state.getRound();
+}
+
 void Spades::addBid(unsigned int bid)
 {
     history.addAndExecuteCommand(BidCommandValue{bid}, state, trumpVariationController);
@@ -260,6 +265,26 @@ bool Spades::hasBidOption(const Seat &seat, const BidOption &bidOption) const
 std::optional<int> Spades::getBidResult(const Seat &seat) const
 {
     return bidVariationController.getBidResult(seat, state);
+}
+
+std::optional<int> Spades::getBidResult(const Seat &seat, int round) const
+{
+    std::optional<int> result;
+    if (round == getRound())
+    {
+        return getBidResult(seat);
+    }
+    else if (round >= 0 && round < getRound())
+    {
+        for (const auto &[key, value] : state.getRoundBids(round))
+        {
+            if (key == seat)
+            {
+                result = value;
+            }
+        }
+    }
+    return result;
 }
 
 void Spades::place(const Card &card)

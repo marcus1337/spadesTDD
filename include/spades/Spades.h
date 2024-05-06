@@ -53,6 +53,7 @@ namespace spd
         Seat getTurnSeat() const;
         bool isTurnSeat(const Seat &seat) const;
         std::pair<Score, Score> getScore() const;
+        int getRound() const;
 
         bool hasBid(const Seat &seat) const;
         bool isBidPhase() const;
@@ -69,6 +70,7 @@ namespace spd
         std::vector<Card> getPlaceableCards(const Seat &card) const;
         std::vector<Card> getPlaceableCards() const;
         std::optional<int> getBidResult(const Seat &seat) const;
+        std::optional<int> getBidResult(const Seat &seat, int round) const;
         std::vector<Card> getTrumpCardsDescending() const;
         std::vector<Rank> getRanksDescending() const;
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;

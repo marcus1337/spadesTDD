@@ -6,10 +6,10 @@
 
 using namespace spd;
 
-std::vector<int> State::getRoundBidValues() const
+std::vector<int> State::getRoundBidValues(int round) const
 {
     std::vector<int> madeRoundBids;
-    const int fromIndex = getRound() * NUM_SEATS;
+    const int fromIndex = round * NUM_SEATS;
     const int toIndex = fromIndex + NUM_SEATS;
     for (int i = fromIndex; i < toIndex && i < bids.size(); i++)
     {
@@ -18,25 +18,30 @@ std::vector<int> State::getRoundBidValues() const
     return madeRoundBids;
 }
 
-std::array<Seat, NUM_SEATS> State::getRoundBidOrder() const
+std::array<Seat, NUM_SEATS> State::getRoundBidOrder(int round) const
 {
     std::array<Seat, NUM_SEATS> bidOrder{};
-    const Seat startSeat = SeatUtils::getStartBidSeat(getRound());
+    const Seat startSeat = SeatUtils::getStartBidSeat(round);
     const auto seatOrder = SeatUtils::getSeatOrder(startSeat, NUM_SEATS);
     std::copy(seatOrder.begin(), seatOrder.end(), bidOrder.begin());
     return bidOrder;
 }
 
-std::vector<std::pair<Seat, int>> State::getRoundBids() const
+std::vector<std::pair<Seat, int>> State::getRoundBids(int round) const
 {
     std::vector<std::pair<Seat, int>> roundBids;
-    const auto roundBidOrder = getRoundBidOrder();
-    const auto roundBidValues = getRoundBidValues();
+    const auto roundBidOrder = getRoundBidOrder(round);
+    const auto roundBidValues = getRoundBidValues(round);
     for (int i = 0; i < roundBidValues.size(); i++)
     {
         roundBids.push_back(std::make_pair(roundBidOrder[i], roundBidValues[i]));
     }
     return roundBids;
+}
+
+std::vector<std::pair<Seat, int>> State::getRoundBids() const
+{
+    return getRoundBids(getRound());
 }
 
 std::vector<std::pair<Seat, int>> State::getBids() const
