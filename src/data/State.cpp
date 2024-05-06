@@ -195,11 +195,16 @@ bool State::isBidPhase() const
     return bids.size() < (getRound() + 1) * NUM_SEATS;
 }
 
+bool State::hasBidOption(const Seat &seat, const BidOption &bidOption, int targetRound) const
+{
+    if (!roundBidOptions.contains(targetRound))
+        return false;
+    return roundBidOptions.at(targetRound).contains(std::make_pair(seat, bidOption));
+}
+
 bool State::hasBidOption(const Seat &seat, const BidOption &bidOption) const
 {
-    if (!roundBidOptions.contains(getRound()))
-        return false;
-    return roundBidOptions.at(getRound()).contains(std::make_pair(seat, bidOption));
+    return hasBidOption(seat, bidOption, getRound());
 }
 
 void State::setBidOption(const Seat &seat, const BidOption &bidOption)

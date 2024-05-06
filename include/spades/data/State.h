@@ -40,6 +40,7 @@ namespace spd
         void clear();
         int getRound() const;
         bool isBidPhase() const;
+        bool hasBidOption(const Seat &seat, const BidOption &bidOption, int targetRound) const;
         bool hasBidOption(const Seat &seat, const BidOption &bidOption) const;
         void setBidOption(const Seat &seat, const BidOption &bidOption);
         bool hasBid(const Seat &seat) const;

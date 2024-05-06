@@ -274,7 +274,12 @@ void Spades::setBidOption(const Seat &seat, const BidOption &bidOption)
 
 bool Spades::hasBidOption(const Seat &seat, const BidOption &bidOption) const
 {
-    return state.hasBidOption(seat, bidOption);
+    return hasBidOption(seat, bidOption, getRound());
+}
+
+bool Spades::hasBidOption(const Seat &seat, const BidOption &bidOption, int round) const
+{
+    return state.hasBidOption(seat, bidOption, round);
 }
 
 std::optional<int> Spades::getBidResult(const Seat &seat) const
@@ -623,4 +628,16 @@ std::vector<std::pair<Seat, Card>> Spades::getPrevTrickCardSeatPairs() const
         return {};
     const auto &lastTrick = tricks.back();
     return std::vector<std::pair<Seat, Card>>(lastTrick.begin(), lastTrick.end());
+}
+
+std::optional<Seat> Spades::getSpadeBreaker(int round) const
+{
+    for (const auto &[key, value] : state.getPlayedCardSeatPairs(round))
+    {
+        if (isTrumpCard(value))
+        {
+            return key;
+        }
+    }
+    return std::nullopt;
 }

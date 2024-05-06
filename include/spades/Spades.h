@@ -35,8 +35,8 @@ namespace spd
         std::vector<Seat> getTrickTakers(int round) const;
 
         std::vector<Card> getStartCards() const;
-        Score getTeamScore(const std::pair<Seat,Seat>& team) const;
-        Score getTeamScore(const std::pair<Seat,Seat>& team, int targetRound) const;
+        Score getTeamScore(const std::pair<Seat, Seat> &team) const;
+        Score getTeamScore(const std::pair<Seat, Seat> &team, int targetRound) const;
 
     public:
         ScoreSettings scoreSettings;
@@ -62,7 +62,7 @@ namespace spd
         bool hasBid(const Seat &seat) const;
         bool isBidPhase() const;
         bool canPlace(const Card &card) const;
-        bool canSetBidOption(const Seat& seat, const BidOption& bidOption) const;
+        bool canSetBidOption(const Seat &seat, const BidOption &bidOption) const;
         bool canSeeHand(const Seat &seat) const;
 
         std::vector<int> getPossibleBids(const Seat &seat) const;
@@ -79,6 +79,7 @@ namespace spd
         std::vector<Rank> getRanksDescending() const;
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
         std::optional<Seat> getCurrentTrickTopSeat() const;
+        std::optional<Seat> getSpadeBreaker(int round) const;
 
         std::optional<Seat> getPrevTrickTaker() const;
         std::vector<std::pair<Seat, Card>> getPrevTrickCardSeatPairs() const;
@@ -96,6 +97,7 @@ namespace spd
         void addBid(unsigned int bid);
         void setBidOption(const Seat &seat, const BidOption &bidOption);
         bool hasBidOption(const Seat &seat, const BidOption &bidOption) const;
+        bool hasBidOption(const Seat &seat, const BidOption &bidOption, int round) const;
 
         bool isCorrupt() const;
         std::string serialize() const;
