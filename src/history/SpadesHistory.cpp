@@ -45,7 +45,12 @@ bool SpadesHistory::canUndo() const
 
 void SpadesHistory::undo(State &state, const TrumpVariationController &trumpVariationController)
 {
-    if (state.getRoundBids().empty() || !state.getPlayedRoundCards().empty())
+
+    if (state.getRoundBids().empty() && state.getPlayedRoundCards().empty())
+    {
+        undoBid(state, trumpVariationController);
+    }
+    else if (state.getRoundBids().empty() || !state.getPlayedRoundCards().empty())
     {
         undoCard(state, trumpVariationController);
     }
