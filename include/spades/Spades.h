@@ -57,6 +57,7 @@ namespace spd
         bool hasBid(const Seat &seat) const;
         bool isBidPhase() const;
         bool canPlace(const Card &card) const;
+        bool canSetBidOption(const Seat& seat, const BidOption& bidOption) const;
         bool canSeeHand(const Seat &seat) const;
 
         std::vector<int> getPossibleBids(const Seat &seat) const;

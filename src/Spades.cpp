@@ -176,6 +176,21 @@ bool Spades::canSeeHand(const Seat &seat) const
     return true;
 }
 
+bool Spades::canSetBidOption(const Seat &seat, const BidOption &bidOption) const
+{
+    if (isBidPhase() && !hasBidOption(seat, bidOption))
+    {
+        for (const auto &bidOpt : getBidOptions(seat))
+        {
+            if (bidOpt == bidOption)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 std::vector<int> Spades::getPossibleBids(const Seat &seat) const
 {
     return bidVariationController.getBids(seat, state, getHand(seat));
