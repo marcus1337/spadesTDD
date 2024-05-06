@@ -111,5 +111,7 @@ namespace spd
         int getCardStrengthRelativeToCurrentTrick(const Card &card) const;
         int getCardStrength(const Card &card) const;
         int getCardStrengthRelativeToLeadSuit(const Suit &leadSuit, const Card &card) const;
+
+        ScoreResult getScoreResult() const;
     };
 }

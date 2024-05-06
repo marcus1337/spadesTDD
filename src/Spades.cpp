@@ -641,3 +641,9 @@ std::optional<Seat> Spades::getSpadeBreaker(int round) const
     }
     return std::nullopt;
 }
+
+ScoreResult Spades::getScoreResult() const
+{
+    const auto& scores = getScore(getRound());
+    return Score::getScoreResult(scoreSettings, scores.first, scores.second);
+}
