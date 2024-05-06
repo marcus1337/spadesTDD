@@ -60,9 +60,19 @@ std::vector<std::pair<Seat, int>> State::getBids() const
 
 std::vector<std::array<std::pair<Seat, int>, NUM_SEATS>> State::getCompletedRoundBids() const
 {
+    return getCompletedRoundBids(getRound());
+}
+
+std::vector<std::set<std::pair<Seat, BidOption>>> State::getCompletedRoundBidOptions() const
+{
+    return getCompletedRoundBidOptions(getRound());
+}
+
+std::vector<std::array<std::pair<Seat, int>, NUM_SEATS>> State::getCompletedRoundBids(int targetRound) const
+{
     std::vector<std::array<std::pair<Seat, int>, NUM_SEATS>> completedRoundBids;
     const auto allBids = getBids();
-    for (int i = 0; i < getRound(); i++)
+    for (int i = 0; i < targetRound; i++)
     {
         std::array<std::pair<Seat, int>, NUM_SEATS> roundBids;
         for (int j = 0; j < NUM_SEATS; j++)
@@ -74,10 +84,10 @@ std::vector<std::array<std::pair<Seat, int>, NUM_SEATS>> State::getCompletedRoun
     return completedRoundBids;
 }
 
-std::vector<std::set<std::pair<Seat, BidOption>>> State::getCompletedRoundBidOptions() const
+std::vector<std::set<std::pair<Seat, BidOption>>> State::getCompletedRoundBidOptions(int targetRound) const
 {
     std::vector<std::set<std::pair<Seat, BidOption>>> comepletedRoundBidOptions;
-    for (int i = 0; i < getRound(); i++)
+    for (int i = 0; i < targetRound; i++)
     {
         std::set<std::pair<Seat, BidOption>> bidOptions;
         if (roundBidOptions.contains(i))

@@ -31,9 +31,12 @@ namespace spd
         bool hasCorruptBids() const;
 
         std::vector<std::vector<Seat>> getCompletedRoundTrickTakers() const;
+        std::vector<std::vector<Seat>> getCompletedRoundTrickTakers(int targetRound) const;
         std::vector<Seat> getTrickTakers(int round) const;
 
         std::vector<Card> getStartCards() const;
+        Score getTeamScore(const std::pair<Seat,Seat>& team) const;
+        Score getTeamScore(const std::pair<Seat,Seat>& team, int targetRound) const;
 
     public:
         ScoreSettings scoreSettings;
@@ -53,6 +56,7 @@ namespace spd
         Seat getTurnSeat() const;
         bool isTurnSeat(const Seat &seat) const;
         std::pair<Score, Score> getScore() const;
+        std::pair<Score, Score> getScore(int targetRound) const;
         int getRound() const;
 
         bool hasBid(const Seat &seat) const;
@@ -84,6 +88,7 @@ namespace spd
         std::vector<std::pair<Seat, Card>> getCurrentRoundCardSeatPairs() const;
         bool isSpadesBroken() const;
         int getNumberOfTakenTricksCurrentRound(const Seat &seat) const;
+        int getNumberOfTakenTricks(const Seat &seat, int targetRound) const;
 
         Suit getEffectiveSuit(const Card &card) const;
         bool isTrumpCard(const Card &card) const;

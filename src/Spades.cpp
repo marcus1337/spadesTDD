@@ -117,11 +117,26 @@ void Spades::deserialize(const std::string &data)
     loadMemento(SpadesMemento(data));
 }
 
+Score Spades::getTeamScore(const std::pair<Seat, Seat> &team) const
+{
+    return getTeamScore(team, getRound());
+}
+
+Score Spades::getTeamScore(const std::pair<Seat, Seat> &team, int targetRound) const
+{
+    return Score(scoreSettings, team, getCompletedRoundTrickTakers(targetRound), state.getCompletedRoundBids(targetRound), state.getCompletedRoundBidOptions(targetRound));
+}
+
 std::pair<Score, Score> Spades::getScore() const
 {
-    Score scoreSouthNorth(scoreSettings, {Seat::SOUTH, Seat::NORTH}, getCompletedRoundTrickTakers(), state.getCompletedRoundBids(), state.getCompletedRoundBidOptions());
-    Score scoreWestEast(scoreSettings, {Seat::WEST, Seat::EAST}, getCompletedRoundTrickTakers(), state.getCompletedRoundBids(), state.getCompletedRoundBidOptions());
-    return std::make_pair(scoreSouthNorth, scoreWestEast);
+    return getScore(getRound());
+}
+
+std::pair<Score, Score> Spades::getScore(int targetRound) const
+{
+    const auto team1 = std::make_pair(Seat::SOUTH, Seat::NORTH);
+    const auto team2 = std::make_pair(Seat::WEST, Seat::EAST);
+    return std::make_pair(getTeamScore(team1, targetRound), getTeamScore(team2, targetRound));
 }
 
 unsigned int Spades::getSeed() const
@@ -444,14 +459,19 @@ bool Spades::hasCorruptBids() const
     return corrupt;
 }
 
-std::vector<std::vector<Seat>> Spades::getCompletedRoundTrickTakers() const
+std::vector<std::vector<Seat>> Spades::getCompletedRoundTrickTakers(int targetRound) const
 {
     std::vector<std::vector<Seat>> roundTrickTakers;
-    for (int round = 0; round < state.getRound(); round++)
+    for (int round = 0; round < targetRound; round++)
     {
         roundTrickTakers.push_back(getTrickTakers(round));
     }
     return roundTrickTakers;
+}
+
+std::vector<std::vector<Seat>> Spades::getCompletedRoundTrickTakers() const
+{
+    return getCompletedRoundTrickTakers(getRound());
 }
 
 std::vector<Seat> Spades::getTrickTakers(int round) const
@@ -467,8 +487,13 @@ std::vector<Seat> Spades::getTrickTakers(int round) const
 
 int Spades::getNumberOfTakenTricksCurrentRound(const Seat &seat) const
 {
+    return getNumberOfTakenTricks(seat, state.getRound());
+}
+
+int Spades::getNumberOfTakenTricks(const Seat &seat, int targetRound) const
+{
     int numTricks = 0;
-    for (const auto &trickTaker : getTrickTakers(state.getRound()))
+    for (const auto &trickTaker : getTrickTakers(targetRound))
     {
         if (seat == trickTaker)
         {
