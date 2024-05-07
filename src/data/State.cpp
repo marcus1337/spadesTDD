@@ -99,6 +99,18 @@ std::vector<std::set<std::pair<Seat, BidOption>>> State::getCompletedRoundBidOpt
     return comepletedRoundBidOptions;
 }
 
+std::set<std::pair<Seat, BidOption>> State::getRoundBidOptions(int targetRound) const
+{
+    if (roundBidOptions.contains(targetRound))
+    {
+        return roundBidOptions.at(targetRound);
+    }
+    else
+    {
+        return {};
+    }
+}
+
 std::vector<std::array<std::pair<Seat, Card>, NUM_SEATS>> State::getTricks() const
 {
     return getTricks(0);
