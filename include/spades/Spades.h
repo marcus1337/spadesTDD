@@ -10,6 +10,7 @@
 #include "spades/data/Bid.h"
 #include "spades/data/Score.h"
 #include "spades/rules/ScoreSettings.h"
+#include "spades/data/Move.h"
 
 namespace spd
 {
