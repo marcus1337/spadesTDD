@@ -90,12 +90,6 @@ GameMode SpadesMemento::getGameMode() const
     return gameMode;
 }
 
-State SpadesMemento::getState() const
-{
-    State state;
-
-    return state;
-}
 SpadesHistory SpadesMemento::getHistory() const
 {
     return history;

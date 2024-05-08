@@ -22,6 +22,7 @@ namespace spd
         bool canUndo() const;
         bool canRedo() const;
         void addAndApply(State &state, const Move &move);
+        State load() const;
 
         virtual std::string serialize() const override;
         virtual bool deserialize(const std::string &encoding) override;

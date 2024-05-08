@@ -36,6 +36,19 @@ void HistoryState::shiftLeft()
     leftMoves.pop();
 }
 
+std::vector<Move> HistoryState::getLeftMoves() const
+{
+    std::vector<Move> moves;
+    std::stack<Move> tempStack = leftMoves;
+    while (!tempStack.empty())
+    {
+        moves.push_back(tempStack.top());
+        tempStack.pop();
+    }
+    std::reverse(moves.begin(), moves.end());
+    return moves;
+}
+
 using json = nlohmann::json;
 
 std::string HistoryState::serialize() const

@@ -49,7 +49,6 @@ namespace spd
         virtual bool deserialize(const std::string &data) override;
 
         GameMode getGameMode() const;
-        State getState() const;
         SpadesHistory getHistory() const;
         ScoreSettings getScoreSettings() const;
     };

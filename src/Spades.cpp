@@ -27,7 +27,7 @@ void Spades::loadMemento(const SpadesMemento &memento)
 {
     scoreSettings = memento.getScoreSettings();
     history = memento.getHistory();
-    state = memento.getState();
+    state = history.load();
     const auto &mode = memento.getGameMode();
     deck.setSeed(mode.seed);
     bidVarController.setBidVariationType(mode.bidVarType);

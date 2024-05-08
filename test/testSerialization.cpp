@@ -60,11 +60,15 @@ TEST(Serialization, HistoryUndo)
     const auto encoding = spades.serialize();
     spades.reset();
     spades.deserialize(encoding);
+    ASSERT_TRUE(spades.serialize() == encoding) << spades.serialize() << " != " << encoding;
     ASSERT_TRUE(spades.canUndo());
+
+    auto tmpTest = spades.serialize();
+
     spades.undo();
 
     spades.redo();
-    EXPECT_TRUE(encoding == spades.serialize()) << "SER FAIL";
+    EXPECT_TRUE(encoding == spades.serialize()) << spades.serialize() << " != " << encoding;
 }
 
 TEST(Serialization, HistorySimple)

@@ -64,6 +64,16 @@ void SpadesHistory::addAndApply(State &state, const Move &move)
     apply(state, move);
 }
 
+State SpadesHistory::load() const
+{
+    State state;
+    for (const auto &move : historyState.getLeftMoves())
+    {
+        apply(state, move);
+    }
+    return state;
+}
+
 std::string SpadesHistory::serialize() const
 {
     return historyState.serialize();

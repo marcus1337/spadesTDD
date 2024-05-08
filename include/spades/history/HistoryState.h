@@ -21,6 +21,8 @@ namespace spd
         virtual std::string serialize() const override;
         virtual bool deserialize(const std::string &encoding) override;
 
+        std::vector<Move> getLeftMoves() const;
+
     private:
         std::stack<Move> leftMoves, rightMoves;
     };

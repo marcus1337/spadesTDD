@@ -20,17 +20,17 @@ std::string Move::serialize() const
     json j;
     if (card.has_value())
     {
-        j["card"] = card.value().serialize();
+        j[CARD_KEY] = card.value().serialize();
     }
     if (bid.has_value())
     {
-        j["bid"] = bid.value();
+        j[BID_KEY] = bid.value();
     }
     if (bidOption.has_value())
     {
-        j["bidOption"] = static_cast<unsigned int>(bidOption.value());
+        j[BIDOPT_KEY] = static_cast<unsigned int>(bidOption.value());
     }
-    j["seat"] = static_cast<unsigned int>(seat);
+    j[SEAT_KEY] = static_cast<unsigned int>(seat);
     return j.dump();
 }
 bool Move::deserialize(const std::string &encoding)
@@ -39,6 +39,7 @@ bool Move::deserialize(const std::string &encoding)
     bid = deserializeBid(encoding);
     bidOption = deserializeBidOption(encoding);
     const auto tmpSeat = deserializeSeat(encoding);
+    seat = tmpSeat.value_or(Seat::SOUTH);
     return tmpSeat.has_value() && (card.has_value() || bid.has_value() || bidOption.has_value());
 }
 
@@ -65,7 +66,7 @@ std::optional<unsigned int> Move::deserializeBid(const std::string &encoding) co
 }
 std::optional<spd::BidOption> Move::deserializeBidOption(const std::string &encoding) const
 {
-    auto value = loadUIntKey(encoding, CARD_KEY);
+    auto value = loadUIntKey(encoding, BIDOPT_KEY);
     if (value.has_value())
     {
         const unsigned int MAX_VALUE = ((int)BidOption::LAST) - 1;
@@ -76,7 +77,7 @@ std::optional<spd::BidOption> Move::deserializeBidOption(const std::string &enco
 }
 std::optional<spd::Seat> Move::deserializeSeat(const std::string &encoding) const
 {
-    auto value = loadUIntKey(encoding, CARD_KEY);
+    auto value = loadUIntKey(encoding, SEAT_KEY);
     if (value.has_value())
     {
         value = std::clamp<unsigned int>(value.value(), 0, 3);
