@@ -1,6 +1,4 @@
 #pragma once
-#include "spades/history/SpadesCommand.h"
-#include "spades/history/SpadesCommandOrder.h"
 #include <memory>
 #include <vector>
 #include <string>
@@ -9,18 +7,15 @@ namespace spd
 {
     class SpadesHistory
     {
-        void undoBid(State &state, const TrumpVariationController &trumpVariationController);
-        void undoCard(State &state, const TrumpVariationController &trumpVariationController);
-        void redoBid(State &state, const TrumpVariationController &trumpVariationController);
-        void redoCard(State &state, const TrumpVariationController &trumpVariationController);
+
     public:
-        SpadesCommandContainer undoCommandContainer;
-        SpadesCommandContainer redoCommandContainer;
+
+        void apply(State &state, const Move &move) const;
+        void revert(State &state, const Move &move) const;
+        void undo(State &state);
+        void redo(State &state);
         void clear();
         bool canUndo() const;
         bool canRedo() const;
-        void undo(State &state, const TrumpVariationController &trumpVariationController);
-        void redo(State &state, const TrumpVariationController &trumpVariationController);
-        void addAndExecuteCommand(const SpadesCommandValue& commandValue, State &state, const TrumpVariationController &trumpVariationController);
     };
 }
