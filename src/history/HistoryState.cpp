@@ -11,7 +11,7 @@ void HistoryState::clear()
 void HistoryState::add(const Move &item)
 {
     leftMoves.push_back(item);
-    rightMoves = {};
+    rightMoves.clear();
 }
 const Move &HistoryState::peek() const
 {
@@ -27,13 +27,13 @@ int HistoryState::getRightSize() const
 }
 void HistoryState::shiftRight()
 {
-    leftMoves.emplace_back(rightMoves.back());
-    rightMoves.pop_back();
+    leftMoves.emplace_back(rightMoves.front());
+    rightMoves.pop_front();
 }
 void HistoryState::shiftLeft()
 {
-    rightMoves.emplace_back(leftMoves.front());
-    leftMoves.pop_front();
+    rightMoves.emplace_front(leftMoves.back());
+    leftMoves.pop_back();
 }
 
 std::vector<Move> HistoryState::getLeftMoves() const
