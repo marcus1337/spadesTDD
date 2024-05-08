@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <stack>
 #include "spades/data/Move.h"
 
 namespace spd
@@ -19,6 +20,9 @@ namespace spd
 
         virtual std::string serialize() const override;
         virtual bool deserialize(const std::string &encoding) override;
+
+    private:
+        std::stack<Move> leftMoves, rightMoves;
     };
 
 }
