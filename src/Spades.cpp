@@ -4,6 +4,11 @@
 
 using namespace spd;
 
+Spades::Spades(const std::string &encoding)
+{
+    deserialize(encoding);
+}
+
 Spades::Spades(const Spades &other)
 {
     deserialize(other.serialize());
