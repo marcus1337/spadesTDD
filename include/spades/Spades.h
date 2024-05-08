@@ -16,11 +16,11 @@ namespace spd
 {
     class Spades
     {
-        BidVariationController bidVariationController;
-        TrumpVariationController trumpVariationController;
         Deck deck;
         SpadesHistory history;
         State state;
+        TrumpVariationController trumpVarController;
+        BidVariationController bidVarController;
 
         SpadesMemento createMemento() const;
         void loadMemento(const SpadesMemento &memento);
@@ -38,6 +38,8 @@ namespace spd
         std::vector<Card> getStartCards() const;
         Score getTeamScore(const std::pair<Seat, Seat> &team) const;
         Score getTeamScore(const std::pair<Seat, Seat> &team, int targetRound) const;
+
+        GameMode getMode() const;
 
     public:
         ScoreSettings scoreSettings;

@@ -4,25 +4,46 @@
 
 using namespace spd;
 
-SpadesMemento::SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed, const ScoreSettings &scoreSettings)
+GameMode::GameMode()
 {
-    this->seed = seed;
-    this->bidVariationType = (unsigned int)bidVarType;
-    this->trumpVariationType = (unsigned int)trumpVarType;
-    this->undoBidsData = undoContainer.getBidsData();
-    this->undoCardsData = undoContainer.getCardsData();
-    this->redoBidsData = redoContainer.getBidsData();
-    this->redoCardsData = redoContainer.getCardsData();
-    this->winScore = scoreSettings.getWinScore();
-    this->loseScore = scoreSettings.getLoseScore();
+    seed = Deck().getSeed();
+}
+std::string GameMode::serialize() const
+{
+    nlohmann::json j;
+    j[BID_VAR_KEY] = (unsigned int)bidVarType;
+    j[TRUMP_VAR_KEY] = (unsigned int)trumpVarType;
+    j[SEED_KEY] = seed;
+    return j.dump();
+}
+bool GameMode::deserialize(const std::string &data)
+{
+    seed = loadUIntKey(data, SEED_KEY).value_or(0);
+    const auto bidVarValue = loadUIntKey(data, BID_VAR_KEY).value_or(0);
+    const auto trumpVarValue = loadUIntKey(data, TRUMP_VAR_KEY).value_or(0);
+    trumpVarType = (TrumpVariationType)std::clamp<unsigned int>(trumpVarValue, 0, (int)TrumpVariationType::LAST - 1);
+    bidVarType = (BidVariationType)std::clamp<unsigned int>(bidVarValue, 0, (int)BidVariationType::LAST - 1);
+    return true;
 }
 
-ScoreSettings SpadesMemento::getScoreSettings() const
+std::optional<unsigned int> GameMode::loadUIntKey(const std::string &encoding, const std::string &key)
 {
-    ScoreSettings scoreSettins;
-    scoreSettins.setLoseScore(loseScore);
-    scoreSettins.setWinScore(winScore);
-    return scoreSettins;
+    using namespace nlohmann;
+    const auto &data = json::parse(encoding);
+    if (data.contains(key) && data[key].is_number_unsigned())
+    {
+        return std::make_optional<unsigned int>(data[key].get<unsigned int>());
+    }
+    return std::nullopt;
+}
+
+//////////////
+
+SpadesMemento::SpadesMemento(const SpadesHistory &history, const ScoreSettings &scoreSettings, const GameMode &gameMode)
+{
+    this->scoreSettings = scoreSettings;
+    this->history = history;
+    this->gameMode = gameMode;
 }
 
 SpadesMemento::SpadesMemento(const std::string &data)
@@ -30,93 +51,56 @@ SpadesMemento::SpadesMemento(const std::string &data)
     deserialize(data);
 }
 
-BidVariationType SpadesMemento::getBidVariationType() const
-{
-    if (bidVariationType < (unsigned int)BidVariationType::LAST)
-        return (BidVariationType)bidVariationType;
-    else
-        return BidVariationType{};
-}
-
-TrumpVariationType SpadesMemento::getTrumpVariationType() const
-{
-    if (trumpVariationType < (unsigned int)TrumpVariationType::LAST)
-        return (TrumpVariationType)trumpVariationType;
-    else
-        return TrumpVariationType{};
-}
-
 std::string SpadesMemento::serialize() const
 {
     nlohmann::json j;
-    j[BID_VAR_KEY] = bidVariationType;
-    j[TRUMP_VAR_KEY] = trumpVariationType;
-    j[SEED_KEY] = seed;
-    j[WIN_SCORE_KEY] = winScore;
-    j[LOSE_SCORE_KEY] = loseScore;
-    for (const auto &bid : undoBidsData)
-    {
-        j[UNDO_BIDS_KEY].push_back(bid);
-    }
-    for (const auto &card : undoCardsData)
-    {
-        j[UNDO_CARDS_KEY].push_back(card);
-    }
-    for (const auto &bid : redoBidsData)
-    {
-        j[REDO_BIDS_KEY].push_back(bid);
-    }
-    for (const auto &card : redoCardsData)
-    {
-        j[REDO_CARDS_KEY].push_back(card);
-    }
+    j[GAME_MODE_KEY] = gameMode.serialize();
+    j[SCORE_SETTINGS_KEY] = scoreSettings.serialize();
+    j[HISTORY_KEY] = history.serialize();
     return j.dump();
 }
 
-void SpadesMemento::deserialize(const std::string &data)
+bool SpadesMemento::deserialize(const std::string &data)
 {
-    nlohmann::json j = nlohmann::json::parse(data);
-    bidVariationType = j[BID_VAR_KEY].get<unsigned int>();
-    trumpVariationType = j[TRUMP_VAR_KEY].get<unsigned int>();
-    seed = j[SEED_KEY].get<unsigned int>();
-    winScore = j[WIN_SCORE_KEY].get<int>();
-    loseScore = j[LOSE_SCORE_KEY].get<int>();
-    deserializeArray(data, undoCardsData, UNDO_CARDS_KEY);
-    deserializeArray(data, undoBidsData, UNDO_BIDS_KEY);
-    deserializeArray(data, redoCardsData, REDO_CARDS_KEY);
-    deserializeArray(data, redoBidsData, REDO_BIDS_KEY);
-}
-
-void SpadesMemento::deserializeArray(const std::string &data, std::vector<unsigned int> &arr, const char *KEY)
-{
-    nlohmann::json j = nlohmann::json::parse(data);
-    arr.clear();
-    if (j.find(KEY) != j.end() && j[KEY].is_array())
+    using namespace nlohmann;
+    const auto &j = json::parse(data);
+    bool result = true;
+    if (j.contains(GAME_MODE_KEY))
     {
-        for (const auto &element : j[KEY])
-        {
-            arr.push_back(element);
-        }
+        gameMode.deserialize(j[GAME_MODE_KEY]);
+        result = false;
     }
+    if (j.contains(SCORE_SETTINGS_KEY))
+    {
+        scoreSettings.deserialize(j[SCORE_SETTINGS_KEY]);
+        result = false;
+    }
+    if (j.contains(HISTORY_KEY))
+    {
+        history.deserialize(j[HISTORY_KEY]);
+        result = false;
+    }
+    return result;
 }
 
-unsigned int SpadesMemento::getSeed() const
+//////////////
+
+GameMode SpadesMemento::getGameMode() const
 {
-    return seed;
+    return gameMode;
 }
 
-SpadesCommandContainer SpadesMemento::getUndoContainer() const
+State SpadesMemento::getState() const
 {
-    SpadesCommandContainer container;
-    container.setBidValueVariants(undoBidsData);
-    container.setPlacedCards(undoCardsData);
-    return container;
-}
+    State state;
 
-SpadesCommandContainer SpadesMemento::getRedoContainer() const
+    return state;
+}
+SpadesHistory SpadesMemento::getHistory() const
 {
-    SpadesCommandContainer container;
-    container.setBidValueVariants(redoBidsData);
-    container.setPlacedCards(redoCardsData);
-    return container;
+    return history;
+}
+ScoreSettings SpadesMemento::getScoreSettings() const
+{
+    return scoreSettings;
 }

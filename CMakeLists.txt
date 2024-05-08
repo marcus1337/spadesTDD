@@ -25,9 +25,8 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/rules/ScoreSettings.cpp"
 
 "src/data/Move.cpp"
+"src/history/HistoryState.cpp"
 "src/history/SpadesHistory.cpp"
-"src/history/SpadesCommand.cpp"
-"src/history/SpadesCommandOrder.cpp"
 
 "src/spades_ai/Analyze.cpp"
 "src/spades_ai/AIBid.cpp"

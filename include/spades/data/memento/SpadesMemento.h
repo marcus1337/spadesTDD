@@ -4,6 +4,7 @@
 #include <string>
 #include <set>
 #include <map>
+#include <optional>
 
 #include "spades/rules/BidVariationType.h"
 #include "spades/rules/TrumpVariationType.h"
@@ -11,46 +12,45 @@
 #include "spades/data/card/Card.h"
 #include "spades/history/SpadesHistory.h"
 #include "spades/rules/ScoreSettings.h"
+#include "spades/rules/Deck.h"
 
 namespace spd
 {
-    class SpadesMemento
+    class GameMode : public Serializable
     {
-        static constexpr const char *BID_VAR_KEY = "BidVariationType";
-        static constexpr const char *TRUMP_VAR_KEY = "TrumpVariationType";
-        static constexpr const char *SEED_KEY = "seed";
-        static constexpr const char *UNDO_BIDS_KEY = "undo_bids";
-        static constexpr const char *UNDO_CARDS_KEY = "undo_cards";
-        static constexpr const char *REDO_BIDS_KEY = "redo_bids";
-        static constexpr const char *REDO_CARDS_KEY = "redo_cards";
-        static constexpr const char *WIN_SCORE_KEY = "win_score_key";
-        static constexpr const char *LOSE_SCORE_KEY = "lose_score_key";
-
-        unsigned int bidVariationType;
-        unsigned int trumpVariationType;
-        unsigned int seed;
-        int winScore;
-        int loseScore;
-
-        std::vector<unsigned int> undoBidsData;
-        std::vector<unsigned int> undoCardsData;
-        std::vector<unsigned int> redoBidsData;
-        std::vector<unsigned int> redoCardsData;
-
-        void deserializeArray(const std::string& data, std::vector<unsigned int>& arr, const char* KEY);
+        static constexpr const char *BID_VAR_KEY = "BidVar_key";
+        static constexpr const char *TRUMP_VAR_KEY = "TrumpVar_key";
+        static constexpr const char *SEED_KEY = "Seed_key";
+        static std::optional<unsigned int> loadUIntKey(const std::string &encoding, const std::string &key);
 
     public:
-        SpadesMemento(const SpadesCommandContainer &undoContainer, const SpadesCommandContainer &redoContainer, const TrumpVariationType &trumpVarType, const BidVariationType &bidVarType, unsigned int seed, const ScoreSettings& scoreSettings);
-        SpadesMemento(const std::string &data);
-        std::string serialize() const;
-        void deserialize(const std::string &data);
+        GameMode();
+        virtual std::string serialize() const override;
+        virtual bool deserialize(const std::string &data) override;
+        TrumpVariationType trumpVarType = TrumpVariationType::ACE_HIGH;
+        BidVariationType bidVarType = BidVariationType::DOUBLE_BLIND_NILL;
+        unsigned int seed = 0;
+    };
 
-        unsigned int getSeed() const;
-        BidVariationType getBidVariationType() const;
-        TrumpVariationType getTrumpVariationType() const;
-        SpadesCommandContainer getUndoContainer() const;
-        SpadesCommandContainer getRedoContainer() const;
+    class SpadesMemento : public Serializable
+    {
+        static constexpr const char *GAME_MODE_KEY = "Game_Mode_key";
+        static constexpr const char *SCORE_SETTINGS_KEY = "Score_key";
+        static constexpr const char *HISTORY_KEY = "History_key";
+
+        GameMode gameMode;
+        SpadesHistory history;
+        ScoreSettings scoreSettings;
+
+    public:
+        SpadesMemento(const SpadesHistory &history, const ScoreSettings &scoreSettings, const GameMode &gameMode);
+        SpadesMemento(const std::string &data);
+        virtual std::string serialize() const override;
+        virtual bool deserialize(const std::string &data) override;
+
+        GameMode getGameMode() const;
+        State getState() const;
+        SpadesHistory getHistory() const;
         ScoreSettings getScoreSettings() const;
-        
     };
 }
