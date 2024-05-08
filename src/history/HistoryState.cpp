@@ -5,17 +5,17 @@ using namespace spd;
 
 void HistoryState::clear()
 {
-    leftMoves = {};
-    rightMoves = {};
+    leftMoves.clear();
+    rightMoves.clear();
 }
 void HistoryState::add(const Move &item)
 {
-    leftMoves.push(item);
+    leftMoves.push_back(item);
     rightMoves = {};
 }
 const Move &HistoryState::peek() const
 {
-    return leftMoves.top();
+    return leftMoves.back();
 }
 int HistoryState::getLeftSize() const
 {
@@ -27,47 +27,34 @@ int HistoryState::getRightSize() const
 }
 void HistoryState::shiftRight()
 {
-    leftMoves.push(rightMoves.top());
-    rightMoves.pop();
+    leftMoves.emplace_back(rightMoves.back());
+    rightMoves.pop_back();
 }
 void HistoryState::shiftLeft()
 {
-    rightMoves.push(leftMoves.top());
-    leftMoves.pop();
+    rightMoves.emplace_back(leftMoves.front());
+    leftMoves.pop_front();
 }
 
 std::vector<Move> HistoryState::getLeftMoves() const
 {
-    std::vector<Move> moves;
-    std::stack<Move> tempStack = leftMoves;
-    while (!tempStack.empty())
-    {
-        moves.push_back(tempStack.top());
-        tempStack.pop();
-    }
-    std::reverse(moves.begin(), moves.end());
-    return moves;
+    return std::vector<Move>(leftMoves.begin(), leftMoves.end());
 }
 
 using json = nlohmann::json;
 
 std::string HistoryState::serialize() const
 {
-    auto leftMovesCopy = leftMoves;
-    auto rightMovesCopy = rightMoves;
     json leftMovesJson;
     json rightMovesJson;
-    while (!leftMovesCopy.empty())
+    for (const auto &move : leftMoves)
     {
-        leftMovesJson.push_back(leftMovesCopy.top().serialize());
-        leftMovesCopy.pop();
+        leftMovesJson.push_back(move.serialize());
     }
-    while (!rightMovesCopy.empty())
+    for (const auto &move : rightMoves)
     {
-        rightMovesJson.push_back(rightMovesCopy.top().serialize());
-        rightMovesCopy.pop();
+        rightMovesJson.push_back(move.serialize());
     }
-
     json encoding;
     encoding["leftMoves"] = leftMovesJson;
     encoding["rightMoves"] = rightMovesJson;
@@ -78,11 +65,11 @@ bool HistoryState::deserialize(const std::string &encoding)
     const auto &serializedState = json::parse(encoding);
     for (const auto &moveJson : serializedState["leftMoves"])
     {
-        leftMoves.push(Move(moveJson.get<std::string>()));
+        leftMoves.push_back(Move(moveJson.get<std::string>()));
     }
     for (const auto &moveJson : serializedState["rightMoves"])
     {
-        rightMoves.push(Move(moveJson.get<std::string>()));
+        rightMoves.push_back(Move(moveJson.get<std::string>()));
     }
     return true;
 }

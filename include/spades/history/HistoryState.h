@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <deque>
 #include "spades/data/Move.h"
 
 namespace spd
@@ -24,7 +25,7 @@ namespace spd
         std::vector<Move> getLeftMoves() const;
 
     private:
-        std::stack<Move> leftMoves, rightMoves;
+        std::deque<Move> leftMoves, rightMoves;
     };
 
 }

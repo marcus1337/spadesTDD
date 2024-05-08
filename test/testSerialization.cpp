@@ -95,7 +95,7 @@ TEST(Serialization, History)
     spades.undo();
     const auto encoding = spades.serialize();
     spades.reset();
-    spades.deserialize(encoding);
+    spades.deserialize(encoding); 
     ASSERT_TRUE(spades.canRedo());
     spades.redo();
     ASSERT_TRUE(spades.canRedo());
