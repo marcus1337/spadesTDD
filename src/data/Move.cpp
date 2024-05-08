@@ -3,6 +3,11 @@
 
 using namespace spd;
 
+Move::Move(const std::string &encoding)
+{
+    deserialize(encoding);
+}
+
 Move::Move(const Seat &seat, const Card &card) : seat(seat), card(card) {}
 
 Move::Move(const Seat &seat, int bid) : seat(seat), bid(bid) {}

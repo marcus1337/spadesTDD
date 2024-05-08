@@ -10,6 +10,7 @@ namespace spd
     class Move : public Serializable
     {
     public:
+        Move(const std::string &encoding);
         Move(const Seat &seat, const Card &card);
         Move(const Seat &seat, int bid);
         Move(const Seat &seat, const BidOption &bidOption);

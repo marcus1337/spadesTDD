@@ -1,4 +1,5 @@
 #include "spades/history/HistoryState.h"
+#include "spades/data/memento/json.h"
 
 using namespace spd;
 
@@ -35,8 +36,40 @@ void HistoryState::shiftLeft()
     leftMoves.pop();
 }
 
+using json = nlohmann::json;
+
 std::string HistoryState::serialize() const
 {
-    return "";
+    auto leftMovesCopy = leftMoves;
+    auto rightMovesCopy = rightMoves;
+    json leftMovesJson;
+    json rightMovesJson;
+    while (!leftMovesCopy.empty())
+    {
+        leftMovesJson.push_back(leftMovesCopy.top().serialize());
+        leftMovesCopy.pop();
+    }
+    while (!rightMovesCopy.empty())
+    {
+        rightMovesJson.push_back(rightMovesCopy.top().serialize());
+        rightMovesCopy.pop();
+    }
+
+    json encoding;
+    encoding["leftMoves"] = leftMovesJson;
+    encoding["rightMoves"] = rightMovesJson;
+    return encoding.dump();
 }
-bool HistoryState::deserialize(const std::string &encoding) { return false; }
+bool HistoryState::deserialize(const std::string &encoding)
+{
+    const auto &serializedState = json::parse(encoding);
+    for (const auto &moveJson : serializedState["leftMoves"])
+    {
+        leftMoves.push(Move(moveJson.get<std::string>()));
+    }
+    for (const auto &moveJson : serializedState["rightMoves"])
+    {
+        rightMoves.push(Move(moveJson.get<std::string>()));
+    }
+    return true;
+}
