@@ -6,6 +6,7 @@
 #include "spades_ai/logic/NetAIPlacer.h"
 #include "spades_ai/logic/RandomAIPlacer.h"
 #include "spades_ai/logic/AIBid.h"
+#include "spades_ai/logic/ZeroAIPlacer.h"
 
 #include <iostream>
 #include <fstream>
@@ -17,6 +18,7 @@ namespace spd
         std::shared_ptr<Spades> spades;
         NetAIPlacer atkAI, defAI;
         RandomAIPlacer randAI;
+        ZeroAIPlacer zeroPlacer;
         AIStrategy strategy = AIStrategy::ATTACK;
 
         std::string loadText(const std::string &filepath) const
@@ -30,6 +32,19 @@ namespace spd
             {
                 return "";
             }
+        }
+
+        AIPlacer &getPlacer()
+        {
+            const auto &seat = spades->getTurnSeat();
+            const auto &numTakenTricks = spades->getNumberOfTakenTricksCurrentRound(seat);
+            const auto &bid = spades->getBidResult(seat).value();
+            if (bid == 0 && numTakenTricks == 0)
+            {
+                return zeroPlacer;
+            }
+
+            return randAI;
         }
 
     public:
@@ -80,25 +95,7 @@ namespace spd
         Card getPlacement()
         {
             assert(spades != nullptr);
-            if (spades)
-            {
-                if (strategy == AIStrategy::RANDOM)
-                {
-                    return randAI.getPlacement(*spades.get());
-                }
-                else if (strategy == AIStrategy::ATTACK)
-                {
-                    return atkAI.getPlacement(*spades.get());
-                }
-                else
-                {
-                    return defAI.getPlacement(*spades.get());
-                }
-            }
-            else
-            {
-                return Card();
-            }
+            return getPlacer().getPlacement(*spades.get());
         }
     };
 }
