@@ -1,5 +1,4 @@
 #pragma once
-#include "spades_ai/logic/AIStrategy.h"
 #include "spades_ai/logic/AIPlacer.h"
 #include "spades_ai/neuralnet/Neuralnet.h"
 #include "spades_ai/logic/Analyze.h"

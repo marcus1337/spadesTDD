@@ -3,7 +3,7 @@
 #include "spades/pch.h"
 #include "spades_ai/logic/Analyze.h"
 #include "spades/data/PortableRandom.h"
-#include "spades_ai/logic/NetAIPlacer.h"
+#include "spades_ai/logic/AIStrategy.h"
 #include "spades_ai/logic/RandomAIPlacer.h"
 #include "spades_ai/logic/AIBid.h"
 #include "spades_ai/logic/ZeroAIPlacer.h"
@@ -22,7 +22,7 @@ namespace spd
         SabotageZeroAIPlacer sabotageZeroPlacer;
         DefendZeroAIPlacer defendZeroPlacer;
         TargetAIPlacer targetAIPlacer;
-        AIStrategy strategy = AIStrategy::ATTACK;
+        AIStrategy strategy = AIStrategy::NORMAL;
 
         AIPlacer &getPlacer()
         {

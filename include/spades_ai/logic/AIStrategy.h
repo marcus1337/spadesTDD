@@ -3,9 +3,8 @@ namespace spd
 {
     enum class AIStrategy
     {
-        ATTACK,
-        DEFEND,
-        RANDOM,
-        CHEAT
+        NORMAL,
+        RANDOM
+        // TODO: CHEAT
     };
 }
