@@ -109,6 +109,30 @@ namespace spd
                 return getStrongestPlaceableCard();
             }
         }
+        Card getAvoidTricksCardMid() const
+        {
+            const auto &weakest = getWeakestPlaceableCard();
+            if (!spades.isTopCardIfPlaced(weakest))
+            {
+                return weakest;
+            }
+            else
+            {
+                return getStrongestPlaceableCard();
+            }
+        }
+        Card getTakeTricksCardMid() const
+        {
+            const auto &strongest = getStrongestPlaceableCard();
+            if (spades.isTopCardIfPlaced(strongest))
+            {
+                return strongest;
+            }
+            else
+            {
+                return getWeakestPlaceableCard();
+            }
+        }
 
         Card getTakeTricksCard() const
         {
@@ -120,7 +144,10 @@ namespace spd
             {
                 return getTakeTricksCardLast();
             }
-            return getAnyCard();
+            else
+            {
+                return getTakeTricksCardMid();
+            }
         }
         Card getAvoidTricksCard() const // place highest cards if must win, place highest lose card if can lose, place low card if may lose
         {
@@ -132,7 +159,10 @@ namespace spd
             {
                 return getAvoidTricksCardLast();
             }
-            return getAnyCard();
+            else
+            {
+                return getAvoidTricksCardMid();
+            }
         }
 
     private:
