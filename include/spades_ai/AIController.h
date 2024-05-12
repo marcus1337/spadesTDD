@@ -43,8 +43,18 @@ namespace spd
             {
                 return zeroPlacer;
             }
-
-            return randAI;
+            else if (strategy == AIStrategy::ATTACK)
+            {
+                return atkAI;
+            }
+            else if (strategy == AIStrategy::DEFEND)
+            {
+                return defAI;
+            }
+            else
+            {
+                return randAI;
+            }
         }
 
     public:
