@@ -63,12 +63,75 @@ namespace spd
             return spades.getPlaceableCards().front();
         }
 
+        bool isFirst() const
+        {
+            return spades.getCurrentTrickCardSeatPairs().empty();
+        }
+
+        bool isLast() const
+        {
+            return spades.getCurrentTrickCardSeatPairs().size() == SeatUtils::getSeats().size() - 1;
+        }
+
+        Card getStrongestPlaceableCard() const
+        {
+            auto placeableCards = spades.getPlaceableCards();
+            analyze.sortByStrengthAscending(placeableCards);
+            return placeableCards.back();
+        }
+        Card getWeakestPlaceableCard() const
+        {
+            auto placeableCards = spades.getPlaceableCards();
+            analyze.sortByStrengthAscending(placeableCards);
+            return placeableCards.front();
+        }
+
+        Card getTakeTricksCardLast() const
+        {
+            if (const auto &winCardOpt = getLowestWinCard(); winCardOpt.has_value())
+            {
+                return winCardOpt.value();
+            }
+            else
+            {
+                return getWeakestPlaceableCard();
+            }
+        }
+
+        Card getAvoidTricksCardLast() const
+        {
+            if (const auto &loseCardOpt = getHighesLoseCard(); loseCardOpt.has_value())
+            {
+                return loseCardOpt.value();
+            }
+            else
+            {
+                return getStrongestPlaceableCard();
+            }
+        }
+
         Card getTakeTricksCard() const
         {
+            if (isFirst())
+            {
+                return getStrongestPlaceableCard();
+            }
+            else if (isLast())
+            {
+                return getTakeTricksCardLast();
+            }
             return getAnyCard();
         }
         Card getAvoidTricksCard() const // place highest cards if must win, place highest lose card if can lose, place low card if may lose
         {
+            if (isFirst())
+            {
+                return getWeakestPlaceableCard();
+            }
+            else if (isLast())
+            {
+                return getAvoidTricksCardLast();
+            }
             return getAnyCard();
         }
 
