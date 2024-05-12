@@ -36,11 +36,16 @@ namespace spd
 
     class SabotageZeroAIPlacer : public AIPlacer // Assume 1 or more opponents has an active 0-bids
     {
-        // place highest cards if must win, place highest lose card if can lose, place low card if may lose
+        virtual Card getPlacement(const Spades &spades) override
+        {
+            return AIAction(spades).getAvoidTricksCard();
+        }
     };
     class DefendZeroAIPlacer : public AIPlacer // Assume team member has active 0-bid but not self
     {
-        // place lowest cards if must lose, place low win card if may win, place high card if may win
+        virtual Card getPlacement(const Spades &spades) override
+        {
+            return AIAction(spades).getTakeTricksCard();
+        }
     };
-
 }

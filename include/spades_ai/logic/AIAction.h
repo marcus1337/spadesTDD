@@ -63,6 +63,15 @@ namespace spd
             return spades.getPlaceableCards().front();
         }
 
+        Card getTakeTricksCard() const
+        {
+            return getAnyCard();
+        }
+        Card getAvoidTricksCard() const // place highest cards if must win, place highest lose card if can lose, place low card if may lose
+        {
+            return getAnyCard();
+        }
+
     private:
         const Spades &spades;
         Analyze analyze;
