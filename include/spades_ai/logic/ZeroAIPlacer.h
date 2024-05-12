@@ -11,8 +11,6 @@ namespace spd
 
         Card getFirstRoundCard(const Spades &spades, const Analyze &analyze) const
         {
-            auto placeableCards = spades.getPlaceableCards();
-            analyze.sortByStrengthAscending(placeableCards);
             std::vector<Card> fewestRemaining = analyze.getPlaceableCardsAscending(Suit::CLOVER);
             for (const auto &suit : {Suit::DIAMOND, Suit::HEART})
             {
@@ -21,6 +19,12 @@ namespace spd
                 {
                     fewestRemaining = suitCards;
                 }
+            }
+            if (fewestRemaining.empty())
+            {
+                auto placeableCards = spades.getPlaceableCards();
+                analyze.sortByStrengthAscending(placeableCards);
+                return placeableCards.front();
             }
             return fewestRemaining.front();
         }
@@ -40,7 +44,7 @@ namespace spd
             {
                 return getFirstRoundCard(spades, analyze);
             }
-            
+
             return getAnyCard(spades);
         }
     };
