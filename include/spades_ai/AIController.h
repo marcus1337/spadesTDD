@@ -24,13 +24,8 @@ namespace spd
         TargetAIPlacer targetAIPlacer;
         AIStrategy strategy = AIStrategy::NORMAL;
 
-        AIPlacer &getPlacer()
+        AIPlacer &getNormalPlacer()
         {
-            if (strategy == AIStrategy::RANDOM)
-            {
-                return randAI;
-            }
-
             const auto seat = spades->getTurnSeat();
             const auto teamSeat = SeatUtils::getTeamSeat(seat);
             const auto opp1 = SeatUtils::getLeftOpponentSeat(seat);
@@ -60,6 +55,18 @@ namespace spd
             else
             {
                 return targetAIPlacer;
+            }
+        }
+
+        AIPlacer &getPlacer()
+        {
+            if (strategy == AIStrategy::RANDOM)
+            {
+                return randAI;
+            }
+            else
+            {
+                return getNormalPlacer(); // NORMAL AIStrategy
             }
         }
 
