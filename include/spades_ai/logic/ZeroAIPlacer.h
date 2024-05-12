@@ -9,7 +9,35 @@ namespace spd
     class ZeroAIPlacer : public AIPlacer
     {
 
-        Card getFirstRoundCard(const Spades &spades, const Analyze &analyze) const
+        std::optional<Card> getLowestWinCard(const Spades &spades, const Analyze &analyze) const
+        {
+            auto placeableCards = spades.getPlaceableCards();
+            analyze.sortByStrengthAscending(placeableCards);
+            for (const auto &card : placeableCards)
+            {
+                if (spades.isTopCardIfPlaced(card))
+                {
+                    return card;
+                }
+            }
+            return std::nullopt;
+        }
+        std::optional<Card> getHighesLoseCard(const Spades &spades, const Analyze &analyze) const
+        {
+            auto placeableCards = spades.getPlaceableCards();
+            analyze.sortByStrengthAscending(placeableCards);
+            std::reverse(placeableCards.begin(), placeableCards.end());
+            for (const auto &card : placeableCards)
+            {
+                if (!spades.isTopCardIfPlaced(card))
+                {
+                    return card;
+                }
+            }
+            return std::nullopt;
+        }
+
+        Card getLowestCardFromLeastOwnedSuit(const Spades &spades, const Analyze &analyze) const
         {
             std::vector<Card> fewestRemaining = analyze.getPlaceableCardsAscending(Suit::CLOVER);
             for (const auto &suit : {Suit::DIAMOND, Suit::HEART})
@@ -39,13 +67,22 @@ namespace spd
         virtual Card getPlacement(const Spades &spades) override
         {
             Analyze analyze(spades);
-            const auto &placedCardSeats = spades.getCurrentRoundCardSeatPairs();
-            if (placedCardSeats.empty())
+            if (spades.getCurrentRoundCardSeatPairs().empty())
             {
-                return getFirstRoundCard(spades, analyze);
+                return getLowestCardFromLeastOwnedSuit(spades, analyze);
             }
-
-            return getAnyCard(spades);
+            else
+            {
+                const auto &highestLose = getHighesLoseCard(spades, analyze);
+                if (highestLose.has_value())
+                {
+                    return highestLose.value();
+                }
+                else
+                {
+                    return getLowestWinCard(spades, analyze).value();
+                }
+            }
         }
     };
 }
