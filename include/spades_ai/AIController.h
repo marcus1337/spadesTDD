@@ -7,6 +7,7 @@
 #include "spades_ai/logic/RandomAIPlacer.h"
 #include "spades_ai/logic/AIBid.h"
 #include "spades_ai/logic/ZeroAIPlacer.h"
+#include "spades_ai/logic/TargetAIPlacer.h"
 
 #include <iostream>
 #include <fstream>
@@ -20,23 +21,29 @@ namespace spd
         ZeroAIPlacer zeroPlacer;
         SabotageZeroAIPlacer sabotageZeroPlacer;
         DefendZeroAIPlacer defendZeroPlacer;
+        TargetAIPlacer targetAIPlacer;
         AIStrategy strategy = AIStrategy::ATTACK;
 
-        std::string loadText(const std::string &filepath) const
-        {
-            std::ifstream file(filepath);
-            if (file.is_open())
-            {
-                return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-            }
-            else
-            {
-                return "";
-            }
-        }
+        /*         std::string loadText(const std::string &filepath) const
+                {
+                    std::ifstream file(filepath);
+                    if (file.is_open())
+                    {
+                        return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                } */
 
         AIPlacer &getPlacer()
         {
+            if (strategy == AIStrategy::RANDOM)
+            {
+                return randAI;
+            }
+
             const auto seat = spades->getTurnSeat();
             const auto teamSeat = SeatUtils::getTeamSeat(seat);
             const auto opp1 = SeatUtils::getLeftOpponentSeat(seat);
@@ -65,7 +72,7 @@ namespace spd
             }
             else
             {
-                return randAI;
+                return targetAIPlacer;
             }
         }
 
@@ -91,13 +98,13 @@ namespace spd
 
         bool load(const std::string &filepath, const AIStrategy &strategy)
         {
-/*             switch (strategy)
-            {
-            case AIStrategy::ATTACK:
-                return atkAI.deserialize(loadText(filepath));
-            case AIStrategy::DEFEND:
-                return defAI.deserialize(loadText(filepath));
-            } */
+            /*             switch (strategy)
+                        {
+                        case AIStrategy::ATTACK:
+                            return atkAI.deserialize(loadText(filepath));
+                        case AIStrategy::DEFEND:
+                            return defAI.deserialize(loadText(filepath));
+                        } */
             return false;
         }
 
