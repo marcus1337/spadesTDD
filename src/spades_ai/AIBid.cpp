@@ -111,7 +111,7 @@ int AIBid::getBid() const
     {
         const int minTakes = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
         const int probableTakes = getNumStrongNonTrumpCards() / 2; // Arbitrary divisor value
-        const int lowCommonPartnerBid = 1;
+        const int lowCommonPartnerBid = 2;
         const int highCommonPartnerBid = 4;
         const int probableTargetBid = std::clamp(probableTakes, lowCommonPartnerBid, highCommonPartnerBid);
         return getClosestNonZeroBid(minTakes + probableTargetBid);
