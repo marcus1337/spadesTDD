@@ -6,7 +6,7 @@ namespace spd
     class AIAction
     {
     public:
-        AIAction(const Spades &spades) : spades(spades), analyze(analyze)
+        AIAction(const Spades &spades) : spades(spades), analyze(spades)
         {
         }
 
@@ -167,6 +167,6 @@ namespace spd
 
     private:
         const Spades &spades;
-        Analyze analyze;
+        const Analyze analyze;
     };
 }
