@@ -24,19 +24,6 @@ namespace spd
         TargetAIPlacer targetAIPlacer;
         AIStrategy strategy = AIStrategy::ATTACK;
 
-        /*         std::string loadText(const std::string &filepath) const
-                {
-                    std::ifstream file(filepath);
-                    if (file.is_open())
-                    {
-                        return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                } */
-
         AIPlacer &getPlacer()
         {
             if (strategy == AIStrategy::RANDOM)
@@ -94,18 +81,6 @@ namespace spd
         void setStrategy(const AIStrategy &strategy)
         {
             this->strategy = strategy;
-        }
-
-        bool load(const std::string &filepath, const AIStrategy &strategy)
-        {
-            /*             switch (strategy)
-                        {
-                        case AIStrategy::ATTACK:
-                            return atkAI.deserialize(loadText(filepath));
-                        case AIStrategy::DEFEND:
-                            return defAI.deserialize(loadText(filepath));
-                        } */
-            return false;
         }
 
         int getBid() const
