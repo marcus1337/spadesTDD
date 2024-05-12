@@ -59,7 +59,7 @@ namespace spd
             {
                 score = scoreSettings.getNilBlindValue();
             }
-            return getCountedTricks() == 0 ? score : -score;
+            return tricks == 0 ? score : -score;
         }
 
         int getPointsPerTrick(const ScoreSettings &scoreSettings) const
