@@ -53,6 +53,23 @@ int ScoreSettings::getPointsPerBlindTrick() const
     return blindTrickValue;
 }
 
+int ScoreSettings::getBagSetPenalty() const
+{
+    return bagSetPenalty;
+}
+void ScoreSettings::setPointsPerBag(int value)
+{
+    pointsPerBag = value;
+}
+void ScoreSettings::setPointsPerTrick(int value)
+{
+    trickValue = value;
+}
+void ScoreSettings::setBagSetPenalty(int value)
+{
+    bagSetPenalty = value;
+}
+
 std::string ScoreSettings::serialize() const
 {
     nlohmann::json j;

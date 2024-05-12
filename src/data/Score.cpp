@@ -69,7 +69,7 @@ int Score::getNumBagSets() const
 
 int Score::getPoints() const
 {
-    const int bagSetPenalty = 100;
+    const int bagSetPenalty = scoreSettings.getBagSetPenalty();
     const int points = std::accumulate(roundPoints.begin(), roundPoints.end(), 0);
     return points - getNumBagSets() * bagSetPenalty;
 }

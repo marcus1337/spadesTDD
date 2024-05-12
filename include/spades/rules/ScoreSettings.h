@@ -11,18 +11,23 @@ namespace spd
     public:
         ScoreSettings() = default;
         void setWinScore(int score);
-        void setLoseScore(int score);
         int getWinScore() const;
+        void setLoseScore(int score);
         int getLoseScore() const;
 
-        int getBags(int totalBags) const;
-        int getNumBagSets(int totalBags) const;
+        void setPointsPerBag(int value);
+        void setPointsPerTrick(int value);
+        void setBagSetPenalty(int value);
+
         int getNilValue() const;
         int getNilBlindValue() const;
         int getPointsPerBag() const;
         int getPointsPerTrick() const;
         int getPointsPerBlindTrick() const;
+        int getBagSetPenalty() const;
 
+        int getBags(int totalBags) const;
+        int getNumBagSets(int totalBags) const;
         virtual std::string serialize() const override;
         virtual bool deserialize(const std::string &encoding) override;
 
