@@ -6,8 +6,6 @@ using namespace spd;
 int Score::getRoundTrickPoints(const SeatRoundResult &r1, const SeatRoundResult &r2) const
 {
     const bool hitTarget = (r1.bid + r2.bid) <= (r1.getCountedTricks() + r2.getCountedTricks());
-    const int r1PPT = r1.getPointsPerTrick(scoreSettings);
-    const int r2PPT = r2.getPointsPerTrick(scoreSettings);
     const int points = r1.getPointsPerTrick(scoreSettings) * r1.bid + r2.getPointsPerTrick(scoreSettings) * r2.bid;
     return hitTarget ? points : -points;
 }
@@ -36,7 +34,7 @@ Score::Score(const ScoreSettings &scoreSettings, const std::pair<Seat, Seat> &te
     for (int round = 0; round < numRounds; round++)
     {
         const SeatRoundResult sr1(team.first, round, completedRoundTrickTakers, completedRoundBids, completedRoundBidOptions);
-        const SeatRoundResult sr2(team.first, round, completedRoundTrickTakers, completedRoundBids, completedRoundBidOptions);
+        const SeatRoundResult sr2(team.second, round, completedRoundTrickTakers, completedRoundBids, completedRoundBidOptions);
         roundPoints.push_back(getRoundPoints(sr1, sr2));
         roundBags.push_back(getRoundBags(sr1, sr2));
     }

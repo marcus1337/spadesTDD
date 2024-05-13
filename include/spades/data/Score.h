@@ -10,8 +10,8 @@ namespace spd
 {
     struct SeatRoundResult
     {
-        int tricks;
-        int bid;
+        int tricks = 0;
+        int bid = 0;
         std::set<BidOption> bidOptions;
         SeatRoundResult(const Seat &seat, int round, const std::vector<std::vector<Seat>> &completedRoundTrickTakers, const std::vector<std::array<std::pair<Seat, int>, NUM_SEATS>> &completedRoundBids, const std::vector<std::set<std::pair<Seat, BidOption>>> &completedRoundBidOptions)
         {
@@ -93,7 +93,7 @@ namespace spd
         int getBags() const;
         int getPoints() const;
 
-        static ScoreResult getScoreResult(const ScoreSettings& scoreSettings, const Score& score1, const Score& score2);
+        static ScoreResult getScoreResult(const ScoreSettings &scoreSettings, const Score &score1, const Score &score2);
     };
 
 }
