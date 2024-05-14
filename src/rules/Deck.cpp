@@ -14,9 +14,11 @@ bool Deck::isExcluded(const Card &card) const
 std::vector<Card> Deck::getCards() const
 {
     std::vector<Card> cards;
+    assert(Card::getCards().size() == DECK_SIZE + 2);
     for (const auto &card : Card::getCards())
         if (!isExcluded(card))
             cards.push_back(card);
+    assert(cards.size() == DECK_SIZE);
     return cards;
 }
 
@@ -24,6 +26,7 @@ std::vector<Card> Deck::getShuffledCards(int round) const
 {
     portableRandom.setSeed(getSeed());
     std::vector<Card> cards = getCards();
+    assert(cards.size() == DECK_SIZE);
     for (int i = 0; i <= round; i++)
         portableRandom.shuffle(cards);
     return cards;

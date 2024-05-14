@@ -17,6 +17,14 @@ bool CardValueComparison::operator==(const CardValue &other) const
         const auto &otherJokerValue = std::get<JokerValue>(other);
         return jokerValue == otherJokerValue;
     }
+    else if (std::holds_alternative<NormalCardValue>(value) && std::holds_alternative<JokerValue>(other))
+    {
+        return false;
+    }
+    else if (std::holds_alternative<JokerValue>(value) && std::holds_alternative<NormalCardValue>(other))
+    {
+        return false;
+    }
     else
     {
         return false;
@@ -39,6 +47,14 @@ bool CardValueComparison::operator<(const CardValue &other) const
         const auto &jokerValue = std::get<JokerValue>(value);
         const auto &otherJokerValue = std::get<JokerValue>(other);
         return jokerValue < otherJokerValue;
+    }
+    else if (std::holds_alternative<NormalCardValue>(value) && std::holds_alternative<JokerValue>(other))
+    {
+        return true;
+    }
+    else if (std::holds_alternative<JokerValue>(value) && std::holds_alternative<NormalCardValue>(other))
+    {
+        return false;
     }
     else
     {

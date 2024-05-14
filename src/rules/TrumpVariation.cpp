@@ -91,20 +91,27 @@ bool TrumpVariation::hasTrumpBeenPlayed(const std::vector<Card> &playedCards) co
 
 bool TrumpVariation::areAllTrump(const std::vector<Card> &cards) const
 {
-    bool onlyTrumps = true;
     for (const auto &handCard : cards)
     {
         if (!isTrumpCard(handCard))
         {
-            onlyTrumps = false;
+            return false;
         }
     }
-    return onlyTrumps;
+    return true;
 }
 
 bool TrumpVariation::sameSuit(const Card &cardA, const Card &cardB) const
 {
-    if (isTrumpCard(cardA) && isTrumpCard(cardB))
+    if (isTrumpCard(cardA) && !isTrumpCard(cardB))
+    {
+        return false;
+    }
+    else if (!isTrumpCard(cardA) && isTrumpCard(cardB))
+    {
+        return false;
+    }
+    else if (isTrumpCard(cardA) && isTrumpCard(cardB))
     {
         return true;
     }
@@ -171,7 +178,7 @@ std::vector<Card> JokerJoker::getTrumpCardsOrderedByValueDescending() const
 }
 std::array<Card, 2> JokerJoker::getExcludedCards() const
 {
-    return {Card(Rank::TWO, Suit::CLOVER), Card(Rank::TWO, Suit::DIAMOND)};
+    return {Card(Rank::TWO, Suit::CLOVER), Card(Rank::TWO, Suit::HEART)};
 }
 
 std::vector<Card> JokerJokerDeuce::getTrumpCardsOrderedByValueDescending() const
@@ -190,7 +197,7 @@ std::vector<Card> JokerJokerDeuce::getTrumpCardsOrderedByValueDescending() const
 }
 std::array<Card, 2> JokerJokerDeuce::getExcludedCards() const
 {
-    return {Card(Rank::TWO, Suit::CLOVER), Card(Rank::TWO, Suit::DIAMOND)};
+    return {Card(Rank::TWO, Suit::CLOVER), Card(Rank::TWO, Suit::HEART)};
 }
 
 std::vector<Card> JokerJokerDeuceDeuce::getTrumpCardsOrderedByValueDescending() const
@@ -210,5 +217,5 @@ std::vector<Card> JokerJokerDeuceDeuce::getTrumpCardsOrderedByValueDescending() 
 }
 std::array<Card, 2> JokerJokerDeuceDeuce::getExcludedCards() const
 {
-    return {Card(Rank::TWO, Suit::CLOVER), Card(Rank::TWO, Suit::DIAMOND)};
+    return {Card(Rank::TWO, Suit::CLOVER), Card(Rank::TWO, Suit::HEART)};
 }

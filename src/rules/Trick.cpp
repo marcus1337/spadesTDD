@@ -78,7 +78,9 @@ int Trick::getValue(const Card &card) const
 
 bool Trick::isNewTopCard(const Card &topCard, const Card &newCard) const
 {
-    return getTrickCardComparator(topCard) < getTrickCardComparator(newCard);
+    const auto& comp1 = getTrickCardComparator(topCard);
+    const auto& comp2 = getTrickCardComparator(newCard);
+    return comp1 < comp2;
 }
 
 std::optional<Suit> Trick::getLeadSuit() const

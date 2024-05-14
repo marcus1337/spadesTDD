@@ -37,6 +37,7 @@ void Spades::loadMemento(const SpadesMemento &memento)
     deck.setSeed(mode.seed);
     bidVarController.setBidVariationType(mode.bidVarType);
     trumpVarController.setTrumpVariationType(mode.trumpVarType);
+    deck.setExcludeCards(trumpVarController.getExcludedCards());
 }
 
 void Spades::setBidVariation(BidVariationType type)
@@ -65,6 +66,7 @@ void Spades::reset(unsigned int seed, BidVariationType bidVariationType, TrumpVa
     setSeed(seed);
     setBidVariation(bidVariationType);
     setTrumpVariation(trumpVariationType);
+    deck.setExcludeCards(trumpVarController.getExcludedCards());
 }
 
 void Spades::reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
