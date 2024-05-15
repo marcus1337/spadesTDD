@@ -25,6 +25,7 @@ namespace spd
         int getPointsPerTrick() const;
         int getPointsPerBlindTrick() const;
         int getBagSetPenalty() const;
+        void setBlindBonus(bool value);
 
         int getBags(int totalBags) const;
         int getNumBagSets(int totalBags) const;
@@ -35,16 +36,15 @@ namespace spd
         int winScore = 250;
         int loseScore = -200;
         int trickValue = 10;
-        int blindTrickValue = 10;
         int nilValue = 100;
         int bagSetPenalty = 100;
         int numBagsPerSet = 10;
         int pointsPerBag = 1;
+        bool blindBonus = false;
 
         static constexpr const char *WIN_KEY = "WIN_KEY";
         static constexpr const char *LOSE_KEY = "LOSE_KEY";
         static constexpr const char *TRICK_KEY = "TRICK_KEY";
-        static constexpr const char *BLINDTRICK_KEY = "BLINDTRICK_KEY";
         static constexpr const char *NIL_KEY = "NIL_KEY";
         static constexpr const char *BAG_PENALTY_KEY = "BAG_PENALTY_KEY";
         static constexpr const char *BAGS_PER_SET_KEY = "BAGS_PER_SET_KEY";

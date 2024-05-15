@@ -36,7 +36,7 @@ int ScoreSettings::getNilValue() const
 }
 int ScoreSettings::getNilBlindValue() const
 {
-    return nilValue * 2;
+    return blindBonus ? getNilValue() * 2 : getNilValue();
 }
 int ScoreSettings::getPointsPerBag() const
 {
@@ -48,9 +48,14 @@ int ScoreSettings::getPointsPerTrick() const
     return trickValue;
 }
 
+void ScoreSettings::setBlindBonus(bool value)
+{
+    this->blindBonus = value;
+}
+
 int ScoreSettings::getPointsPerBlindTrick() const
 {
-    return blindTrickValue;
+    return blindBonus ? getPointsPerTrick() * 2 : getPointsPerTrick();
 }
 
 int ScoreSettings::getBagSetPenalty() const
@@ -76,7 +81,6 @@ std::string ScoreSettings::serialize() const
     j[WIN_KEY] = winScore;
     j[LOSE_KEY] = loseScore;
     j[TRICK_KEY] = trickValue;
-    j[BLINDTRICK_KEY] = blindTrickValue;
     j[NIL_KEY] = nilValue;
     j[BAG_PENALTY_KEY] = bagSetPenalty;
     j[BAGS_PER_SET_KEY] = numBagsPerSet;
@@ -88,12 +92,11 @@ bool ScoreSettings::deserialize(const std::string &encoding)
     const auto &winOpt = loadIntKey(encoding, WIN_KEY);
     const auto &loseOpt = loadIntKey(encoding, LOSE_KEY);
     const auto &trickOpt = loadIntKey(encoding, TRICK_KEY);
-    const auto &blindTrickOpt = loadIntKey(encoding, BLINDTRICK_KEY);
     const auto &bagPenaltyOpt = loadIntKey(encoding, BAG_PENALTY_KEY);
     const auto &bagsPerSetOpt = loadIntKey(encoding, BAGS_PER_SET_KEY);
     const auto &pointsPerBagOpt = loadIntKey(encoding, POINTS_PER_BAG_KEY);
 
-    for (const auto &opt : {winOpt, loseOpt, trickOpt, blindTrickOpt, bagPenaltyOpt, bagsPerSetOpt, pointsPerBagOpt})
+    for (const auto &opt : {winOpt, loseOpt, trickOpt, bagPenaltyOpt, bagsPerSetOpt, pointsPerBagOpt})
     {
         if (!opt.has_value())
         {
@@ -104,7 +107,6 @@ bool ScoreSettings::deserialize(const std::string &encoding)
     winScore = winOpt.value();
     loseScore = loseOpt.value();
     trickValue = trickOpt.value();
-    blindTrickValue = blindTrickOpt.value();
     bagSetPenalty = bagPenaltyOpt.value();
     numBagsPerSet = bagsPerSetOpt.value();
     pointsPerBag = pointsPerBagOpt.value();
