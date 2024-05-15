@@ -1,5 +1,5 @@
 #pragma once
-#include "spades_ai/logic/AIPlacer.h"
+#include "spades_ai/placer/AIPlacer.h"
 #include "spades/data/PortableRandom.h"
 
 namespace spd

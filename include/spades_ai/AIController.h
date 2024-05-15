@@ -4,10 +4,11 @@
 #include "spades_ai/logic/Analyze.h"
 #include "spades/data/PortableRandom.h"
 #include "spades_ai/logic/AIStrategy.h"
-#include "spades_ai/logic/RandomAIPlacer.h"
 #include "spades_ai/logic/AIBid.h"
-#include "spades_ai/logic/ZeroAIPlacer.h"
-#include "spades_ai/logic/TargetAIPlacer.h"
+
+#include "spades_ai/placer/RandomAIPlacer.h"
+#include "spades_ai/placer/ZeroAIPlacer.h"
+#include "spades_ai/placer/TargetAIPlacer.h"
 
 #include <iostream>
 #include <fstream>
