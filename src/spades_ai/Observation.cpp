@@ -2,33 +2,26 @@
 
 using namespace spd;
 
-Observation::Observation(const Spades &spades) : spades(spades)
+Observation::Observation(const Spades &spades) : observation{}
 {
+    seat = spades.getTurnSeat();
+    oppSeat1 = SeatUtils::getLeftOpponentSeat(seat);
+    oppSeat2 = SeatUtils::getRightOpponentSeat(seat);
+    teamSeat = SeatUtils::getTeamSeat(seat);
 }
 
-
-std::vector<float> Observation::getNetInput() const
+const std::array<float, Observation::OBSERVATION_SIZE> &Observation::getValues() const
 {
-    std::vector<float> input;
-    input.push_back(spades.isSpadesBroken() ? 1.f : 0);
-
-    const auto seat = spades.getTurnSeat();
-    const auto opp1 = SeatUtils::getLeftOpponentSeat(seat);
-    const auto opp2 = SeatUtils::getRightOpponentSeat(seat);
-    const auto teamSeat = SeatUtils::getTeamSeat(seat);
-
-
-    return input;
+    return observation;
 }
 
-
-bool Observation::hasSkippedLeadSuit(const Suit &leadSuit, const Seat &seat) const
+bool Observation::hasSkippedLeadSuit(const Spades &spades, const Suit &leadSuit, const Seat &seat) const
 { // TODO: Make it work for half-finished tricks
-    const auto csPairs = spades.getCurrentRoundCardSeatPairs();
+    const auto &csPairs = spades.getCurrentRoundCardSeatPairs();
     for (int trickIndex = 0; trickIndex < csPairs.size() / 4; trickIndex++)
     {
         int from = trickIndex * 4;
-        const Card& leadCard = csPairs[from].second;
+        const Card &leadCard = csPairs[from].second;
         if (leadCard.is(leadSuit))
         {
             for (int i = 1; i <= 3; i++)
@@ -44,4 +37,3 @@ bool Observation::hasSkippedLeadSuit(const Suit &leadSuit, const Seat &seat) con
     }
     return false;
 }
-
