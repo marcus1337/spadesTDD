@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/spades_ai/neuralnet/NetworkCodec.cpp" 
 "src/spades_ai/neuralnet/Layer.cpp" 
 "src/spades_ai/neuralnet/Node.cpp"
+"src/spades_ai/logic/NetUtils.cpp"
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "include/spades/pch.h")
