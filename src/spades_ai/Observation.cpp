@@ -8,7 +8,56 @@ Observation::Observation(const Spades &spades) : observation{}
     oppSeat1 = SeatUtils::getLeftOpponentSeat(seat);
     oppSeat2 = SeatUtils::getRightOpponentSeat(seat);
     teamSeat = SeatUtils::getTeamSeat(seat);
-    // TODO
+
+    std::size_t counter = 0;
+    for (const auto &value : getPlacedCards(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getStartCards(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getCurrentlyOwnedCards(spades))
+    {
+        observation[counter++] = value;
+    }
+
+    for (const auto &value : getLeadCardSuit(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getTopCardRank(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getTopCardSeat(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getPlacedTrickCardSeats(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getKnownAbsentSuits(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getActiveNilBidSeats(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getNumNeededTricksOpponent(spades))
+    {
+        observation[counter++] = value;
+    }
+    for (const auto &value : getNumNeededTricksTeam(spades))
+    {
+        observation[counter++] = value;
+    }
+
+    assert(counter == observation.size() - 1);
+    observation.back() = isTopCardTrump(spades) ? 1.f : 0;
 }
 
 const std::array<float, Observation::OBSERVATION_SIZE> &Observation::getValues() const
