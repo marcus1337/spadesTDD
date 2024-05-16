@@ -35,7 +35,6 @@ namespace spd
         std::vector<std::vector<Seat>> getCompletedRoundTrickTakers(int targetRound) const;
         std::vector<Seat> getTrickTakers(int round) const;
 
-        std::vector<Card> getStartCards() const;
         Score getTeamScore(const std::pair<Seat, Seat> &team) const;
         Score getTeamScore(const std::pair<Seat, Seat> &team, int targetRound) const;
 
@@ -45,7 +44,7 @@ namespace spd
         ScoreSettings scoreSettings;
         Spades() = default;
         Spades(const Spades &other);
-        Spades(const std::string& encoding);
+        Spades(const std::string &encoding);
         void reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType, TrumpVariationType trumpVariationType);
         void reset(BidVariationType bidVariationType);
@@ -84,6 +83,7 @@ namespace spd
         std::array<Card, NUM_EXCLUDED_CARDS> getExcludedCards() const;
         std::optional<Seat> getCurrentTrickTopSeat() const;
         std::optional<Seat> getSpadeBreaker(int round) const;
+        std::vector<Card> getStartCards() const;
 
         std::optional<Seat> getPrevTrickTaker() const;
         std::vector<std::pair<Seat, Card>> getPrevTrickCardSeatPairs() const;

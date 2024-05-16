@@ -6,6 +6,7 @@ using namespace net;
 
 NetAction::NetAction(const Spades &spades, const std::array<float, OUTPUT_SIZE> &output)
 {
+    const auto &allCards = spades.getStartCards();
     std::set<Card> handSet;
     for (const auto &card : spades.getHand(spades.getTurnSeat()))
     {
@@ -13,10 +14,15 @@ NetAction::NetAction(const Spades &spades, const std::array<float, OUTPUT_SIZE> 
     }
     for (const auto &index : getIndicesSortedByMax(output))
     {
-        const auto suitIndex = index / 4;
-        const auto rankIndex = index % 13;
+        const auto &indexCard = allCards[index];
+        if (handSet.contains(indexCard) && spades.canPlace(indexCard))
+        {
+            card = indexCard;
+            break;
+        }
     }
 }
+
 Card NetAction::getPlacement() const
 {
     return card;
