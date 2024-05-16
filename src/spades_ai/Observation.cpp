@@ -207,7 +207,12 @@ std::array<float, NUM_SEATS - 1> Observation::getTopCardSeat(const Spades &spade
 }
 std::array<float, NUM_SEATS - 1> Observation::getPlacedTrickCardSeats(const Spades &spades) const
 {
-    return {}; // TODO
+    std::array<float, NUM_SEATS - 1> values{};
+    for (const auto &[seat, _] : spades.getCurrentTrickCardSeatPairs())
+    {
+        values[getRelativeSeatIndex(spades, seat)] = 1.f;
+    }
+    return values;
 }
 std::array<float, 4 * (NUM_SEATS - 1)> Observation::getKnownAbsentSuits(const Spades &spades) const
 {
