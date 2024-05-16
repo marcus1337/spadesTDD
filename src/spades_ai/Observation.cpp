@@ -195,10 +195,15 @@ unsigned int Observation::getRankIndex(const Spades &spades, const Card &card) c
     return rankIndex;
 }
 
-
 std::array<float, NUM_SEATS - 1> Observation::getTopCardSeat(const Spades &spades) const
 {
-    return {}; // TODO
+    std::array<float, NUM_SEATS - 1> values{};
+    const auto &topSeat = spades.getCurrentTrickTopSeat();
+    if (topSeat.has_value())
+    {
+        values[getRelativeSeatIndex(spades, topSeat.value())] = 1.f;
+    }
+    return values;
 }
 std::array<float, NUM_SEATS - 1> Observation::getPlacedTrickCardSeats(const Spades &spades) const
 {
@@ -224,4 +229,35 @@ std::array<float, 13> Observation::getNumNeededTricksTeam(const Spades &spades) 
 unsigned int Observation::getCardIndex(const Spades &spades, const Card &card) const // MAX 52-1
 {
     return getSuitIndex(spades, card) * 13 + getRankIndex(spades, card);
+}
+
+Seat Observation::getRelativeSeatPosition(const Spades &spades, const Seat &relSeat) const
+{
+    const auto &seat = spades.getTurnSeat();
+    if (SeatUtils::getLeftOpponentSeat(seat) == relSeat)
+    {
+        return Seat::WEST;
+    }
+    if (SeatUtils::getRightOpponentSeat(seat) == relSeat)
+    {
+        return Seat::EAST;
+    }
+    return Seat::NORTH;
+}
+
+unsigned int Observation::getRelativeSeatIndex(const Spades &spades, const Seat &relSeat) const
+{
+    const auto &pos = getRelativeSeatPosition(spades, relSeat);
+    if (pos == Seat::EAST)
+    {
+        return 0;
+    }
+    else if (pos == Seat::NORTH)
+    {
+        return 1;
+    }
+    else
+    {
+        return 2;
+    }
 }

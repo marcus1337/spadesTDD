@@ -49,6 +49,8 @@ namespace spd
         bool hasSkippedLeadSuit(const Spades &spades, const std::vector<std::pair<Seat, Card>> &csPairs, int from, const Suit &suit, const Seat &seat) const;
         bool areAllSuitCardsPlaced(const Spades &spades, const Suit &suit) const;
         bool hasActiveNilBid(const Spades &spades, const Seat &seat) const;
+        Seat getRelativeSeatPosition(const Spades& spades, const Seat& relSeat) const;
+        unsigned int getRelativeSeatIndex(const Spades& spades, const Seat& relSeat) const;
 
         unsigned int getCardIndex(const Spades &spades, const Card &card) const;
         unsigned int getSuitIndex(const Spades &spades, const Card &card) const;
