@@ -96,3 +96,48 @@ bool Observation::hasActiveNilBid(const Spades &spades, const Seat &seat) const
     const auto &takenTricks = spades.getNumberOfTakenTricksCurrentRound(seat);
     return bid == 0 && takenTricks == 0;
 }
+
+std::array<float, DECK_SIZE> Observation::getPlacedCards(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, DECK_SIZE> Observation::getStartCards(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, DECK_SIZE> Observation::getCurrentlyOwnedCards(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, 4> Observation::getLeadCardSuit(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, 13> Observation::getLeadCardRank(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, NUM_SEATS - 1> Observation::getLeadCardSeat(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, NUM_SEATS - 1> Observation::getPlacedTrickCardSeats(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, 4 * (NUM_SEATS - 1)> Observation::getKnownAbsentSuits(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, NUM_SEATS> Observation::getActiveNilBidSeats(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, 13> Observation::getNumNeededTricksOpponent(const Spades &spades) const
+{
+    return {}; // TODO
+}
+std::array<float, 13> Observation::getNumNeededTricksTeam(const Spades &spades) const
+{
+    return {}; // TODO
+}
