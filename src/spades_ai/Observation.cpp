@@ -99,10 +99,12 @@ bool Observation::hasActiveNilBid(const Spades &spades, const Seat &seat) const
 
 std::array<float, DECK_SIZE> Observation::getPlacedCards(const Spades &spades) const
 {
-    for (const auto &card : spades.getUnplacedRoundCards())
+    std::array<float, DECK_SIZE> values{};
+    for (const auto &[_, card] : spades.getCurrentRoundCardSeatPairs())
     {
+        values[getCardIndex(spades, card)] = 1.f;
     }
-    return {}; // TODO
+    return values; // TODO
 }
 std::array<float, DECK_SIZE> Observation::getStartCards(const Spades &spades) const
 {
