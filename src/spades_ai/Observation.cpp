@@ -104,15 +104,25 @@ std::array<float, DECK_SIZE> Observation::getPlacedCards(const Spades &spades) c
     {
         values[getCardIndex(spades, card)] = 1.f;
     }
-    return values; // TODO
+    return values;
 }
 std::array<float, DECK_SIZE> Observation::getStartCards(const Spades &spades) const
 {
-    return {}; // TODO
+    std::array<float, DECK_SIZE> values{};
+    for (const auto &card : spades.getRoundStartCards(spades.getTurnSeat()))
+    {
+        values[getCardIndex(spades, card)] = 1.f;
+    }
+    return values;
 }
 std::array<float, DECK_SIZE> Observation::getCurrentlyOwnedCards(const Spades &spades) const
 {
-    return {}; // TODO
+    std::array<float, DECK_SIZE> values{};
+    for (const auto &card : spades.getHand(spades.getTurnSeat()))
+    {
+        values[getCardIndex(spades, card)] = 1.f;
+    }
+    return values;
 }
 std::array<float, 4> Observation::getLeadCardSuit(const Spades &spades) const
 {
