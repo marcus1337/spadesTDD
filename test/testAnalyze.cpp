@@ -2,7 +2,7 @@
 #include "spades/Spades.h"
 #include "spades_ai/logic/Analyze.h"
 #include "spades_ai/placer/RandomAIPlacer.h"
-#include "spades_ai/logic/AIObservation.h"
+#include "spades_ai/logic/Observation.h"
 
 using namespace spd;
 
