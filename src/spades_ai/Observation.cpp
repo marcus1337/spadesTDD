@@ -248,11 +248,23 @@ std::array<float, NUM_SEATS> Observation::getActiveNilBidSeats(const Spades &spa
 }
 std::array<float, 13> Observation::getNumNeededTricksOpponent(const Spades &spades) const
 {
-    return {}; // TODO
+    std::array<float, 13> values{};
+    const auto totalBid = spades.getBidResult(oppSeat1).value() + spades.getBidResult(oppSeat2).value();
+    for (int i = 0; i < totalBid; i++)
+    {
+        values[i] = 1.f;
+    }
+    return values;
 }
 std::array<float, 13> Observation::getNumNeededTricksTeam(const Spades &spades) const
 {
-    return {}; // TODO
+    std::array<float, 13> values{};
+    const auto totalBid = spades.getBidResult(seat).value() + spades.getBidResult(teamSeat).value();
+    for (int i = 0; i < totalBid; i++)
+    {
+        values[i] = 1.f;
+    }
+    return values;
 }
 
 unsigned int Observation::getCardIndex(const Spades &spades, const Card &card) const // MAX 52-1
