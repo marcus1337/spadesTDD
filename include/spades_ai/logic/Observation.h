@@ -42,6 +42,7 @@ namespace spd
         std::array<float, 13> getNumNeededTricksTeam(const Spades &spades) const;
 
         // Helper functions below.
+        bool wasFirstSpadePlacedStartOfTrick(const Spades &spades) const;
         bool hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat) const;
         bool hasSkippedLeadSuit(const Spades &spades, const Suit &leadSuit, const Seat &seat) const;
         bool hasSkippedLeadSuit(const Spades &spades, const std::vector<std::pair<Seat, Card>> &csPairs, int from, const Suit &suit, const Seat &seat) const;

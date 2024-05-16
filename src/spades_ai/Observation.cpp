@@ -17,7 +17,34 @@ const std::array<float, Observation::OBSERVATION_SIZE> &Observation::getValues()
 
 bool Observation::hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat) const
 {
-    return false; // TODO
+    if (!spades.isSpadesBroken())
+    {
+        return false;
+    }
+    uint64_t counter = 0;
+    for (const auto &pair : spades.getCurrentRoundCardSeatPairs())
+    {
+        counter++;
+        if (spades.getEffectiveSuit(pair.second) == Suit::SPADE)
+        {
+            return counter % 4 == 0 && pair.first == seat;
+        }
+    }
+    return false;
+}
+
+bool Observation::wasFirstSpadePlacedStartOfTrick(const Spades &spades) const
+{
+    uint64_t counter = 0;
+    for (const auto &pair : spades.getCurrentRoundCardSeatPairs())
+    {
+        counter++;
+        if (spades.getEffectiveSuit(pair.second) == Suit::SPADE)
+        {
+            return counter % 4 == 0;
+        }
+    }
+    return false;
 }
 
 bool Observation::areAllSuitCardsPlaced(const Spades &spades, const Suit &suit) const
