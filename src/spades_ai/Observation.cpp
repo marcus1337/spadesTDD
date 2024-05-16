@@ -92,5 +92,7 @@ bool Observation::hasSkippedLeadSuit(const Spades &spades, const Suit &suit, con
 
 bool Observation::hasActiveNilBid(const Spades &spades, const Seat &seat) const
 {
-    return false; // TODO
+    const auto &bid = spades.getBidResult(seat).value();
+    const auto &takenTricks = spades.getNumberOfTakenTricksCurrentRound(seat);
+    return bid == 0 && takenTricks == 0;
 }
