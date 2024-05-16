@@ -44,6 +44,7 @@ namespace spd
         // Helper functions below.
         bool hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat) const;
         bool hasSkippedLeadSuit(const Spades &spades, const Suit &leadSuit, const Seat &seat) const;
+        bool hasSkippedLeadSuit(const Spades &spades, const std::vector<std::pair<Seat, Card>> &csPairs, int from, const Suit &suit, const Seat &seat) const;
         bool areAllSuitCardsPlaced(const Spades &spades, const Suit &suit) const;
         bool hasActiveNilBid(const Spades &spades, const Seat &seat) const;
 

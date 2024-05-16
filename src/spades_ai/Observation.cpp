@@ -15,25 +15,46 @@ const std::array<float, Observation::OBSERVATION_SIZE> &Observation::getValues()
     return observation;
 }
 
-bool Observation::hasSkippedLeadSuit(const Spades &spades, const Suit &leadSuit, const Seat &seat) const
-{ // TODO: Make it work for half-finished tricks
-    const auto &csPairs = spades.getCurrentRoundCardSeatPairs();
-    for (int trickIndex = 0; trickIndex < csPairs.size() / 4; trickIndex++)
+bool Observation::hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat) const
+{
+    return false; // TODO
+}
+bool Observation::areAllSuitCardsPlaced(const Spades &spades, const Suit &suit) const
+{
+    return false; // TODO
+}
+
+bool Observation::hasSkippedLeadSuit(const Spades &spades, const std::vector<std::pair<Seat, Card>> &csPairs, int from, const Suit &suit, const Seat &seat) const
+{
+    const Suit leadSuit = spades.getEffectiveSuit(csPairs[from].second);
+    for (int i = 1; i <= 3 && i + from < csPairs.size(); i++)
     {
-        int from = trickIndex * 4;
-        const Card &leadCard = csPairs[from].second;
-        if (leadCard.is(leadSuit))
+        const auto &otherSeat = csPairs[from + i].first;
+        const auto &otherSuit = spades.getEffectiveSuit(csPairs[from + i].second);
+        if (otherSeat == seat && otherSuit != leadSuit)
         {
-            for (int i = 1; i <= 3; i++)
-            {
-                const auto &otherSeat = csPairs[from + i].first;
-                const auto &otherCard = csPairs[from + i].second;
-                if (otherSeat == seat && !leadCard.is(leadSuit))
-                {
-                    return true;
-                }
-            }
+            return true;
         }
     }
     return false;
+}
+
+bool Observation::hasSkippedLeadSuit(const Spades &spades, const Suit &suit, const Seat &seat) const
+{
+    const auto &csPairs = spades.getCurrentRoundCardSeatPairs();
+    const auto cardsPerTrick = 4;
+    for (int i = 0; i < spades.getRound() + 1; i++)
+    {
+        const auto from = i * cardsPerTrick;
+        if (from < csPairs.size() && hasSkippedLeadSuit(spades, csPairs, from, suit, seat))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Observation::hasActiveNilBid(const Spades &spades, const Seat &seat) const
+{
+    return false; // TODO
 }
