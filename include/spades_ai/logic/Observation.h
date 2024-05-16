@@ -49,6 +49,8 @@ namespace spd
         bool areAllSuitCardsPlaced(const Spades &spades, const Suit &suit) const;
         bool hasActiveNilBid(const Spades &spades, const Seat &seat) const;
 
+        unsigned int getCardIndex(const Spades& spades, const Card& card) const;
+
     public:
         Observation(const Spades &spades);
         const std::array<float, OBSERVATION_SIZE> &getValues() const;
