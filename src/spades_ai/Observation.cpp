@@ -126,8 +126,20 @@ std::array<float, DECK_SIZE> Observation::getCurrentlyOwnedCards(const Spades &s
 }
 std::array<float, 4> Observation::getLeadCardSuit(const Spades &spades) const
 {
-    return {}; // TODO
+    std::array<float, 4> values{};
+    const auto &trick = spades.getCurrentTrickCardSeatPairs();
+    if (!trick.empty())
+    {
+        values[getSuitIndex(spades, trick.front().second)] = 1.f;
+    }
+    return values;
 }
+
+unsigned int Observation::getSuitIndex(const Spades &spades, const Card &card) const
+{
+    return (unsigned int)spades.getEffectiveSuit(card);
+}
+
 std::array<float, 13> Observation::getLeadCardRank(const Spades &spades) const
 {
     return {}; // TODO
@@ -159,11 +171,10 @@ std::array<float, 13> Observation::getNumNeededTricksTeam(const Spades &spades) 
 
 unsigned int Observation::getCardIndex(const Spades &spades, const Card &card) const // MAX 52-1
 {
-    const auto &suit = spades.getEffectiveSuit(card);
-    const unsigned int suitIndex = (unsigned int)suit;
+    const unsigned int suitIndex = getSuitIndex(spades, card);
     unsigned int rankIndex = 0;
 
-    if (suit == Suit::SPADE)
+    if (spades.getEffectiveSuit(card) == Suit::SPADE)
     {
         const auto &trumpCards = spades.getTrumpCardsDescending();
         auto it = std::find(trumpCards.begin(), trumpCards.end(), card);

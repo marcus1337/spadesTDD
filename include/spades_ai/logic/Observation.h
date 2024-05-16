@@ -49,7 +49,10 @@ namespace spd
         bool areAllSuitCardsPlaced(const Spades &spades, const Suit &suit) const;
         bool hasActiveNilBid(const Spades &spades, const Seat &seat) const;
 
-        unsigned int getCardIndex(const Spades& spades, const Card& card) const;
+        unsigned int getCardIndex(const Spades &spades, const Card &card) const;
+        unsigned int getSuitIndex(const Spades &spades, const Card &card) const;
+
+        bool isTopCardTrump(const Spades &spades) const; // TODO
 
     public:
         Observation(const Spades &spades);
