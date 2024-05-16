@@ -44,7 +44,8 @@ namespace spd
         // Helper functions below.
         bool hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat) const;
         bool hasSkippedLeadSuit(const Spades &spades, const Suit &leadSuit, const Seat &seat) const;
-        bool hasActiveNilBis(const Spades &spades, const Seat &seat) const;
+        bool areAllSuitCardsPlaced(const Spades &spades, const Suit &suit) const;
+        bool hasActiveNilBid(const Spades &spades, const Seat &seat) const;
 
     public:
         Observation(const Spades &spades);
