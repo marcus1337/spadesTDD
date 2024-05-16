@@ -19,9 +19,18 @@ bool Observation::hasStartedTrickBreakingSpades(const Spades &spades, const Seat
 {
     return false; // TODO
 }
+
 bool Observation::areAllSuitCardsPlaced(const Spades &spades, const Suit &suit) const
 {
-    return false; // TODO
+    for (const auto &card : spades.getUnplacedRoundCards())
+    {
+        const auto &unplacedSuit = spades.getEffectiveSuit(card);
+        if (unplacedSuit == suit)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool Observation::hasSkippedLeadSuit(const Spades &spades, const std::vector<std::pair<Seat, Card>> &csPairs, int from, const Suit &suit, const Seat &seat) const
