@@ -135,16 +135,68 @@ std::array<float, 4> Observation::getLeadCardSuit(const Spades &spades) const
     return values;
 }
 
+bool Observation::isTopCardTrump(const Spades &spades) const
+{
+    for (const auto &[_, card] : spades.getCurrentTrickCardSeatPairs())
+    {
+        if (spades.getEffectiveSuit(card) == Suit::SPADE)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::array<float, 13> Observation::getTopCardRank(const Spades &spades) const
+{
+    std::array<float, 13> values{};
+    const auto &topSeat = spades.getCurrentTrickTopSeat();
+    if (topSeat.has_value())
+    {
+        for (const auto &[seat, card] : spades.getCurrentTrickCardSeatPairs())
+        {
+            if (seat == topSeat)
+            {
+                values[getRankIndex(spades, card)] = 1.f;
+            }
+        }
+    }
+    return values;
+}
+
 unsigned int Observation::getSuitIndex(const Spades &spades, const Card &card) const
 {
     return (unsigned int)spades.getEffectiveSuit(card);
 }
 
-std::array<float, 13> Observation::getLeadCardRank(const Spades &spades) const
+unsigned int Observation::getRankIndex(const Spades &spades, const Card &card) const // Max 12
 {
-    return {}; // TODO
+    unsigned int rankIndex = 0;
+    if (spades.getEffectiveSuit(card) == Suit::SPADE)
+    {
+        const auto &trumpCards = spades.getTrumpCardsDescending();
+        auto it = std::find(trumpCards.begin(), trumpCards.end(), card);
+        if (it != trumpCards.end())
+        {
+            rankIndex = static_cast<unsigned int>(std::distance(trumpCards.begin(), it));
+        }
+    }
+    else if (card.getRank().has_value())
+    {
+        const auto &ranks = Card::getRanks();
+        const auto &rank = card.getRank().value();
+        auto it = std::find(ranks.begin(), ranks.end(), rank);
+        if (it != ranks.end())
+        {
+            rankIndex = static_cast<unsigned int>(std::distance(ranks.begin(), it));
+        }
+    }
+    rankIndex = std::clamp<unsigned int>(rankIndex, 0, 12);
+    return rankIndex;
 }
-std::array<float, NUM_SEATS - 1> Observation::getLeadCardSeat(const Spades &spades) const
+
+
+std::array<float, NUM_SEATS - 1> Observation::getTopCardSeat(const Spades &spades) const
 {
     return {}; // TODO
 }
@@ -171,28 +223,5 @@ std::array<float, 13> Observation::getNumNeededTricksTeam(const Spades &spades) 
 
 unsigned int Observation::getCardIndex(const Spades &spades, const Card &card) const // MAX 52-1
 {
-    const unsigned int suitIndex = getSuitIndex(spades, card);
-    unsigned int rankIndex = 0;
-
-    if (spades.getEffectiveSuit(card) == Suit::SPADE)
-    {
-        const auto &trumpCards = spades.getTrumpCardsDescending();
-        auto it = std::find(trumpCards.begin(), trumpCards.end(), card);
-        if (it != trumpCards.end())
-        {
-            rankIndex = static_cast<unsigned int>(std::distance(trumpCards.begin(), it));
-        }
-    }
-    else if (card.getRank().has_value())
-    {
-        const auto &ranks = Card::getRanks();
-        const auto &rank = card.getRank().value();
-        auto it = std::find(ranks.begin(), ranks.end(), rank);
-        if (it != ranks.end())
-        {
-            rankIndex = static_cast<unsigned int>(std::distance(ranks.begin(), it));
-        }
-    }
-    rankIndex = std::clamp<unsigned int>(rankIndex, 0, 12);
-    return suitIndex * 13 + rankIndex;
+    return getSuitIndex(spades, card) * 13 + getRankIndex(spades, card);
 }

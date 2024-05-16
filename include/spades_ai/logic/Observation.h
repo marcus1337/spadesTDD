@@ -33,8 +33,9 @@ namespace spd
         std::array<float, DECK_SIZE> getStartCards(const Spades &spades) const;
         std::array<float, DECK_SIZE> getCurrentlyOwnedCards(const Spades &spades) const;
         std::array<float, 4> getLeadCardSuit(const Spades &spades) const;
-        std::array<float, 13> getLeadCardRank(const Spades &spades) const;
-        std::array<float, NUM_SEATS - 1> getLeadCardSeat(const Spades &spades) const;           // Relative seat positions
+        bool isTopCardTrump(const Spades &spades) const;
+        std::array<float, 13> getTopCardRank(const Spades &spades) const;
+        std::array<float, NUM_SEATS - 1> getTopCardSeat(const Spades &spades) const;           // Relative seat positions
         std::array<float, NUM_SEATS - 1> getPlacedTrickCardSeats(const Spades &spades) const;   // Relative seat positions
         std::array<float, 4 * (NUM_SEATS - 1)> getKnownAbsentSuits(const Spades &spades) const; // Relative seat positions
         std::array<float, NUM_SEATS> getActiveNilBidSeats(const Spades &spades) const;          // Relative seat positions
@@ -51,8 +52,7 @@ namespace spd
 
         unsigned int getCardIndex(const Spades &spades, const Card &card) const;
         unsigned int getSuitIndex(const Spades &spades, const Card &card) const;
-
-        bool isTopCardTrump(const Spades &spades) const; // TODO
+        unsigned int getRankIndex(const Spades &spades, const Card &card) const;
 
     public:
         Observation(const Spades &spades);
