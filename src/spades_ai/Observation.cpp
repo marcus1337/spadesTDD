@@ -22,7 +22,6 @@ Observation::Observation(const Spades &spades) : observation{}
     {
         observation[counter++] = value;
     }
-
     for (const auto &value : getLeadCardSuit(spades))
     {
         observation[counter++] = value;
