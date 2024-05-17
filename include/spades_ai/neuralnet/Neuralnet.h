@@ -15,6 +15,7 @@ namespace neuralnet
     {
         std::vector<Layer> layers;
         Layer &inputLayer();
+        WeightRandomizer randomizer;
 
     public:
         NeuralNet(int numInputNodes, int numHiddenNodes, int numOutputNodes);

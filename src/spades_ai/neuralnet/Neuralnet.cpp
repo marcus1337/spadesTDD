@@ -31,7 +31,7 @@ namespace neuralnet
 
     void NeuralNet::randomizeWeightSubset()
     {
-        // TODO
+        randomizer.randomizeSubset(layers);
     }
 
     Layer &NeuralNet::inputLayer()

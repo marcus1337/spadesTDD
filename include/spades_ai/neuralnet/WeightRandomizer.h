@@ -21,10 +21,13 @@ namespace neuralnet
 
     public:
         WeightRandomizer();
-        void randomize(std::vector<Layer>& layers);
-        void randomize(Layer& layer);
-        void randomizeSubset(Layer& layer);
-        void randomizeSubset(std::vector<Layer>& layers);
+        WeightRandomizer(WeightRandomizer &&other) noexcept;
+        WeightRandomizer &operator=(WeightRandomizer &&other) noexcept;
+
+        void randomize(std::vector<Layer> &layers);
+        void randomize(Layer &layer);
+        void randomizeSubset(Layer &layer);
+        void randomizeSubset(std::vector<Layer> &layers);
     };
 }
 

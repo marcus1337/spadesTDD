@@ -9,6 +9,18 @@ namespace neuralnet
     {
     }
 
+    WeightRandomizer::WeightRandomizer(WeightRandomizer &&other) noexcept
+        : randDevice(), rng(std::move(other.rng)) {}
+
+    WeightRandomizer &WeightRandomizer::operator=(WeightRandomizer &&other) noexcept
+    {
+        if (this != &other)
+        {
+            rng = std::move(other.rng);
+        }
+        return *this;
+    }
+
     void WeightRandomizer::randomize(Layer &layer)
     {
         for (std::size_t i = 0; i < layer.getNumInWeights(); i++)
