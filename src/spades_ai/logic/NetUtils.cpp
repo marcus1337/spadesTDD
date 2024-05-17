@@ -3,7 +3,7 @@
 using namespace spd;
 using namespace spd::net;
 
-bool wasFirstSpadePlacedStartOfTrick(const Spades &spades)
+bool spd::net::wasFirstSpadePlacedStartOfTrick(const Spades &spades)
 {
     uint64_t counter = 0;
     for (const auto &pair : spades.getCurrentRoundCardSeatPairs())
@@ -16,7 +16,7 @@ bool wasFirstSpadePlacedStartOfTrick(const Spades &spades)
     }
     return false;
 }
-bool hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat)
+bool spd::net::hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat)
 {
     if (!spades.isSpadesBroken())
     {
@@ -33,7 +33,7 @@ bool hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat)
     }
     return false;
 }
-bool hasSkippedLeadSuit(const Spades &spades, const Suit &suit, const Seat &seat)
+bool spd::net::hasSkippedLeadSuit(const Spades &spades, const Suit &suit, const Seat &seat)
 {
     const auto &csPairs = spades.getCurrentRoundCardSeatPairs();
     const auto cardsPerTrick = 4;
@@ -47,7 +47,7 @@ bool hasSkippedLeadSuit(const Spades &spades, const Suit &suit, const Seat &seat
     }
     return false;
 }
-bool hasSkippedLeadSuit(const Spades &spades, const std::vector<std::pair<Seat, Card>> &csPairs, int from, const Suit &suit, const Seat &seat)
+bool spd::net::hasSkippedLeadSuit(const Spades &spades, const std::vector<std::pair<Seat, Card>> &csPairs, int from, const Suit &suit, const Seat &seat)
 {
     const Suit leadSuit = spades.getEffectiveSuit(csPairs[from].second);
     for (int i = 1; i <= 3 && i + from < csPairs.size(); i++)
@@ -61,7 +61,7 @@ bool hasSkippedLeadSuit(const Spades &spades, const std::vector<std::pair<Seat, 
     }
     return false;
 }
-bool areAllSuitCardsPlaced(const Spades &spades, const Suit &suit)
+bool spd::net::areAllSuitCardsPlaced(const Spades &spades, const Suit &suit)
 {
     for (const auto &card : spades.getUnplacedRoundCards())
     {
@@ -73,13 +73,13 @@ bool areAllSuitCardsPlaced(const Spades &spades, const Suit &suit)
     }
     return true;
 }
-bool hasActiveNilBid(const Spades &spades, const Seat &seat)
+bool spd::net::hasActiveNilBid(const Spades &spades, const Seat &seat)
 {
     const auto &bid = spades.getBidResult(seat).value();
     const auto &takenTricks = spades.getNumberOfTakenTricksCurrentRound(seat);
     return bid == 0 && takenTricks == 0;
 }
-Seat getRelativeSeatPosition(const Spades &spades, const Seat &relSeat)
+Seat spd::net::getRelativeSeatPosition(const Spades &spades, const Seat &relSeat)
 {
     const auto &seat = spades.getTurnSeat();
     if (SeatUtils::getLeftOpponentSeat(seat) == relSeat)
@@ -92,7 +92,7 @@ Seat getRelativeSeatPosition(const Spades &spades, const Seat &relSeat)
     }
     return Seat::NORTH;
 }
-unsigned int getRelativeSeatIndex(const Spades &spades, const Seat &relSeat)
+unsigned int spd::net::getRelativeSeatIndex(const Spades &spades, const Seat &relSeat)
 {
     const auto &pos = net::getRelativeSeatPosition(spades, relSeat);
     if (pos == Seat::EAST)
@@ -108,15 +108,15 @@ unsigned int getRelativeSeatIndex(const Spades &spades, const Seat &relSeat)
         return 2;
     }
 }
-unsigned int getCardIndex(const Spades &spades, const Card &card)
+unsigned int spd::net::getCardIndex(const Spades &spades, const Card &card)
 {
     return net::getSuitIndex(spades, card) * 13 + net::getRankIndex(spades, card);
 }
-unsigned int getSuitIndex(const Spades &spades, const Card &card)
+unsigned int spd::net::getSuitIndex(const Spades &spades, const Card &card)
 {
     return (unsigned int)spades.getEffectiveSuit(card);
 }
-unsigned int getRankIndex(const Spades &spades, const Card &card)
+unsigned int spd::net::getRankIndex(const Spades &spades, const Card &card)
 {
     unsigned int rankIndex = 0;
     if (spades.getEffectiveSuit(card) == Suit::SPADE)
