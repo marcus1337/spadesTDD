@@ -23,6 +23,21 @@ namespace neuralnet
         layers = NetworkCodec::decode(serializedLayers);
     }
 
+    NeuralNet::NeuralNet(const NeuralNet &other)
+        : layers(other.layers), randomizer()
+    {
+    }
+
+    NeuralNet &NeuralNet::operator=(const NeuralNet &other)
+    {
+        if (this != &other)
+        {
+            layers = other.layers;
+            randomizer = WeightRandomizer();
+        }
+        return *this;
+    }
+
     std::string NeuralNet::encode() const
     {
         return NetworkCodec::encode(layers);
