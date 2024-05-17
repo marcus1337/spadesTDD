@@ -21,18 +21,10 @@ namespace spd
             Observation observation(spades);
             const auto &observationValues = observation.getValues();
             const auto &outputValues = network.getOutput(std::vector<float>(observationValues.begin(), observationValues.end()));
-            if (outputValues.size() == Action::OUTPUT_SIZE)
-            {
-                std::array<float, Action::OUTPUT_SIZE> arrOutputValues{};
-                std::copy(outputValues.begin(), outputValues.end(), arrOutputValues.begin());
-                Action action(spades, arrOutputValues);
-                return action.getPlacement();
-            }
-            else
-            {
-                assert(false);
-                return Card(0);
-            }
+            std::array<float, Action::OUTPUT_SIZE> arrOutputValues{};
+            std::copy(outputValues.begin(), outputValues.end(), arrOutputValues.begin());
+            Action action(spades, arrOutputValues);
+            return action.getPlacement();
         }
         virtual std::string serialize() const override
         {
