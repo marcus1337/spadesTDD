@@ -8,6 +8,8 @@
 #include "spades_ai/placer/TargetAIPlacer.h"
 #include "spades_ai/placer/NetAIPlacer.h"
 
+#include "spades_ai/placer/DefaultPlacer.h"
+
 namespace spd
 {
     class AIController
