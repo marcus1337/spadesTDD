@@ -27,26 +27,37 @@ namespace neuralnet
 
     void WeightRandomizer::randomizeSubset(Layer &layer)
     {
-        for (std::size_t i : getWeightIndicesSubset(layer.getNumInWeights()))
+        for (std::size_t i : getIndicesSubset(layer.getNumInWeights()))
         {
             layer.setInWeight(i, getRandomWeight());
         }
     }
 
-    std::vector<std::size_t> WeightRandomizer::getWeightIndicesSubset(std::size_t numWeights)
+    void WeightRandomizer::randomizeSubset(std::vector<Layer> &layers)
     {
-        std::set<std::size_t> indices;
-        for (std::size_t i = 0; i < getWeightIndicesSubsetSize(numWeights); i++)
+        for (std::size_t i : getIndicesSubset(layers.size()))
         {
-            indices.insert(getRandomWeightIndex(numWeights));
+            randomizeSubset(layers[i]);
+        }
+    }
+
+    std::vector<std::size_t> WeightRandomizer::getIndicesSubset(std::size_t numIndices)
+    {
+        if (numIndices == 0)
+        {
+            return {};
+        }
+        std::set<std::size_t> indices;
+        for (std::size_t i = 0; i < getRandIndicesSubsetSize(numIndices); i++)
+        {
+            indices.insert(getRandomIndex(numIndices));
         }
         return std::vector<std::size_t>(indices.begin(), indices.end());
     }
 
-    std::size_t WeightRandomizer::getWeightIndicesSubsetSize(std::size_t numWeights)
+    std::size_t WeightRandomizer::getRandIndicesSubsetSize(std::size_t numIndices)
     {
-        std::size_t maxSize = std::max<std::size_t>(1, numWeights / 3);
-        std::uniform_int_distribution<std::size_t> distribution(0, maxSize);
+        std::uniform_int_distribution<std::size_t> distribution(1, numIndices);
         return distribution(rng);
     }
 
@@ -56,9 +67,9 @@ namespace neuralnet
         return distribution(rng);
     }
 
-    std::size_t WeightRandomizer::getRandomWeightIndex(std::size_t numWeights)
+    std::size_t WeightRandomizer::getRandomIndex(std::size_t size)
     {
-        std::uniform_int_distribution<std::size_t> distribution(0, numWeights - 1);
+        std::uniform_int_distribution<std::size_t> distribution(0, size - 1);
         return distribution(rng);
     }
 

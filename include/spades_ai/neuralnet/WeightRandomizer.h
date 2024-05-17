@@ -15,15 +15,16 @@ namespace neuralnet
         std::mt19937 rng;
 
         float getRandomWeight();
-        std::size_t getRandomWeightIndex(std::size_t numWeights);
-        std::vector<std::size_t> getWeightIndicesSubset(std::size_t numWeights);
-        std::size_t getWeightIndicesSubsetSize(std::size_t numWeights);
+        std::size_t getRandomIndex(std::size_t numWeights);
+        std::vector<std::size_t> getIndicesSubset(std::size_t numWeights);
+        std::size_t getRandIndicesSubsetSize(std::size_t numWeights);
 
     public:
         WeightRandomizer();
         void randomize(std::vector<Layer>& layers);
         void randomize(Layer& layer);
         void randomizeSubset(Layer& layer);
+        void randomizeSubset(std::vector<Layer>& layers);
     };
 }
 
