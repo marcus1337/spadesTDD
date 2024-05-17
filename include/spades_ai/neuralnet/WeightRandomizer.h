@@ -21,7 +21,8 @@ namespace neuralnet
 
     public:
         WeightRandomizer();
-        void radomize(Layer& layer);
+        void randomize(std::vector<Layer>& layers);
+        void randomize(Layer& layer);
         void randomizeSubset(Layer& layer);
     };
 }

@@ -9,11 +9,19 @@ namespace neuralnet
     {
     }
 
-    void WeightRandomizer::radomize(Layer &layer)
+    void WeightRandomizer::randomize(Layer &layer)
     {
         for (std::size_t i = 0; i < layer.getNumInWeights(); i++)
         {
             layer.setInWeight(i, getRandomWeight());
+        }
+    }
+
+    void WeightRandomizer::randomize(std::vector<Layer> &layers)
+    {
+        for (auto &layer : layers)
+        {
+            randomize(layer);
         }
     }
 
