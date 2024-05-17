@@ -14,6 +14,7 @@ namespace spd
         DefaultPlacer defaultPlacer;
         AIStrategy strategy = AIStrategy::NORMAL;
         AIPlacer &getPlacer();
+        std::map<AIStrategy, std::unique_ptr<NetAIPlacer>> netAIPlacers;
 
     public:
         AIController(std::shared_ptr<Spades> spades);
@@ -22,5 +23,6 @@ namespace spd
         void setStrategy(const AIStrategy &strategy);
         int getBid() const;
         Card getPlacement();
+        bool setNetAI(const std::string& encoding, const AIStrategy& strategy);
     };
 }

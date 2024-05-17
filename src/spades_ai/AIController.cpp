@@ -4,6 +4,11 @@ using namespace spd;
 
 AIPlacer &AIController::getPlacer()
 {
+    if (netAIPlacers.contains(strategy))
+    {
+        return *netAIPlacers.at(strategy);
+    }
+
     if (strategy == AIStrategy::RANDOM)
     {
         return randAI;
@@ -50,4 +55,18 @@ Card AIController::getPlacement()
 {
     assert(spades != nullptr);
     return getPlacer().getPlacement(*spades.get());
+}
+
+bool AIController::setNetAI(const std::string &encoding, const AIStrategy &strategy)
+{
+    auto netPlacer = std::make_unique<NetAIPlacer>();
+    if (netPlacer->deserialize(encoding))
+    {
+        netAIPlacers[strategy] = std::move(netPlacer);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
