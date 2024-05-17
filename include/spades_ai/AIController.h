@@ -9,7 +9,7 @@
 #include "spades_ai/placer/RandomAIPlacer.h"
 #include "spades_ai/placer/ZeroAIPlacer.h"
 #include "spades_ai/placer/TargetAIPlacer.h"
-#include "spades_ai/logic/NetAction.h"
+#include "spades_ai/logic/Action.h"
 
 #include <iostream>
 #include <fstream>

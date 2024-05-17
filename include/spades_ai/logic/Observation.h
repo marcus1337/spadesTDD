@@ -25,7 +25,12 @@ namespace spd
 {
     class Observation
     {
+    public:
         static constexpr auto OBSERVATION_SIZE = DECK_SIZE + DECK_SIZE + DECK_SIZE + 4 + 13 + (NUM_SEATS - 1) * 3 + NUM_SEATS + 13 + 13;
+        Observation(const Spades &spades);
+        const std::array<float, OBSERVATION_SIZE> &getValues() const;
+
+    private:
         std::array<float, OBSERVATION_SIZE> observation;
         Seat seat, teamSeat, oppSeat1, oppSeat2;
 
@@ -35,15 +40,11 @@ namespace spd
         std::array<float, 4> getLeadCardSuit(const Spades &spades) const;
         bool isTopCardTrump(const Spades &spades) const;
         std::array<float, 13> getTopCardRank(const Spades &spades) const;
-        std::array<float, NUM_SEATS - 1> getTopCardSeat(const Spades &spades) const;           // Relative seat positions
+        std::array<float, NUM_SEATS - 1> getTopCardSeat(const Spades &spades) const;            // Relative seat positions
         std::array<float, NUM_SEATS - 1> getPlacedTrickCardSeats(const Spades &spades) const;   // Relative seat positions
         std::array<float, 4 * (NUM_SEATS - 1)> getKnownAbsentSuits(const Spades &spades) const; // Relative seat positions
         std::array<float, NUM_SEATS> getActiveNilBidSeats(const Spades &spades) const;          // Relative seat positions
         std::array<float, 13> getNumNeededTricksOpponent(const Spades &spades) const;
         std::array<float, 13> getNumNeededTricksTeam(const Spades &spades) const;
-
-    public:
-        Observation(const Spades &spades);
-        const std::array<float, OBSERVATION_SIZE> &getValues() const;
     };
 }

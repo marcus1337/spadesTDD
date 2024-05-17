@@ -1,15 +1,15 @@
-#include "spades_ai/logic/NetAction.h"
+#include "spades_ai/logic/Action.h"
 #include "spades_ai/logic/NetUtils.h"
 
 using namespace spd;
 using namespace net;
 
-NetAction::NetAction(const Spades &spades, const std::array<float, OUTPUT_SIZE> &output)
+Action::Action(const Spades &spades, const std::array<float, OUTPUT_SIZE> &output)
 {
     card = selectCard(spades, output);
 }
 
-Card NetAction::selectCard(const Spades &spades, const std::array<float, OUTPUT_SIZE> &output) const
+Card Action::selectCard(const Spades &spades, const std::array<float, OUTPUT_SIZE> &output) const
 {
     const auto &allCards = spades.getStartCards();
     std::set<Card> handSet;
@@ -29,12 +29,12 @@ Card NetAction::selectCard(const Spades &spades, const std::array<float, OUTPUT_
     return Card(0);
 }
 
-Card NetAction::getPlacement() const
+Card Action::getPlacement() const
 {
     return card;
 }
 
-std::vector<unsigned int> NetAction::getIndicesSortedByMax(const std::array<float, OUTPUT_SIZE> &output) const
+std::vector<unsigned int> Action::getIndicesSortedByMax(const std::array<float, OUTPUT_SIZE> &output) const
 {
     std::vector<std::pair<float, unsigned int>> indexedValues;
     for (unsigned int i = 0; i < OUTPUT_SIZE; ++i)
