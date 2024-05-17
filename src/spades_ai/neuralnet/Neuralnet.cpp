@@ -48,19 +48,14 @@ namespace neuralnet
         randomizer.randomizeSubset(layers);
     }
 
-    Layer &NeuralNet::inputLayer()
-    {
-        return layers[0];
-    }
-
     int NeuralNet::selectMaxOutputIndex(std::vector<float> outputValues)
     {
         return std::distance(outputValues.begin(), std::max_element(outputValues.begin(), outputValues.end()));
     }
 
-    bool NeuralNet::isValidInput(const std::vector<float> &inputValues)
+    bool NeuralNet::isValidInput(const std::vector<float> &inputValues) const
     {
-        return inputValues.size() == inputLayer().getNumNodes();
+        return inputValues.size() == layers.front().getNumNodes();
     }
 
     std::vector<float> NeuralNet::getOutput(std::vector<float> inputValues)
