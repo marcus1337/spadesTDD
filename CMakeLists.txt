@@ -33,6 +33,7 @@ add_library(${PROJECT_NAME} STATIC "src/Spades.cpp"
 "src/spades_ai/RandomAIPlacer.cpp"
 "src/spades_ai/NetAIPlacer.cpp"
 "src/spades_ai/Observation.cpp"
+"src/spades_ai/AIController.cpp"
 
 "src/spades_ai/neuralnet/Neuralnet.cpp" 
 "src/spades_ai/neuralnet/WeightRandomizer.cpp" 
