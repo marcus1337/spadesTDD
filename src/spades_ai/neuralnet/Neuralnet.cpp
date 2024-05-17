@@ -7,7 +7,6 @@ namespace neuralnet
 
     NeuralNet::NeuralNet(int numInputNodes, int numHiddenNodes, int numOutputNodes)
     {
-
         Layer inputLayer(numInputNodes, 0);
         layers.push_back(inputLayer);
         if (numHiddenNodes > 0)
@@ -58,12 +57,12 @@ namespace neuralnet
         return inputValues;
     }
 
-    int NeuralNet::getNumLayers()
+    std::size_t NeuralNet::getNumLayers() const
     {
         return layers.size();
     }
 
-    std::vector<float> NeuralNet::getInWeights(int layerIndex)
+    std::vector<float> NeuralNet::getInWeights(std::size_t layerIndex)
     {
         return layers[layerIndex].getInWeights();
     }

@@ -23,6 +23,8 @@ namespace neuralnet
         WeightRandomizer();
         WeightRandomizer(WeightRandomizer &&other) noexcept;
         WeightRandomizer &operator=(WeightRandomizer &&other) noexcept;
+        WeightRandomizer(const WeightRandomizer &) = delete;
+        WeightRandomizer &operator=(const WeightRandomizer &) = delete;
 
         void randomize(std::vector<Layer> &layers);
         void randomize(Layer &layer);

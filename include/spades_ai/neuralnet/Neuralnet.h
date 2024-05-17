@@ -14,8 +14,8 @@ namespace neuralnet
     class NeuralNet
     {
         std::vector<Layer> layers;
-        Layer &inputLayer();
         WeightRandomizer randomizer;
+        Layer &inputLayer();
 
     public:
         NeuralNet(int numInputNodes, int numHiddenNodes, int numOutputNodes);
@@ -25,8 +25,8 @@ namespace neuralnet
         std::vector<float> getOutput(std::vector<float> inputValues);
         bool isValidInput(const std::vector<float> &inputValues);
         void randomizeWeightSubset();
-        int getNumLayers();
-        std::vector<float> getInWeights(int layerIndex);
+        std::size_t getNumLayers() const;
+        std::vector<float> getInWeights(std::size_t layerIndex);
     };
 
 }
