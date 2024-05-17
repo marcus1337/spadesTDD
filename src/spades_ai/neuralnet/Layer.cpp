@@ -18,9 +18,9 @@ namespace neuralnet
 
     std::vector<float> Layer::getInWeights(int nodeIndex)
     {
-        int sliceSize = getPreviousLayerSize();
-        int startIndex = nodeIndex * sliceSize;
-        int endIndex = startIndex + sliceSize;
+        const int sliceSize = getPreviousLayerSize();
+        const int startIndex = nodeIndex * sliceSize;
+        const int endIndex = startIndex + sliceSize;
         return std::vector<float>(inWeights.begin() + startIndex, inWeights.begin() + endIndex);
     }
 
@@ -32,10 +32,9 @@ namespace neuralnet
         std::vector<float> output;
         for (int i = 0; i < nodes.size(); i++)
         {
-            Node &node = nodes[i];
             std::vector<float> nodeInWeights = getInWeights(i);
-            node.setValue(nodeInWeights, inputValues);
-            output.push_back(node.getValue());
+            nodes[i].setValue(nodeInWeights, inputValues);
+            output.push_back(nodes[i].getValue());
         }
         return output;
     }
