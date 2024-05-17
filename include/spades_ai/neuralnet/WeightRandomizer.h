@@ -4,22 +4,23 @@
 
 #include <vector>
 #include <random>
+#include <memory>
 
-namespace neuralnet {
-    class WeightRandomizer {
-        std::vector<float>& weights;
-        std::mt19937 rng;
-        std::random_device randDevice;
+namespace neuralnet
+{
+    class WeightRandomizer
+    {
+        std::shared_ptr<std::mt19937> rng;
+        std::vector<float> &weights;
         float getRandomWeight();
         int getRandomWeightIndex();
         std::vector<int> getWeightIndicesSubset();
         int getWeightIndicesSubsetSize();
 
     public:
-        WeightRandomizer(std::vector<float>& _weights);
+        WeightRandomizer(std::vector<float> &_weights, std::shared_ptr<std::mt19937> rng);
         void radomize();
         void randomizeSubset();
-
     };
 }
 

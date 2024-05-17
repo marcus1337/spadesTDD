@@ -8,18 +8,21 @@
 #include "WeightRandomizer.h"
 #include "NetworkCodec.h"
 
-namespace neuralnet {
+namespace neuralnet
+{
 
-    class NeuralNet {
+    class NeuralNet
+    {
         std::vector<Layer> layers;
-        Layer& inputLayer();
+        Layer &inputLayer();
+
     public:
         NeuralNet(int numInputNodes, int numHiddenNodes, int numOutputNodes);
-        NeuralNet(const std::string& serializedLayers);
+        NeuralNet(const std::string &serializedLayers);
         std::string encode() const;
         static int selectMaxOutputIndex(std::vector<float> outputValues);
         std::vector<float> getOutput(std::vector<float> inputValues);
-        bool isValidInput(const std::vector<float>& inputValues);
+        bool isValidInput(const std::vector<float> &inputValues);
         void randomizeWeightSubset();
         int getNumLayers();
         std::vector<float> getInWeights(int layerIndex);
