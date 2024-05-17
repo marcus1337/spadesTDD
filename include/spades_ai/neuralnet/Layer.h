@@ -20,6 +20,7 @@ namespace neuralnet
         std::vector<float> getOutput(const std::vector<float> &inputValues);
         int getNumNodes() const;
         std::vector<float> getInWeights() const;
+        std::size_t getNumInWeights() const;
         void setInWeight(int index, float value);
     };
 }

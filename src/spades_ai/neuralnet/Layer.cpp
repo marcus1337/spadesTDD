@@ -1,6 +1,5 @@
 #include "spades_ai/neuralnet/Layer.h"
 #include <cmath>
-#include "spades_ai/neuralnet/WeightRandomizer.h"
 
 namespace neuralnet
 {
@@ -57,6 +56,10 @@ namespace neuralnet
     int Layer::getPreviousLayerSize()
     {
         return inWeights.size() / getNumNodes();
+    }
+    std::size_t Layer::getNumInWeights() const
+    {
+        return inWeights.size();
     }
 
 }

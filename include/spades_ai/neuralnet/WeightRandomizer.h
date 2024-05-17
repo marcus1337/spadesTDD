@@ -5,22 +5,24 @@
 #include <vector>
 #include <random>
 #include <memory>
+#include "spades_ai/neuralnet/Layer.h"
 
 namespace neuralnet
 {
     class WeightRandomizer
     {
-        std::shared_ptr<std::mt19937> rng;
-        std::vector<float> &weights;
+        std::random_device randDevice;
+        std::mt19937 rng;
+
         float getRandomWeight();
-        int getRandomWeightIndex();
-        std::vector<int> getWeightIndicesSubset();
-        int getWeightIndicesSubsetSize();
+        std::size_t getRandomWeightIndex(std::size_t numWeights);
+        std::vector<std::size_t> getWeightIndicesSubset(std::size_t numWeights);
+        std::size_t getWeightIndicesSubsetSize(std::size_t numWeights);
 
     public:
-        WeightRandomizer(std::vector<float> &_weights, std::shared_ptr<std::mt19937> rng);
-        void radomize();
-        void randomizeSubset();
+        WeightRandomizer();
+        void radomize(Layer& layer);
+        void randomizeSubset(Layer& layer);
     };
 }
 

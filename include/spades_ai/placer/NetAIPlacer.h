@@ -6,6 +6,7 @@
 #include "spades_ai/logic/Action.h"
 #include <variant>
 #include "spades/data/Serializable.h"
+#include "spades_ai/neuralnet/WeightRandomizer.h"
 
 namespace spd
 {

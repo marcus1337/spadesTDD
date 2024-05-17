@@ -5,53 +5,53 @@
 namespace neuralnet
 {
 
-    WeightRandomizer::WeightRandomizer(std::vector<float> &_weights, std::shared_ptr<std::mt19937> _rng) : weights(_weights), rng(_rng)
+    WeightRandomizer::WeightRandomizer() : rng(randDevice())
     {
     }
 
-    void WeightRandomizer::radomize()
+    void WeightRandomizer::radomize(Layer &layer)
     {
-        for (int i = 0; i < weights.size(); i++)
+        for (std::size_t i = 0; i < layer.getNumInWeights(); i++)
         {
-            weights[i] = getRandomWeight();
+            layer.setInWeight(i, getRandomWeight());
         }
     }
 
-    void WeightRandomizer::randomizeSubset()
+    void WeightRandomizer::randomizeSubset(Layer &layer)
     {
-        for (int weightIndex : getWeightIndicesSubset())
+        for (std::size_t i : getWeightIndicesSubset(layer.getNumInWeights()))
         {
-            weights[weightIndex] = getRandomWeight();
+            layer.setInWeight(i, getRandomWeight());
         }
     }
 
-    std::vector<int> WeightRandomizer::getWeightIndicesSubset()
+    std::vector<std::size_t> WeightRandomizer::getWeightIndicesSubset(std::size_t numWeights)
     {
-        std::set<int> indices;
-        for (int i = 0; i < getWeightIndicesSubsetSize(); i++)
+        std::set<std::size_t> indices;
+        for (std::size_t i = 0; i < getWeightIndicesSubsetSize(numWeights); i++)
         {
-            indices.insert(getRandomWeightIndex());
+            indices.insert(getRandomWeightIndex(numWeights));
         }
-        return std::vector<int>(indices.begin(), indices.end());
+        return std::vector<std::size_t>(indices.begin(), indices.end());
     }
 
-    int WeightRandomizer::getWeightIndicesSubsetSize()
+    std::size_t WeightRandomizer::getWeightIndicesSubsetSize(std::size_t numWeights)
     {
-        int maxSize = std::min<int>(3, weights.size());
-        std::uniform_int_distribution<int> distribution(0, maxSize);
-        return distribution(*rng);
+        std::size_t maxSize = std::max<std::size_t>(1, numWeights / 3);
+        std::uniform_int_distribution<std::size_t> distribution(0, maxSize);
+        return distribution(rng);
     }
 
     float WeightRandomizer::getRandomWeight()
     {
         std::uniform_real_distribution<float> distribution(-2.f, 2.f);
-        return distribution(*rng);
+        return distribution(rng);
     }
 
-    int WeightRandomizer::getRandomWeightIndex()
+    std::size_t WeightRandomizer::getRandomWeightIndex(std::size_t numWeights)
     {
-        std::uniform_int_distribution<int> distribution(0, weights.size());
-        return distribution(*rng);
+        std::uniform_int_distribution<std::size_t> distribution(0, numWeights - 1);
+        return distribution(rng);
     }
 
 }
