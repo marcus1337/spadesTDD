@@ -52,6 +52,7 @@ target_include_directories(${PROJECT_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
 )
 
+cmake_policy(SET CMP0077 NEW)
 option(BUILD_TESTING "Build the testing" ON)
 if(BUILD_TESTING)
   include(cmake/Tests.cmake)
