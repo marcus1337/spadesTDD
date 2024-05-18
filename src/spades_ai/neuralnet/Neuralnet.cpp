@@ -7,15 +7,8 @@ namespace neuralnet
 
     NeuralNet::NeuralNet(int numInputNodes, int numHiddenNodes, int numOutputNodes)
     {
-        Layer inputLayer(numInputNodes, 0);
-        layers.push_back(inputLayer);
-        if (numHiddenNodes > 0)
-        {
-            Layer hiddenLayer(numHiddenNodes, layers[layers.size() - 1].getNumNodes());
-            layers.push_back(hiddenLayer);
-        }
-        Layer outputLayer(numOutputNodes, layers[layers.size() - 1].getNumNodes());
-        layers.push_back(outputLayer);
+        addLayers(numInputNodes, numHiddenNodes, numOutputNodes);
+        randomize();
     }
 
     NeuralNet::NeuralNet(const std::string &serializedLayers)
@@ -26,6 +19,19 @@ namespace neuralnet
     NeuralNet::NeuralNet(const NeuralNet &other)
         : layers(other.layers), randomizer()
     {
+    }
+
+    void NeuralNet::addLayers(int numInputNodes, int numHiddenNodes, int numOutputNodes)
+    {
+        Layer inputLayer(numInputNodes, 0);
+        layers.push_back(inputLayer);
+        if (numHiddenNodes > 0)
+        {
+            Layer hiddenLayer(numHiddenNodes, layers[layers.size() - 1].getNumNodes());
+            layers.push_back(hiddenLayer);
+        }
+        Layer outputLayer(numOutputNodes, layers[layers.size() - 1].getNumNodes());
+        layers.push_back(outputLayer);
     }
 
     NeuralNet &NeuralNet::operator=(const NeuralNet &other)
@@ -46,6 +52,11 @@ namespace neuralnet
     void NeuralNet::randomizeWeightSubset()
     {
         randomizer.randomizeSubset(layers);
+    }
+
+    void NeuralNet::randomize()
+    {
+        randomizer.randomize(layers);
     }
 
     int NeuralNet::selectMaxOutputIndex(std::vector<float> outputValues)
