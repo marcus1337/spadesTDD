@@ -75,7 +75,6 @@ TEST_F(SuicideBidTest, PossibleBids)
 {
     const auto seat = spades.getTurnSeat();
     const auto bids = spades.getPossibleBids(seat);
-    EXPECT_NO_THROW(bids.at(1));
     EXPECT_EQ(bids.at(1), 4);
     EXPECT_EQ(bids.back(), 13);
     spades.addBid(bids[1]);

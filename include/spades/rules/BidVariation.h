@@ -23,20 +23,20 @@ namespace spd
     {
         virtual std::vector<int> getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const override;
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override;
-        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const;
+        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const override;
     };
     class DoubleNil : public BidVariation
     {
         virtual std::vector<int> getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const override;
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override;
-        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const;
+        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const override;
     };
 
     class Mirror : public BidVariation
     {
         virtual std::vector<int> getBids(const Seat &seat, const State &state, const std::vector<Card>& hand) const override;
         virtual std::vector<BidOption> getBidOptions(const Seat &seat, const State &state) const override;
-        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const;
+        virtual std::optional<int> getBidResult(const Seat &seat, const State &state) const override;
     };
 
     class Suicide : public BidVariation

@@ -75,7 +75,7 @@ bool spd::net::areAllSuitCardsPlaced(const Spades &spades, const Suit &suit)
 }
 bool spd::net::hasActiveNilBid(const Spades &spades, const Seat &seat)
 {
-    const auto &bid = spades.getBidResult(seat).value();
+    const auto bid = spades.getBidResult(seat).value();
     const auto &takenTricks = spades.getNumberOfTakenTricksCurrentRound(seat);
     return bid == 0 && takenTricks == 0;
 }
@@ -131,7 +131,7 @@ unsigned int spd::net::getRankIndex(const Spades &spades, const Card &card)
     else if (card.getRank().has_value())
     {
         const auto &ranks = Card::getRanks();
-        const auto &rank = card.getRank().value();
+        const auto rank = card.getRank().value();
         auto it = std::find(ranks.begin(), ranks.end(), rank);
         if (it != ranks.end())
         {
