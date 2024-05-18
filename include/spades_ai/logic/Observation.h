@@ -26,7 +26,7 @@ namespace spd
     class Observation
     {
     public:
-        static constexpr auto OBSERVATION_SIZE = DECK_SIZE + DECK_SIZE + DECK_SIZE + 4 + 13 + (NUM_SEATS - 1) * 3 + NUM_SEATS + 13 + 13;
+        static constexpr auto OBSERVATION_SIZE = 3 * DECK_SIZE + 4 + 1 + 13 + (NUM_SEATS - 1) * 6 + NUM_SEATS + 2 * 13;
         Observation(const Spades &spades);
         const std::array<float, OBSERVATION_SIZE> &getValues() const;
 
