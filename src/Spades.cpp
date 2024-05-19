@@ -238,14 +238,15 @@ std::vector<Card> Spades::getRoundStartCards(const Seat &seat) const
 
 std::vector<Card> Spades::getHand(const Seat &seat) const
 {
-    auto startHand = deck.getHand(seat, state.getRound());
-    auto playedRoundCards = state.getPlayedCardSeatPairs(state.getRound());
-    std::vector<Card> hand;
-    for (const auto &card : startHand)
+    std::set<Card> playedSet;
+    for (const auto &pair : state.getPlayedCardSeatPairs(state.getRound()))
     {
-        if (!std::any_of(playedRoundCards.begin(), playedRoundCards.end(),
-                         [&](const auto &playedSeatCardPair)
-                         { return playedSeatCardPair.second == card; }))
+        playedSet.insert(pair.second);
+    }
+    std::vector<Card> hand;
+    for (const auto &card : getRoundStartCards(seat))
+    {
+        if (!playedSet.contains(card))
         {
             hand.push_back(card);
         }
@@ -590,7 +591,7 @@ std::vector<Card> Spades::getStartCards() const
     std::vector<Card> cards;
     for (const auto &seat : SeatUtils::getSeats())
     {
-        for (const auto &card : deck.getHand(seat, state.getRound()))
+        for (const auto &card : getRoundStartCards(seat))
         {
             cards.push_back(card);
         }
