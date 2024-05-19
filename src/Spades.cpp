@@ -62,7 +62,7 @@ void Spades::setSeed(unsigned int seed)
 
 void Spades::reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
 {
-    cachedHands.clear();
+    cachedStartHands.clear();
     history.clear();
     state.clear();
     setSeed(seed);
@@ -233,8 +233,13 @@ std::vector<BidOption> Spades::getBidOptions(const Seat &seat) const
 
 std::vector<Card> Spades::getRoundStartCards(const Seat &seat) const
 {
-    const auto &hand = deck.getHand(seat, state.getRound());
-    return std::vector<Card>(hand.begin(), hand.end());
+    const auto &key = std::make_pair(seat, getRound());
+    if (!cachedStartHands.contains(key))
+    {
+        const auto &hand = deck.getHand(seat, state.getRound());
+        cachedStartHands[key] = std::vector<Card>(hand.begin(), hand.end());
+    }
+    return cachedStartHands[key];
 }
 
 std::vector<Card> Spades::getHand(const Seat &seat) const

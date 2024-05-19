@@ -12,6 +12,18 @@
 #include "spades/rules/ScoreSettings.h"
 #include "spades/data/Move.h"
 
+namespace std
+{
+    template <>
+    struct hash<std::pair<spd::Seat, int>>
+    {
+        std::size_t operator()(const std::pair<spd::Seat, int> &p) const noexcept
+        {
+            return std::hash<spd::Seat>{}(p.first) ^ std::hash<int>{}(p.second);
+        }
+    };
+}
+
 namespace spd
 {
     class Spades
@@ -22,7 +34,7 @@ namespace spd
         TrumpVariationController trumpVarController;
         BidVariationController bidVarController;
 
-        std::unordered_map<std::pair<Seat, int>, std::vector<Card>> cachedHands; // Temporary values used for optimization
+        mutable std::unordered_map<std::pair<Seat, int>, std::vector<Card>> cachedStartHands; // Temporary values used for optimization
 
         SpadesMemento createMemento() const;
         void loadMemento(const SpadesMemento &memento);
