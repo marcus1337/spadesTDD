@@ -66,3 +66,15 @@ Seat TrumpVariationController::getTrickStartSeat(const State &state) const
     }
     return startSeat;
 }
+
+Suit TrumpVariationController::getEffectiveSuit(const Card &card) const
+{
+    if (getTrumpVariation()->isTrumpCard(card))
+    {
+        return Suit::SPADE;
+    }
+    else
+    {
+        return card.getSuit().value_or(Suit::SPADE);
+    }
+}

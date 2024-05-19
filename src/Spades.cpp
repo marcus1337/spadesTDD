@@ -330,15 +330,7 @@ bool Spades::canPlace(const Card &card) const
 
 Suit Spades::getEffectiveSuit(const Card &card) const
 {
-    const auto trumpCards = getTrumpCardsDescending();
-    if (std::find(trumpCards.begin(), trumpCards.end(), card) != trumpCards.end())
-    {
-        return Suit::SPADE;
-    }
-    else
-    {
-        return card.getSuit().value_or(Suit::SPADE);
-    }
+    return trumpVarController.getEffectiveSuit(card);
 }
 
 bool Spades::isTrumpCard(const Card &card) const
