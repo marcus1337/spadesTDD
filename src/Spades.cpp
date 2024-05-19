@@ -62,6 +62,7 @@ void Spades::setSeed(unsigned int seed)
 
 void Spades::reset(unsigned int seed, BidVariationType bidVariationType, TrumpVariationType trumpVariationType)
 {
+    cachedHands.clear();
     history.clear();
     state.clear();
     setSeed(seed);

@@ -22,6 +22,8 @@ namespace spd
         TrumpVariationController trumpVarController;
         BidVariationController bidVarController;
 
+        std::unordered_map<std::pair<Seat, int>, std::vector<Card>> cachedHands; // Temporary values used for optimization
+
         SpadesMemento createMemento() const;
         void loadMemento(const SpadesMemento &memento);
         void setBidVariation(BidVariationType type);
