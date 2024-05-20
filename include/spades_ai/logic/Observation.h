@@ -1,6 +1,7 @@
 #pragma once
 #include "spades/Spades.h"
 #include "spades/pch.h"
+#include "SuitSupplyObservation.h"
 
 // Observation assumens each suit has 13 ranks, if more ranks due to special rules crop out selection to top 13 ranks and assume lower ranks are the "lowest rank".
 
@@ -42,7 +43,6 @@ namespace spd
         std::array<float, 13> getTopCardRank(const Spades &spades) const;
         std::array<float, NUM_SEATS - 1> getTopCardSeat(const Spades &spades) const;            // Relative seat positions
         std::array<float, NUM_SEATS - 1> getPlacedTrickCardSeats(const Spades &spades) const;   // Relative seat positions
-        std::array<float, 4 * (NUM_SEATS - 1)> getKnownAbsentSuits(const Spades &spades) const; // Relative seat positions
         std::array<float, NUM_SEATS> getActiveNilBidSeats(const Spades &spades) const;          // Relative seat positions
         std::array<float, 13> getNumNeededTricksOpponent(const Spades &spades) const;
         std::array<float, 13> getNumNeededTricksTeam(const Spades &spades) const;

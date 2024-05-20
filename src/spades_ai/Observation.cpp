@@ -40,7 +40,8 @@ Observation::Observation(const Spades &spades) : observation{}
     {
         observation[counter++] = value;
     }
-    for (const auto &value : getKnownAbsentSuits(spades))
+    const auto &suitSupplyObs = SuitSupplyObservation(spades);
+    for (const auto &value : suitSupplyObs.getValues())
     {
         observation[counter++] = value;
     }
@@ -152,26 +153,7 @@ std::array<float, NUM_SEATS - 1> Observation::getPlacedTrickCardSeats(const Spad
     }
     return values;
 }
-std::array<float, 4 * (NUM_SEATS - 1)> Observation::getKnownAbsentSuits(const Spades &spades) const
-{
-    std::array<float, 4 * (NUM_SEATS - 1)> values{};
-    for (const auto &otherSeat : SeatUtils::getOtherSeats(spades.getTurnSeat()))
-    {
-        const auto &seatIndex = getRelativeSeatIndex(spades, otherSeat);
-        for (const auto &suit : Card::getSuits())
-        {
-            values[seatIndex * 4 + (unsigned int)suit] = areAllSuitCardsPlaced(spades, suit) || hasSkippedLeadSuit(spades, suit, otherSeat) ? 1.f : 0.f;
-        }
-        if (hasStartedTrickBreakingSpades(spades, otherSeat))
-        {
-            for (const auto &suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART})
-            {
-                values[seatIndex * 4 + (unsigned int)suit] = 1.f;
-            }
-        }
-    }
-    return values;
-}
+
 std::array<float, NUM_SEATS> Observation::getActiveNilBidSeats(const Spades &spades) const
 {
     std::array<float, NUM_SEATS> values{};
