@@ -53,6 +53,7 @@ namespace spd
         Score getTeamScore(const std::pair<Seat, Seat> &team, int targetRound) const;
 
         GameMode getMode() const;
+        bool canPlace(const Card &card, const std::vector<Card>& hand) const;
 
     public:
         ScoreSettings scoreSettings;

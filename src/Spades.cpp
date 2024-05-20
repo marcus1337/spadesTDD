@@ -268,9 +268,10 @@ std::vector<Card> Spades::getHand(const Seat &seat) const
 std::vector<Card> Spades::getPlaceableCards(const Seat &seat) const
 {
     std::vector<Card> cards;
-    for (const auto &card : getHand(seat))
+    const auto &hand = getHand(seat);
+    for (const auto &card : hand)
     {
-        if (canPlace(card))
+        if (canPlace(card, hand))
         {
             cards.push_back(card);
         }
@@ -330,7 +331,12 @@ void Spades::place(const Card &card)
 
 bool Spades::canPlace(const Card &card) const
 {
-    return trumpVarController.canPlaceCard(state, card, getHand(getTurnSeat()));
+    return canPlace(card, getHand(getTurnSeat()));
+}
+
+bool Spades::canPlace(const Card &card, const std::vector<Card> &hand) const
+{
+    return trumpVarController.canPlaceCard(state, card, hand);
 }
 
 Suit Spades::getEffectiveSuit(const Card &card) const
