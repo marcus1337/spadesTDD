@@ -11,6 +11,7 @@ Spades::Spades(const std::string &encoding)
 
 Spades::Spades(const Spades &other)
 {
+    cachedStartHands.clear();
     deserialize(other.serialize());
 }
 
@@ -43,12 +44,14 @@ void Spades::loadMemento(const SpadesMemento &memento)
 
 void Spades::setBidVariation(BidVariationType type)
 {
+    cachedStartHands.clear();
     assert(!state.hasGameStarted());
     bidVarController.setBidVariationType(type);
 }
 
 void Spades::setTrumpVariation(TrumpVariationType type)
 {
+    cachedStartHands.clear();
     assert(!state.hasGameStarted());
     trumpVarController.setTrumpVariationType(type);
     deck.setExcludeCards(trumpVarController.getExcludedCards());
@@ -56,6 +59,7 @@ void Spades::setTrumpVariation(TrumpVariationType type)
 
 void Spades::setSeed(unsigned int seed)
 {
+    cachedStartHands.clear();
     assert(!state.hasGameStarted());
     deck.setSeed(seed);
 }
@@ -119,6 +123,7 @@ std::string Spades::serialize() const
 
 void Spades::deserialize(const std::string &data)
 {
+    cachedStartHands.clear();
     loadMemento(SpadesMemento(data));
 }
 
