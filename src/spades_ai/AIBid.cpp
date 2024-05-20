@@ -96,7 +96,7 @@ bool AIBid::isStrongStartCard(const Card &card) const
 
 int AIBid::getBid() const
 {
-    const auto& possibleBids = spades.getPossibleBids();
+    const auto &possibleBids = spades.getPossibleBids();
     assert(!possibleBids.empty());
 
     if (possibleBids.size() == 1 || hasWeakHand())
@@ -110,10 +110,8 @@ int AIBid::getBid() const
     else
     {
         const int minTakes = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
-        const int probableTakes = getNumStrongNonTrumpCards() / 2; // Arbitrary divisor value
-        const int lowCommonPartnerBid = 2;
-        const int highCommonPartnerBid = 4;
-        const int probableTargetBid = std::clamp(probableTakes, lowCommonPartnerBid, highCommonPartnerBid);
-        return getClosestNonZeroBid(minTakes + probableTargetBid);
+        const int partnerBidValue = spades.getBidResult(SeatUtils::getTeamSeat(spades.getTurnSeat())).value_or(3);
+        const int targetBid = 6 - partnerBidValue + minTakes; // 6 is the most common team bid result
+        return getClosestNonZeroBid(targetBid);
     }
 }
