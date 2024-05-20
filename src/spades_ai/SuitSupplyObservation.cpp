@@ -3,7 +3,7 @@
 
 using namespace spd;
 
-SuitSupplyObservation::SuitSupplyObservation(const Spades &spades) : values{}
+SuitSupplyObservation::SuitSupplyObservation(const Spades &spades) : values{}, suitTally(spades), spadesBroken(spades.isSpadesBroken())
 {
     setKnownAbsentSuits(spades);
 }
@@ -22,18 +22,27 @@ void SuitSupplyObservation::setKnownAbsentSuits(const Spades &spades)
 {
     for (const auto &otherSeat : SeatUtils::getOtherSeats(spades.getTurnSeat()))
     {
-        const auto &seatIndex = net::getRelativeSeatIndex(spades, otherSeat);
+        setKnownAbsentSuits(spades, otherSeat);
+    }
+}
 
-        for (const auto &suit : Card::getSuits())
+void SuitSupplyObservation::setKnownAbsentSuits(const Spades &spades, const Seat &otherSeat)
+{
+    const auto &seatIndex = net::getRelativeSeatIndex(spades, otherSeat);
+
+    for (const auto &suit : Card::getSuits())
+    {
+        if (!suitTally.otherSeatHasSuit(suit) || net::hasSkippedLeadSuit(spades, suit, otherSeat))
         {
-            values[getValueIndex(seatIndex, suit)] = net::areAllSuitCardsPlaced(spades, suit) || net::hasSkippedLeadSuit(spades, suit, otherSeat) ? 1.f : 0.f;
+            values[getValueIndex(seatIndex, suit)] = 1.f;
         }
-        if (net::hasStartedTrickBreakingSpades(spades, otherSeat))
+    }
+
+    if (spadesBroken && net::hasStartedTrickBreakingSpades(spades, otherSeat))
+    {
+        for (const auto &suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART})
         {
-            for (const auto &suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART})
-            {
-                values[getValueIndex(seatIndex, suit)] = 1.f;
-            }
+            values[getValueIndex(seatIndex, suit)] = 1.f;
         }
     }
 }

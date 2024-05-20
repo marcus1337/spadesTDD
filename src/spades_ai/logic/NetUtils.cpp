@@ -18,10 +18,6 @@ bool spd::net::wasFirstSpadePlacedStartOfTrick(const Spades &spades)
 }
 bool spd::net::hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat)
 {
-    if (!spades.isSpadesBroken())
-    {
-        return false;
-    }
     uint64_t counter = 0;
     for (const auto &pair : spades.getCurrentRoundCardSeatPairs())
     {
