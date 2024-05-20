@@ -88,6 +88,6 @@ namespace spd
         void setKnownAbsentSuits(const Spades &spades, const Seat &otherSeat);
         std::size_t getValueIndex(unsigned int seatIndex, const Suit &suit) const;
         SuitTally suitTally;
-        const bool spadesBroken = false;
+        const std::optional<Seat> spadeBreaker;
     };
 }

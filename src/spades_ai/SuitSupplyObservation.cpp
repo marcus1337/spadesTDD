@@ -3,7 +3,7 @@
 
 using namespace spd;
 
-SuitSupplyObservation::SuitSupplyObservation(const Spades &spades) : values{}, suitTally(spades), spadesBroken(spades.isSpadesBroken())
+SuitSupplyObservation::SuitSupplyObservation(const Spades &spades) : values{}, suitTally(spades), spadeBreaker(spades.getSpadeBreaker(spades.getRound()))
 {
     setKnownAbsentSuits(spades);
 }
@@ -38,7 +38,7 @@ void SuitSupplyObservation::setKnownAbsentSuits(const Spades &spades, const Seat
         }
     }
 
-    if (spadesBroken && net::hasStartedTrickBreakingSpades(spades, otherSeat))
+    if (spadeBreaker.has_value() && spadeBreaker.value() == otherSeat && net::hasStartedTrickBreakingSpades(spades, otherSeat))
     {
         for (const auto &suit : {Suit::CLOVER, Suit::DIAMOND, Suit::HEART})
         {
