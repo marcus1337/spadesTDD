@@ -12,15 +12,16 @@ Action::Action(const Spades &spades, const std::array<float, OUTPUT_SIZE> &outpu
 Card Action::selectCard(const Spades &spades, const std::array<float, OUTPUT_SIZE> &output) const
 {
     const auto &allCards = spades.getStartCards();
-    std::set<Card> handSet;
-    for (const auto &card : spades.getHand(spades.getTurnSeat()))
+    std::set<Card> placeableCards;
+    for (const auto &card : spades.getPlaceableCards())
     {
-        handSet.insert(card);
+        placeableCards.insert(card);
     }
+
     for (const auto &index : getIndicesSortedByMax(output))
     {
         const auto &indexCard = allCards[index];
-        if (handSet.contains(indexCard) && spades.canPlace(indexCard))
+        if (placeableCards.contains(indexCard))
         {
             return indexCard;
         }
