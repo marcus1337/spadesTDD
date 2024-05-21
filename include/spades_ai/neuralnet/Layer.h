@@ -14,6 +14,7 @@ namespace neuralnet
 
     public:
         Layer(std::size_t layerSize, std::size_t previousLayerSize);
+        Layer(const Eigen::MatrixXf& inWeights);
         Eigen::VectorXf getOutput(const Eigen::VectorXf &inputValues) const;
         std::size_t getNumNodes() const;
         const Eigen::MatrixXf &getInWeights() const;
@@ -22,6 +23,9 @@ namespace neuralnet
         std::size_t getNumInWeights() const;
         void setInWeight(std::size_t index, float value);
         Eigen::VectorXf sigmoid(const Eigen::VectorXf &x) const;
+
+        std::size_t getNumRows() const;
+        std::size_t getNumCols() const;
     };
 }
 

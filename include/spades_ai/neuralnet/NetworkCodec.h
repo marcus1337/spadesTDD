@@ -15,6 +15,7 @@ namespace neuralnet
 
     private:
         static const std::string LOCALE_C;
+        static const char DELIMITER;
     };
 }
 

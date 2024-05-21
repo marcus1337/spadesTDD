@@ -10,6 +10,19 @@ namespace neuralnet
         assert(previousLayerSize > 0);
     }
 
+    Layer::Layer(const Eigen::MatrixXf &inWeights) : inWeights(inWeights)
+    {
+    }
+
+    std::size_t Layer::getNumRows() const
+    {
+        return inWeights.rows();
+    }
+    std::size_t Layer::getNumCols() const
+    {
+        return inWeights.cols();
+    }
+
     Eigen::VectorXf Layer::sigmoid(const Eigen::VectorXf &x) const
     {
         return 1.0 / (1.0 + (-x.array()).exp());
