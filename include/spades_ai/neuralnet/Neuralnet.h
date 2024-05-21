@@ -16,6 +16,7 @@ namespace neuralnet
         std::vector<Layer> layers;
         WeightRandomizer randomizer;
         void addLayers(int numInputNodes, int numHiddenNodes, int numOutputNodes);
+        Eigen::VectorXf getOutput(const Eigen::VectorXf &inputValues) const;
 
     public:
         NeuralNet(int numInputNodes, int numHiddenNodes, int numOutputNodes);
@@ -25,12 +26,12 @@ namespace neuralnet
 
         std::string encode() const;
         static int selectMaxOutputIndex(std::vector<float> outputValues);
-        std::vector<float> getOutput(std::vector<float> inputValues);
+        std::vector<float> getOutput(const std::vector<float>& inputValues) const;
         bool isValidInput(const std::vector<float> &inputValues) const;
         void randomizeWeightSubset();
         void randomize();
         std::size_t getNumLayers() const;
-        std::vector<float> getInWeights(std::size_t layerIndex);
+        std::vector<float> getInWeights(std::size_t layerIndex) const;
     };
 
 }

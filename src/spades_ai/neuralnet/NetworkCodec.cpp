@@ -8,7 +8,7 @@ namespace neuralnet {
         std::stringstream ss;
         for (const Layer& layer : layers) {
             ss << layer.getNumNodes() << " ";
-            for (float weight : layer.getInWeights()) {
+            for (float weight : layer.getInWeightsAsVec()) {
                 ss << weight << " ";
             }
         }

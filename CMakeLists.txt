@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(cmake/Linux.cmake)
 
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+
 add_library(${PROJECT_NAME} STATIC "src/Spades.cpp" 
 "src/data/card/Card.cpp" 
 "src/data/card/CardComparison.cpp"
@@ -50,7 +52,9 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
+    $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIR}>
 )
+target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
 
 cmake_policy(SET CMP0077 NEW)
 option(BUILD_TESTING "Build the testing" ON)

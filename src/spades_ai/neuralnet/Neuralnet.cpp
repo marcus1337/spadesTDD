@@ -23,14 +23,14 @@ namespace neuralnet
 
     void NeuralNet::addLayers(int numInputNodes, int numHiddenNodes, int numOutputNodes)
     {
-        Layer inputLayer(numInputNodes, 0);
-        layers.push_back(inputLayer);
+        int prevLayerNodes = numInputNodes;
         if (numHiddenNodes > 0)
         {
-            Layer hiddenLayer(numHiddenNodes, layers[layers.size() - 1].getNumNodes());
+            Layer hiddenLayer(numHiddenNodes, prevLayerNodes);
             layers.push_back(hiddenLayer);
+            prevLayerNodes = numHiddenNodes;
         }
-        Layer outputLayer(numOutputNodes, layers[layers.size() - 1].getNumNodes());
+        Layer outputLayer(numOutputNodes, prevLayerNodes);
         layers.push_back(outputLayer);
     }
 
@@ -69,13 +69,21 @@ namespace neuralnet
         return inputValues.size() == layers.front().getNumNodes();
     }
 
-    std::vector<float> NeuralNet::getOutput(std::vector<float> inputValues)
+    Eigen::VectorXf NeuralNet::getOutput(const Eigen::VectorXf &inputValues) const
     {
-        for (Layer &layer : layers)
+        Eigen::VectorXf currentInput = inputValues;
+        for (const auto &layer : layers)
         {
-            inputValues = layer.getOutput(inputValues);
+            currentInput = layer.getOutput(currentInput);
         }
-        return inputValues;
+        return currentInput;
+    }
+
+    std::vector<float> NeuralNet::getOutput(const std::vector<float> &inputValues) const
+    {
+        Eigen::Map<const Eigen::VectorXf> eigenInput(inputValues.data(), inputValues.size());
+        Eigen::VectorXf output = getOutput(eigenInput);
+        return std::vector<float>(output.data(), output.data() + output.size());
     }
 
     std::size_t NeuralNet::getNumLayers() const
@@ -83,9 +91,9 @@ namespace neuralnet
         return layers.size();
     }
 
-    std::vector<float> NeuralNet::getInWeights(std::size_t layerIndex)
+    std::vector<float> NeuralNet::getInWeights(std::size_t layerIndex) const
     {
-        return layers[layerIndex].getInWeights();
+        return layers[layerIndex].getInWeightsAsVec();
     }
 
 }

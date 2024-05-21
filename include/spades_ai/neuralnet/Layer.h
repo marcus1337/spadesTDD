@@ -3,25 +3,25 @@
 #define NETWORKLAYER_H
 
 #include <vector>
-#include "Node.h"
+#include <Eigen/Dense>
 
 namespace neuralnet
 {
     class Layer
     {
-        std::vector<Node> nodes;
-        std::vector<float> inWeights;
-        std::vector<float> getInWeights(int nodeIndex);
-        bool isInputLayer();
-        int getPreviousLayerSize();
+        Eigen::MatrixXf inWeights;
+        std::size_t getPreviousLayerSize() const;
 
     public:
-        Layer(int layerSize, int previousLayerSize);
-        std::vector<float> getOutput(const std::vector<float> &inputValues);
-        int getNumNodes() const;
-        std::vector<float> getInWeights() const;
+        Layer(std::size_t layerSize, std::size_t previousLayerSize);
+        Eigen::VectorXf getOutput(const Eigen::VectorXf &inputValues) const;
+        std::size_t getNumNodes() const;
+        const Eigen::MatrixXf &getInWeights() const;
+        std::vector<float> getInWeightsAsVec() const;
+        std::vector<float> getInWeightsAsVec(std::size_t nodeIndex) const;
         std::size_t getNumInWeights() const;
-        void setInWeight(int index, float value);
+        void setInWeight(std::size_t index, float value);
+        Eigen::VectorXf sigmoid(const Eigen::VectorXf &x) const;
     };
 }
 

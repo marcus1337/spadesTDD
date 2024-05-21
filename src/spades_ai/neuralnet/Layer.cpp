@@ -4,58 +4,60 @@
 namespace neuralnet
 {
 
-    Layer::Layer(int layerSize, int previousLayerSize)
+    Layer::Layer(std::size_t layerSize, std::size_t previousLayerSize) : inWeights(Eigen::MatrixXf::Random(layerSize, previousLayerSize))
     {
-        nodes.resize(layerSize);
-        inWeights.resize(layerSize * previousLayerSize);
+        assert(layerSize > 0);
+        assert(previousLayerSize > 0);
     }
 
-    bool Layer::isInputLayer()
+    Eigen::VectorXf Layer::sigmoid(const Eigen::VectorXf &x) const
     {
-        return inWeights.empty();
+        return 1.0 / (1.0 + (-x.array()).exp());
     }
 
-    std::vector<float> Layer::getInWeights(int nodeIndex)
+    std::vector<float> Layer::getInWeightsAsVec(std::size_t nodeIndex) const
     {
         const int sliceSize = getPreviousLayerSize();
-        const int startIndex = nodeIndex * sliceSize;
-        const int endIndex = startIndex + sliceSize;
-        return std::vector<float>(inWeights.begin() + startIndex, inWeights.begin() + endIndex);
-    }
-
-    std::vector<float> Layer::getOutput(const std::vector<float> &inputValues)
-    {
-        if (isInputLayer())
-            return std::vector<float>(inputValues.begin(), inputValues.end());
-
-        std::vector<float> output;
-        for (int i = 0; i < nodes.size(); i++)
+        std::vector<float> result(sliceSize);
+        for (int i = 0; i < sliceSize; ++i)
         {
-            std::vector<float> nodeInWeights = getInWeights(i);
-            nodes[i].setValue(nodeInWeights, inputValues);
-            output.push_back(nodes[i].getValue());
+            result[i] = inWeights(nodeIndex, i);
         }
-        return output;
+        return result;
     }
 
-    int Layer::getNumNodes() const
+    std::vector<float> Layer::getInWeightsAsVec() const
     {
-        return nodes.size();
+        std::vector<float> flattenedWeights(inWeights.data(), inWeights.data() + inWeights.size());
+        return flattenedWeights;
     }
 
-    std::vector<float> Layer::getInWeights() const
+    const Eigen::MatrixXf &Layer::getInWeights() const
     {
         return inWeights;
     }
 
-    void Layer::setInWeight(int index, float value)
+    Eigen::VectorXf Layer::getOutput(const Eigen::VectorXf &inputValues) const
     {
-        inWeights[index] = value;
+        Eigen::VectorXf z = inWeights * inputValues;
+        return sigmoid(z);
     }
 
-    int Layer::getPreviousLayerSize()
+    std::size_t Layer::getNumNodes() const
     {
-        return inWeights.size() / getNumNodes();
+        return inWeights.rows();
+    }
+
+    void Layer::setInWeight(std::size_t index, float value)
+    {
+        std::size_t row = index / inWeights.cols();
+        std::size_t col = index % inWeights.cols();
+        inWeights(row, col) = value;
+    }
+
+    std::size_t Layer::getPreviousLayerSize() const
+    {
+        return inWeights.cols();
     }
     std::size_t Layer::getNumInWeights() const
     {
