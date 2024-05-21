@@ -18,11 +18,7 @@ bool spd::net::wasFirstSpadePlacedStartOfTrick(const Spades &spades)
 }
 bool spd::net::hasStartedTrickBreakingSpades(const Spades &spades, const Seat &seat)
 {
-    if (!spades.isSpadesBroken())
-    {
-        return false;
-    }
-    uint64_t counter = 0;
+    std::size_t counter = 0;
     for (const auto &pair : spades.getCurrentRoundCardSeatPairs())
     {
         counter++;
@@ -33,6 +29,7 @@ bool spd::net::hasStartedTrickBreakingSpades(const Spades &spades, const Seat &s
     }
     return false;
 }
+
 bool spd::net::hasSkippedLeadSuit(const Spades &spades, const Suit &suit, const Seat &seat)
 {
     const auto &csPairs = spades.getCurrentRoundCardSeatPairs();

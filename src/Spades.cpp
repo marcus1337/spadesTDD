@@ -11,6 +11,7 @@ Spades::Spades(const std::string &encoding)
 
 Spades::Spades(const Spades &other)
 {
+    cachedStartHands.clear();
     deserialize(other.serialize());
 }
 
@@ -43,12 +44,14 @@ void Spades::loadMemento(const SpadesMemento &memento)
 
 void Spades::setBidVariation(BidVariationType type)
 {
+    cachedStartHands.clear();
     assert(!state.hasGameStarted());
     bidVarController.setBidVariationType(type);
 }
 
 void Spades::setTrumpVariation(TrumpVariationType type)
 {
+    cachedStartHands.clear();
     assert(!state.hasGameStarted());
     trumpVarController.setTrumpVariationType(type);
     deck.setExcludeCards(trumpVarController.getExcludedCards());
@@ -56,6 +59,7 @@ void Spades::setTrumpVariation(TrumpVariationType type)
 
 void Spades::setSeed(unsigned int seed)
 {
+    cachedStartHands.clear();
     assert(!state.hasGameStarted());
     deck.setSeed(seed);
 }
@@ -119,6 +123,7 @@ std::string Spades::serialize() const
 
 void Spades::deserialize(const std::string &data)
 {
+    cachedStartHands.clear();
     loadMemento(SpadesMemento(data));
 }
 
@@ -263,9 +268,10 @@ std::vector<Card> Spades::getHand(const Seat &seat) const
 std::vector<Card> Spades::getPlaceableCards(const Seat &seat) const
 {
     std::vector<Card> cards;
-    for (const auto &card : getHand(seat))
+    const auto &hand = getHand(seat);
+    for (const auto &card : hand)
     {
-        if (canPlace(card))
+        if (canPlace(card, hand))
         {
             cards.push_back(card);
         }
@@ -325,20 +331,17 @@ void Spades::place(const Card &card)
 
 bool Spades::canPlace(const Card &card) const
 {
-    return trumpVarController.canPlaceCard(state, card, getHand(getTurnSeat()));
+    return canPlace(card, getHand(getTurnSeat()));
+}
+
+bool Spades::canPlace(const Card &card, const std::vector<Card> &hand) const
+{
+    return trumpVarController.canPlaceCard(state, card, hand);
 }
 
 Suit Spades::getEffectiveSuit(const Card &card) const
 {
-    const auto trumpCards = getTrumpCardsDescending();
-    if (std::find(trumpCards.begin(), trumpCards.end(), card) != trumpCards.end())
-    {
-        return Suit::SPADE;
-    }
-    else
-    {
-        return card.getSuit().value_or(Suit::SPADE);
-    }
+    return trumpVarController.getEffectiveSuit(card);
 }
 
 bool Spades::isTrumpCard(const Card &card) const
