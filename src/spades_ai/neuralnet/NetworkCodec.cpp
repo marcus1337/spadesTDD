@@ -7,7 +7,8 @@ namespace neuralnet
 {
 
     const std::string NetworkCodec::LOCALE_C = "C";
-    const char NetworkCodec::DELIMITER = '\n';
+    const char NetworkCodec::SPACE = ' ';
+    const char NetworkCodec::NL = '\n';
 
     std::string NetworkCodec::encode(const std::vector<Layer> &layers)
     {
@@ -15,15 +16,15 @@ namespace neuralnet
         ss.imbue(std::locale(LOCALE_C));
 
         ss << layers.size();
-        ss << DELIMITER;
+        ss << NL;
         for (const Layer &layer : layers)
         {
             ss << layer.getNumRows();
-            ss << DELIMITER;
+            ss << SPACE;
             ss << layer.getNumCols();
-            ss << DELIMITER;
+            ss << SPACE;
             ss << layer.getInWeights();
-            ss << DELIMITER;
+            ss << NL;
         }
         return ss.str();
     }
@@ -39,10 +40,8 @@ namespace neuralnet
         ss >> numLayers;
         for (std::size_t layerIndex = 0; layerIndex < numLayers; layerIndex++)
         {
-            std::getline(ss, token, DELIMITER);
-            int numRows = std::stoi(token);
-            std::getline(ss, token, DELIMITER);
-            int numCols = std::stoi(token);
+            std::size_t numRows, numCols;
+            ss >> numRows >> numCols;
             Eigen::MatrixXf matrix(numRows, numCols);
             for (int i = 0; i < numRows; ++i)
             {

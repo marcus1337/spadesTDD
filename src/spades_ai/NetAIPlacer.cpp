@@ -25,7 +25,9 @@ bool NetAIPlacer::deserialize(const std::string &encoding)
     const auto numHiddenNodes = ((Observation::OBSERVATION_SIZE + Action::OUTPUT_SIZE) / 2);
     const auto layer1InWeights = numHiddenNodes * Observation::OBSERVATION_SIZE;
     const auto layer2InWeights = numHiddenNodes * Action::OUTPUT_SIZE;
-    return network.getNumLayers() == 3 && network.isValidInput(std::vector<float>(Observation::OBSERVATION_SIZE)) && network.getInWeights(1).size() == layer1InWeights && network.getInWeights(2).size() == layer2InWeights;
+    const auto& testInWeights1 = network.getInWeights(0);
+    const auto& testInWeights2 = network.getInWeights(1);
+    return network.getNumLayers() == 3 && testInWeights1.size() == layer1InWeights && testInWeights2.size() == layer2InWeights;
 }
 
 void NetAIPlacer::mutate()

@@ -27,7 +27,6 @@ namespace neuralnet
         std::string encode() const;
         static int selectMaxOutputIndex(std::vector<float> outputValues);
         std::vector<float> getOutput(const std::vector<float>& inputValues) const;
-        bool isValidInput(const std::vector<float> &inputValues) const;
         void randomizeWeightSubset();
         void randomize();
         std::size_t getNumLayers() const;

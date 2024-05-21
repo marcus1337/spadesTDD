@@ -64,11 +64,6 @@ namespace neuralnet
         return std::distance(outputValues.begin(), std::max_element(outputValues.begin(), outputValues.end()));
     }
 
-    bool NeuralNet::isValidInput(const std::vector<float> &inputValues) const
-    {
-        return inputValues.size() == layers.front().getNumNodes();
-    }
-
     Eigen::VectorXf NeuralNet::getOutput(const Eigen::VectorXf &inputValues) const
     {
         Eigen::VectorXf currentInput = inputValues;
@@ -88,7 +83,7 @@ namespace neuralnet
 
     std::size_t NeuralNet::getNumLayers() const
     {
-        return layers.size();
+        return layers.size() + 1; //+1 for input layer
     }
 
     std::vector<float> NeuralNet::getInWeights(std::size_t layerIndex) const
