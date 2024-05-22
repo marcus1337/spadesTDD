@@ -550,8 +550,8 @@ int Spades::getCardStrengthRelativeToCurrentTrick(const Card &card) const
 
 int Spades::getCardStrength(const Card &card) const
 {
-    const auto trumpsDescending = getTrumpCardsDescending();
-    const auto ranksDescending = getRanksDescending();
+    const auto& trumpsDescending = getTrumpCardsDescending();
+    const auto& ranksDescending = getRanksDescending();
     int trumpValue = trumpsDescending.size() + ranksDescending.size();
     for (const auto &trumpCard : trumpsDescending)
     {

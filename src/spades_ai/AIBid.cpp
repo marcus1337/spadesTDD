@@ -111,7 +111,7 @@ int AIBid::getBid() const
     {
         const int minTakes = analyze.getGuaranteedTrickTakes(spades.getTurnSeat());
         const int partnerBidValue = spades.getBidResult(SeatUtils::getTeamSeat(spades.getTurnSeat())).value_or(3);
-        const int targetBid = 5 - partnerBidValue + minTakes; // 6 is the most common team bid result
+        const int targetBid = 5 - partnerBidValue + minTakes / 2; // 6 is the most common team bid result
         return getClosestNonZeroBid(targetBid);
     }
 }
