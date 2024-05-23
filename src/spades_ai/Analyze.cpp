@@ -48,42 +48,30 @@ int Analyze::getTrumpIndexDescending(const Card &card) const
 
 int Analyze::getGuaranteedTrickTakes(const Seat &seat) const
 {
-    const auto trumps = spades.getTrumpCardsDescending();
-    std::vector<bool> trumpChecks(trumps.size(), false);
-    std::vector<bool> trumpRejects(trumps.size(), true);
+    std::set<Card> handTrumpSet;
     for (const auto &card : spades.getHand(seat))
     {
-        const int trumpIndex = getTrumpIndexDescending(card);
-        if (trumpIndex >= 0)
+        if (spades.getEffectiveSuit(card) == Suit::SPADE)
         {
-            trumpChecks[trumpIndex] = true;
-            trumpRejects[trumpIndex] = false;
+            handTrumpSet.insert(card);
         }
     }
-
-    for (int i = 0; i < trumps.size(); i++)
+    for (const auto &trump : spades.getTrumpCardsDescending())
     {
-        for (int j = i + 1; j < trumps.size(); j++)
+        if (!handTrumpSet.contains(trump))
         {
-            if (trumpChecks[i] && trumpRejects[j])
+            const auto &trumpValue = spades.getCardStrength(trump);
+            for (auto it = handTrumpSet.begin(); it != handTrumpSet.end(); ++it)
             {
-                trumpChecks[i] = false;
-                trumpRejects[j] = false;
-                break;
+                if (spades.getCardStrength(*it) < trumpValue)
+                {
+                    handTrumpSet.erase(it);
+                    break;
+                }
             }
         }
     }
-
-    int numTricks = 0;
-    for (const bool winTrick : trumpChecks)
-    {
-        if (winTrick)
-        {
-            numTricks++;
-        }
-    }
-
-    return numTricks;
+    return handTrumpSet.size();
 }
 
 std::vector<Card> Analyze::getPlaceableCards(const Suit &suit) const
