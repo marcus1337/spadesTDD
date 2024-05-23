@@ -12,7 +12,7 @@ namespace spd
 
     public:
         ZeroAIPlacer() = default;
-        virtual Card getPlacement(const Spades &spades) override
+        virtual Card getPlacement(const Spades &spades) const override
         {
             AIAction action(spades);
             if (spades.getCurrentRoundCardSeatPairs().empty())
@@ -36,14 +36,14 @@ namespace spd
 
     class SabotageZeroAIPlacer : public AIPlacer // Assume 1 or more opponents has an active 0-bids
     {
-        virtual Card getPlacement(const Spades &spades) override
+        virtual Card getPlacement(const Spades &spades) const override
         {
             return AIAction(spades).getAvoidTricksCard();
         }
     };
     class DefendZeroAIPlacer : public AIPlacer // Assume team member has active 0-bid but not self
     {
-        virtual Card getPlacement(const Spades &spades) override
+        virtual Card getPlacement(const Spades &spades) const override
         {
             return AIAction(spades).getTakeTricksCard();
         }

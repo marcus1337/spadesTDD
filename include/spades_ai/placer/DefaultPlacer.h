@@ -13,10 +13,10 @@ namespace spd
         SabotageZeroAIPlacer sabotageZeroPlacer;
         DefendZeroAIPlacer defendZeroPlacer;
         TargetAIPlacer targetAIPlacer;
-        AIPlacer &getPlacer(const Spades &spades);
+        const AIPlacer &getPlacer(const Spades &spades) const;
 
     public:
         DefaultPlacer() = default;
-        virtual Card getPlacement(const Spades &spades) override;
+        virtual Card getPlacement(const Spades &spades) const override;
     };
 }

@@ -14,7 +14,7 @@ namespace spd
     {
     public:
         NetAIPlacer();
-        virtual Card getPlacement(const Spades &spades) override;
+        virtual Card getPlacement(const Spades &spades) const override;
         virtual std::string serialize() const override;
         virtual bool deserialize(const std::string &encoding) override;
         void mutate();

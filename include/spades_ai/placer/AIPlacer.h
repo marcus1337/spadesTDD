@@ -9,6 +9,6 @@ namespace spd
     {
     public:
         virtual ~AIPlacer() = default;
-        virtual Card getPlacement(const Spades &spades) = 0;
+        virtual Card getPlacement(const Spades &spades) const = 0;
     };
 }

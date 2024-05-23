@@ -31,7 +31,7 @@ namespace spd
         }
 
     public:
-        virtual Card getPlacement(const Spades &spades) override
+        virtual Card getPlacement(const Spades &spades) const override
         {
             if (needTricks(spades))
             {

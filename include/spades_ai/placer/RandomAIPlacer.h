@@ -6,11 +6,11 @@ namespace spd
 {
     class RandomAIPlacer : public AIPlacer
     {
-        PortableRandom portableRandom;
-        Card getRandomCard(const Spades &spades);
+        mutable PortableRandom portableRandom;
+        Card getRandomCard(const Spades &spades) const;
 
     public:
         RandomAIPlacer() = default;
-        virtual Card getPlacement(const Spades &spades) override;
+        virtual Card getPlacement(const Spades &spades) const override;
     };
 }

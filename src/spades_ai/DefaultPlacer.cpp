@@ -1,7 +1,7 @@
 #include "spades_ai/placer/DefaultPlacer.h"
 
 using namespace spd;
-AIPlacer &DefaultPlacer::getPlacer(const Spades &spades)
+const AIPlacer &DefaultPlacer::getPlacer(const Spades &spades) const
 {
     const auto seat = spades.getTurnSeat();
     const auto teamSeat = SeatUtils::getTeamSeat(seat);
@@ -34,7 +34,7 @@ AIPlacer &DefaultPlacer::getPlacer(const Spades &spades)
         return targetAIPlacer;
     }
 }
-Card DefaultPlacer::getPlacement(const Spades &spades)
+Card DefaultPlacer::getPlacement(const Spades &spades) const
 {
     return getPlacer(spades).getPlacement(spades);
 }

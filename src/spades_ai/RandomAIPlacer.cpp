@@ -2,12 +2,12 @@
 
 using namespace spd;
 
-Card RandomAIPlacer::getPlacement(const Spades &spades)
+Card RandomAIPlacer::getPlacement(const Spades &spades) const
 {
     return getRandomCard(spades);
 }
 
-Card RandomAIPlacer::getRandomCard(const Spades &spades)
+Card RandomAIPlacer::getRandomCard(const Spades &spades) const
 {
     const auto placeableCards = spades.getPlaceableCards();
     assert(!placeableCards.empty());
